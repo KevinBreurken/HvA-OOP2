@@ -5,4 +5,5 @@
 **Master:** Artist \
 **Detail:** Albums 
 
-
+## Links
+**Figma:**  https://www.figma.com/file/jfXCPZZKqZBPsTMIdOzBus/OOP2?node-id=0%3A1
