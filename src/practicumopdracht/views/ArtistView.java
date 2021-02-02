@@ -1,5 +1,6 @@
 package practicumopdracht.views;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -24,15 +25,12 @@ public class ArtistView extends View {
 
     private HBox rootHorizontalBox;
 
-    //Artist Display
-
+    //Artist Content
+    StackPane artistDisplayContentPane;
     //Artist List
     private VBox artistListVBox;
     private ListView artistListView;
     private HBox artistListButtonHBox;
-    private double imageX;
-    private double imageY;
-    private ImageView artistOverlay;
 
     public ArtistView() {
         this.rootHorizontalBox = new HBox();
@@ -49,51 +47,6 @@ public class ArtistView extends View {
 
         rootHorizontalBox.getChildren().add(artistListVBox);
         rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
-    }
-
-    private void updateArtistView() {
-        double heightToUse = imageX > imageY ? imageX : imageY;
-//        artistImage.setFitWidth(imageX + 100);
-//        artistImage.setX(imageX);
-//        artistImage.setFitHeight(heightToUse);
-    }
-
-    private void initArtistDisplay() {
-
-        StackPane rootPane = new StackPane();
-        StackPane overlayPane = new StackPane();
-        VBox contentVBox = new VBox();
-
-        HBox.setHgrow(rootPane, Priority.ALWAYS);
-        VBox.setVgrow(rootPane, Priority.ALWAYS);
-
-        BackgroundImage bgImage = new BackgroundImage(
-                loadImage(),                                                 // image
-                BackgroundRepeat.NO_REPEAT,                            // repeatX
-                BackgroundRepeat.NO_REPEAT,                            // repeatY
-                BackgroundPosition.DEFAULT,                             // position
-                new BackgroundSize(-1, -1, false, false, false, true)  // size
-        );
-
-        rootPane.setBackground(new Background(bgImage));
-        overlayPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-        rootHorizontalBox.getChildren().add(rootPane);
-        rootPane.getChildren().add(overlayPane);
-        overlayPane.getChildren().add(contentVBox);
-        contentVBox.setAlignment(Pos.CENTER);
-        //Add / Remove Button
-        Label contentTitle = new Label("Arctic Monkeys");
-        contentTitle.setWrapText(true);
-        contentTitle.setTextAlignment(TextAlignment.CENTER);
-        contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); -fx-font-size: 30; -fx-font-family: Broadway");
-        contentVBox.getChildren().add(contentTitle);
-
-        Label recordlabelTitle = new Label("Domino Records");
-        recordlabelTitle.setWrapText(true);
-        recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
-        recordlabelTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); -fx-font-size: 20; -fx-font-family: Broadway");
-        contentVBox.getChildren().add(recordlabelTitle);
-
     }
 
     private void initArtistList() {
@@ -122,6 +75,63 @@ public class ArtistView extends View {
         int btnCount = artistListButtonHBox.getChildren().size();
         addButton.prefWidthProperty().bind(artistListButtonHBox.widthProperty().divide(btnCount));
         removeButton.prefWidthProperty().bind(artistListButtonHBox.widthProperty().divide(btnCount));
+    }
+
+    private void initArtistDisplay() {
+
+        StackPane rootPane = new StackPane();
+        artistDisplayContentPane = new StackPane();
+
+        HBox.setHgrow(rootPane, Priority.ALWAYS);
+        VBox.setVgrow(rootPane, Priority.ALWAYS);
+
+        BackgroundImage bgImage = new BackgroundImage(
+                loadImage(),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                new BackgroundSize(-1, -1, false, false, false, true)
+        );
+
+        rootPane.setBackground(new Background(bgImage));
+        artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+        rootHorizontalBox.getChildren().add(rootPane);
+        rootPane.getChildren().add(artistDisplayContentPane);
+        initArtistContentView();
+        initArtistContentView();
+    }
+
+    private void initArtistContentView(){
+        VBox contentVBox = new VBox();
+        artistDisplayContentPane.getChildren().add(contentVBox);
+        contentVBox.setAlignment(Pos.CENTER);
+        //Add / Remove Button
+        Label contentTitle = new Label("Arctic Monkeys");
+        contentTitle.setWrapText(true);
+        contentTitle.setTextAlignment(TextAlignment.CENTER);
+        contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); -fx-font-size: 30; -fx-font-family: Broadway");
+        contentVBox.getChildren().add(contentTitle);
+
+        Label recordlabelTitle = new Label("Domino Records");
+        recordlabelTitle.setWrapText(true);
+        recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
+        recordlabelTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); -fx-font-size: 20; -fx-font-family: Broadway");
+        contentVBox.getChildren().add(recordlabelTitle);
+
+        VBox buttonHBox = new VBox();
+        buttonHBox.setSpacing(10);
+        buttonHBox.setPadding(new Insets(20,0,0,0));
+        buttonHBox.setAlignment(Pos.CENTER);
+        Button addButton = new Button("View Albums");
+        buttonHBox.getChildren().add(addButton);
+        Button removeButton = new Button("Edit Artist");
+        buttonHBox.getChildren().add(removeButton);
+        contentVBox.getChildren().add(buttonHBox);
+        buttonHBox.setMinWidth(200);
+    }
+
+    private void initArtistEditView(){
+
     }
 
     private Image loadImage() {
