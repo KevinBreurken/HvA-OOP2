@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
+import practicumopdracht.AdjustableListView;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,16 +23,19 @@ public class ArtistView extends View {
     };
     public static boolean openEditPanel = false;
     //Artist Content
-    StackPane artistDisplayContentPane;
+    private StackPane artistDisplayContentPane;
     private HBox rootHorizontalBox;
     //Artist List
     private VBox artistListVBox;
+    private AdjustableListView artistListBox;
     private ListView artistListView;
     private HBox artistListButtonHBox;
 
     public ArtistView() {
         this.rootHorizontalBox = new HBox();
         this.artistListView = new ListView();
+        this.artistListBox = new AdjustableListView("Artist","Add","Remove");
+        this.artistListBox.addTestNames(TEST_ARTIST_NAMES);
         this.artistListVBox = new VBox();
         this.artistListButtonHBox = new HBox();
         initLayout();
@@ -40,55 +44,26 @@ public class ArtistView extends View {
     @Override
     protected void initLayout() {
 
-        initArtistList();
         initArtistDisplay();
 
-        rootHorizontalBox.getChildren().add(artistListVBox);
+        rootHorizontalBox.getChildren().add(artistListBox);
         rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
-    }
-
-    private void initArtistList() {
-
-        artistListVBox.setAlignment(Pos.CENTER);
-        VBox.setVgrow(artistListView, Priority.ALWAYS);
-        artistListVBox.minWidth(500);
-
-        Label artistListTitle = new Label("Artists");
-        artistListTitle.setStyle("-fx-font-weight: bold;");
-        artistListTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
-
-        artistListVBox.getChildren().add(artistListTitle);
-        artistListVBox.getChildren().add(artistListView);
-        //for testing purposes
-        for (int i = 0; i < TEST_ARTIST_NAMES.length; i++) {
-            artistListView.getItems().add(TEST_ARTIST_NAMES[i]);
-        }
-        //Add / Remove Button
-        Button addButton = new Button("Add");
-        artistListButtonHBox.getChildren().add(addButton);
-        Button removeButton = new Button("Remove");
-        artistListButtonHBox.getChildren().add(removeButton);
-        artistListVBox.getChildren().add(artistListButtonHBox);
-        artistListVBox.setMinWidth(200);
-        //Determine how the buttons should be scaled.
-        int btnCount = artistListButtonHBox.getChildren().size();
-        addButton.prefWidthProperty().bind(artistListButtonHBox.widthProperty().divide(btnCount));
-        removeButton.prefWidthProperty().bind(artistListButtonHBox.widthProperty().divide(btnCount));
     }
 
     private void initArtistDisplay() {
 
         StackPane rootPane = new StackPane();
+        rootPane.setMinWidth(200);
         artistDisplayContentPane = new StackPane();
 
         HBox.setHgrow(rootPane, Priority.ALWAYS);
         VBox.setVgrow(rootPane, Priority.ALWAYS);
 
         BackgroundImage bgImage = new BackgroundImage(
-                loadImage("src/practicumopdracht/content/kooks.jpeg"),
+                loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
+                BackgroundPosition.CENTER,
                 new BackgroundSize(-1, -1, false, false, false, true)
         );
 
@@ -111,7 +86,7 @@ public class ArtistView extends View {
         favImage.setSmooth(true);
         contentVBox.getChildren().add(favImage);
         //Add / Remove Button
-        Label contentTitle = new Label("The Kooks");
+        Label contentTitle = new Label("Arctic Monkeys");
         contentTitle.setWrapText(true);
         contentTitle.setTextAlignment(TextAlignment.CENTER);
         contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
@@ -147,7 +122,7 @@ public class ArtistView extends View {
         contentVBox.getChildren().add(artistNameHBox);
         VBox labelNameHBox = createTextfieldGroup("Label name:", "Type label name here...");
         contentVBox.getChildren().add(labelNameHBox);
-        HBox favoriteHBox = createfavoriteGroup("Is favorite:");
+        HBox favoriteHBox = createfavoriteGroup("Favorite:");
         contentVBox.getChildren().add(favoriteHBox);
 
         //Buttons
@@ -190,8 +165,8 @@ public class ArtistView extends View {
         TextField artistName = new TextField();
         artistName.setAlignment(Pos.CENTER);
         artistName.setPromptText(promptText);
-        artistName.setPrefWidth(120);
-        artistName.setMaxWidth(120);
+        artistName.setPrefWidth(140);
+        artistName.setMaxWidth(140);
         groupHBox.getChildren().add(artistName);
         return groupHBox;
     }
@@ -202,7 +177,6 @@ public class ArtistView extends View {
         favoriteGroupHBox.setPadding(new Insets(10, 0, 0, 50));
 
         Label preTextLabel = new Label(preText);
-        preTextLabel.setWrapText(true);
         preTextLabel.setPadding(new Insets(0, 1, 0, 0));
         preTextLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1);");
 
