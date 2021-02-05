@@ -3,6 +3,7 @@ package practicumopdracht;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import practicumopdracht.views.AlbumView;
 import practicumopdracht.views.ArtistView;
 
 public class MainApplication extends Application {
@@ -16,17 +17,19 @@ public class MainApplication extends Application {
             return;
         }
 
-        ArtistView.openEditPanel = false;
+
+        ArtistView.openEditPanel = false; //Show / Hides the edit panel on the Artist View.
         ArtistView artistView = new ArtistView();
-//        Shows the edit panel
-        Scene scene = new Scene(artistView.getRoot());
+        AlbumView albumView = new AlbumView();
+
+        Scene scene = new Scene(albumView.getRoot());
 
         stage.setTitle(String.format("Practicumopdracht OOP2 - %s", Main.studentNaam));
         stage.setWidth(640);
         stage.setHeight(480);
         //set the minimal dimensions the program supports
-        stage.setMinWidth(430);
-        stage.setMinHeight(280);
+        stage.setMinWidth(530);
+        stage.setMinHeight(330);
         stage.setScene(scene);
         stage.show();
 

@@ -9,7 +9,17 @@ import java.util.ArrayList;
 public class Artist {
     private String name;
     private String label;
-    private boolean isRetired;
+    private boolean favorited;
 
     private ArrayList<Album> albums;
+
+    public Artist(String name, String label, boolean favorited) {
+        this.name = name;
+        this.label = label;
+        this.favorited = favorited;
+    }
+
+    public void AddAlbum(Album album) {
+        albums.add(album);
+    }
 }

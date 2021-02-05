@@ -34,7 +34,7 @@ public class ArtistView extends View {
     public ArtistView() {
         this.rootHorizontalBox = new HBox();
         this.artistListView = new ListView();
-        this.artistListBox = new AdjustableListView("Artist","Add","Remove");
+        this.artistListBox = new AdjustableListView("Artist", "Add", "Remove");
         this.artistListBox.addTestNames(TEST_ARTIST_NAMES);
         this.artistListVBox = new VBox();
         this.artistListButtonHBox = new HBox();
