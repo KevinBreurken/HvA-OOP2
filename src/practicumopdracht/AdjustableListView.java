@@ -1,6 +1,7 @@
 package practicumopdracht;
 
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -62,6 +63,10 @@ public class AdjustableListView extends VBox {
                 }
             }
         });
+    }
+
+    public void addToTop(Node node){
+        this.getChildren().add(0,node);
     }
 
     //Only for testing purposes

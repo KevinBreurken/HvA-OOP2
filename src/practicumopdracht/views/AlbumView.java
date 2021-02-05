@@ -4,22 +4,24 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.UIComponents;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class AlbumView extends View {
-
-    private final static String[] TEST_ARTIST_NAMES = new String[]{
+    private final static String[] TEST_ALBUM_NAMES = new String[]{
             "Tranquility Base Hotel & Casino", "AM", "Suck it and see", "Humbug", "Favourite worst nightmare",
             "Whatever people say I am, that's what I'm not"
     };
+    public static boolean openEditPanel = false;
     //Artist Content
     private StackPane artistDisplayContentPane;
     private HBox rootHorizontalBox;
@@ -30,13 +32,12 @@ public class AlbumView extends View {
     public AlbumView() {
         this.rootHorizontalBox = new HBox();
         this.artistListBox = new AdjustableListView("Albums", "Add", "Remove");
-        this.artistListBox.addTestNames(TEST_ARTIST_NAMES);
+        this.artistListBox.addTestNames(TEST_ALBUM_NAMES);
         initLayout();
     }
 
     @Override
     protected void initLayout() {
-
         initArtistDisplay();
 
         rootHorizontalBox.getChildren().add(artistListBox);
@@ -44,7 +45,6 @@ public class AlbumView extends View {
     }
 
     private void initArtistDisplay() {
-
         rootPane = new StackPane();
         artistDisplayContentPane = new StackPane();
 
@@ -53,7 +53,7 @@ public class AlbumView extends View {
 
         BackgroundImage bgImage = new BackgroundImage(
                 loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"
-                        , 50, 50, true, true),
+                        , 24, 24, true, true),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -61,10 +61,28 @@ public class AlbumView extends View {
         );
 
         rootPane.setBackground(new Background(bgImage));
-        artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+        artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
         rootHorizontalBox.getChildren().add(rootPane);
         rootPane.getChildren().add(artistDisplayContentPane);
-        initArtistContentView();
+        if (openEditPanel)
+            initArtistEditView();
+        else
+            initArtistContentView();
+    }
+
+    private void initArtistEditView() {
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setStyle("-fx-background-color: cornflowerblue;");
+        artistDisplayContentPane.getChildren().add(gridPane);
+
+        StackPane pane = new StackPane();
+        pane.setMinSize(100,100);
+        pane.setStyle("-fx-background-color: red;");
+        gridPane.getChildren().add(pane);
+
+        VBox artistNameHBox =  UIComponents.createTextfieldGroup("Album name:","Type album name here...");
+        pane.getChildren().add(artistNameHBox);
     }
 
     private void initArtistContentView() {
@@ -80,10 +98,11 @@ public class AlbumView extends View {
 
         albumVBox.getChildren().add(pane);
         VBox contentVBox = new VBox();
-        contentVBox.setSpacing(20);
-        contentVBox.setPadding(new Insets(0,0,10,0));
+        contentVBox.setSpacing(15);
+        contentVBox.setPadding(new Insets(0, 0, 10, 0));
         Label albumTitleLabel = new Label("Tranquility Base Hotel & Casino");
         albumTitleLabel.setWrapText(true);
+        albumTitleLabel.setMaxWidth(300);
         albumTitleLabel.setTextAlignment(TextAlignment.CENTER);
         albumTitleLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
                 "-fx-font-size: 20; -fx-font-family: Broadway");
@@ -113,7 +132,7 @@ public class AlbumView extends View {
         //Buttons
         HBox buttonHBox = new HBox();
         buttonHBox.setSpacing(10);
-        buttonHBox.setPadding(new Insets(0, 0, 0, 0));
+        buttonHBox.setPadding(new Insets(0, 0, 10, 0));
         buttonHBox.setAlignment(Pos.CENTER);
         Button removeButton = new Button("See Wiki");
         buttonHBox.getChildren().add(removeButton);
@@ -125,17 +144,15 @@ public class AlbumView extends View {
 
         contentVBox.setAlignment(Pos.BOTTOM_CENTER);
         artistDisplayContentPane.getChildren().add(contentVBox);
-//
-//        VBox buttonHBox = new VBox();
-//        buttonHBox.setSpacing(10);
-//        buttonHBox.setPadding(new Insets(20, 0, 0, 0));
-//        buttonHBox.setAlignment(Pos.CENTER);
-//        Button addButton = new Button("View Albums");
-//        buttonHBox.getChildren().add(addButton);
-//        Button removeButton = new Button("Edit Artist");
-//        buttonHBox.getChildren().add(removeButton);
-//        contentVBox.getChildren().add(buttonHBox);
-//        buttonHBox.setMinWidth(200);
+
+        ComboBox albumBox = new ComboBox();
+        albumBox.getItems().addAll(ArtistView.TEST_ARTIST_NAMES);
+        artistListBox.addToTop(albumBox);
+        albumBox.setMaxWidth(999);
+
+        Button backButton = new Button("Back to Artist");
+        backButton.setMaxWidth(999);
+        artistListBox.addToTop(backButton);
 
     }
 

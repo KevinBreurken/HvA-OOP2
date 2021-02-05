@@ -2,6 +2,7 @@ package practicumopdracht;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import practicumopdracht.views.AlbumView;
 import practicumopdracht.views.ArtistView;
@@ -20,10 +21,10 @@ public class MainApplication extends Application {
 
         ArtistView.openEditPanel = false; //Show / Hides the edit panel on the Artist View.
         ArtistView artistView = new ArtistView();
+        AlbumView.openEditPanel = true;
         AlbumView albumView = new AlbumView();
 
         Scene scene = new Scene(albumView.getRoot());
-
         stage.setTitle(String.format("Practicumopdracht OOP2 - %s", Main.studentNaam));
         stage.setWidth(640);
         stage.setHeight(480);
@@ -34,4 +35,5 @@ public class MainApplication extends Application {
         stage.show();
 
     }
+
 }

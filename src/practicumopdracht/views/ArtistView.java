@@ -9,13 +9,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.UIComponents;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class ArtistView extends View {
 
-    private final static String[] TEST_ARTIST_NAMES = new String[]{
+    public final static String[] TEST_ARTIST_NAMES = new String[]{
             "Anamanaguchi", "Periphery", "Haywyre", "Maduk", "Chase & Status", "Darren Korb",
             "Paramore", "Spiritbox", "Arctic Monkeys", "The Kooks", "Minus the Bear",
             "Infected Mushrooms", "Jamiroquai", "David Maxim Micic", "Iron Maiden", "Tesseract",
@@ -117,10 +118,9 @@ public class ArtistView extends View {
         VBox contentVBox = new VBox();
         artistDisplayContentPane.getChildren().add(contentVBox);
         contentVBox.setAlignment(Pos.CENTER);
-
-        VBox artistNameHBox = createTextfieldGroup("Artist name:", "Type artist name here...");
+        VBox artistNameHBox =  UIComponents.createTextfieldGroup("Artist name:","Type artist name here...");
         contentVBox.getChildren().add(artistNameHBox);
-        VBox labelNameHBox = createTextfieldGroup("Label name:", "Type label name here...");
+        VBox labelNameHBox =  UIComponents.createTextfieldGroup("Label name:","Type label name here...");
         contentVBox.getChildren().add(labelNameHBox);
         HBox favoriteHBox = createfavoriteGroup("Favorite:");
         contentVBox.getChildren().add(favoriteHBox);
