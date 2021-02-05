@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
@@ -14,34 +13,56 @@ import practicumopdracht.AdjustableListView;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 public class AlbumView extends View {
     private final static String[] TEST_ALBUM_NAMES = new String[]{
             "Tranquility Base Hotel & Casino", "AM", "Suck it and see", "Humbug", "Favourite worst nightmare",
             "Whatever people say I am, that's what I'm not"
     };
-    public static boolean openEditPanel = false;
-    //Artist Content
-    private StackPane artistDisplayContentPane;
-    private HBox rootHorizontalBox;
-    //Artist List
-    private AdjustableListView artistListBox;
     private StackPane rootPane;
+    private Button backToArtistButton;
+    //Album Content
+    private VBox albumVBox;
+    private HBox rootHorizontalBox;
+    private StackPane artistDisplayContentPane;
+    private Button editAlbumButton;
+    private Button wikiButton;
+
+
+    //Album Edit
+    private GridPane gridPane;
+    //Album List
+    private AdjustableListView adjustableListBox;
+
+
 
     public AlbumView() {
         this.rootHorizontalBox = new HBox();
-        this.artistListBox = new AdjustableListView("Albums", "Add", "Remove");
-        this.artistListBox.addTestNames(TEST_ALBUM_NAMES);
+        this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
+        this.adjustableListBox.addTestNames(TEST_ALBUM_NAMES);
         initLayout();
+    }
+
+    public Button getEditAlbumButton() {
+        return editAlbumButton;
+    }
+
+    public Button getWikiButton() {
+        return wikiButton;
+    }
+
+    public AdjustableListView getAdjustableListBox() {
+        return adjustableListBox;
+    }
+
+    public Button getBackToArtistButton() {
+        return backToArtistButton;
     }
 
     @Override
     protected void initLayout() {
         initArtistDisplay();
 
-        rootHorizontalBox.getChildren().add(artistListBox);
+        rootHorizontalBox.getChildren().add(adjustableListBox);
         rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
     }
 
@@ -68,41 +89,41 @@ public class AlbumView extends View {
 
         ComboBox albumBox = new ComboBox();
         albumBox.getItems().addAll(ArtistView.TEST_ARTIST_NAMES);
-        artistListBox.addToTop(albumBox);
+        adjustableListBox.addToTop(albumBox);
         albumBox.setMaxWidth(999);
 
-        Button backButton = new Button("Back to Artist");
-        backButton.setMaxWidth(999);
-        artistListBox.addToTop(backButton);
+        backToArtistButton = new Button("Back to Artist");
+        backToArtistButton.setMaxWidth(999);
+        adjustableListBox.addToTop(backToArtistButton);
 
-        if (openEditPanel)
-            initArtistEditView();
-        else
-            initArtistContentView();
+
+        initArtistEditView();
+        initArtistContentView();
+        setState(VIEW_STATE.VIEW);
     }
 
     private void initArtistEditView() {
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         artistDisplayContentPane.getChildren().add(gridPane);
 
         StackPane pane = new StackPane();
-        pane.setMinSize(100,100);
+        pane.setMinSize(100, 100);
         gridPane.getChildren().add(pane);
 
         VBox groupBox = new VBox();
         groupBox.setSpacing(5);
         pane.getChildren().add(groupBox);
-        VBox artistNameHBox =  UIComponents.createTextfieldGroup("Album name:","Type album name here...");
+        VBox artistNameHBox = UIComponents.createTextfieldGroup("Album name:", "Type album name here...");
         groupBox.getChildren().add(artistNameHBox);
 
-        VBox wikilinkTextArea = UIComponents.createTextAreaGroup("Wiki Link:","Type wiki URL here...");
+        VBox wikilinkTextArea = UIComponents.createTextAreaGroup("Wiki Link:", "Type wiki URL here...");
         groupBox.getChildren().add(wikilinkTextArea);
 
-        VBox datePicker =  UIComponents.createDatepickerGroup("Release date:");
+        VBox datePicker = UIComponents.createDatepickerGroup("Release date:");
         groupBox.getChildren().add(datePicker);
 
-        VBox intSelector =  UIComponents.createIntSelectorGroup("Rating:");
+        VBox intSelector = UIComponents.createIntSelectorGroup("Rating:");
         groupBox.getChildren().add(intSelector);
 
         Button changeImageButton = new Button("Change Album Image");
@@ -112,10 +133,11 @@ public class AlbumView extends View {
         //Buttons
         HBox editButtonHBox = UIComponents.createEditButtonGroup();
         groupBox.getChildren().add(editButtonHBox);
+        gridPane.setVisible(false);
     }
 
     private void initArtistContentView() {
-        VBox albumVBox = new VBox();
+        albumVBox = new VBox();
         albumVBox.setAlignment(Pos.CENTER);
         artistDisplayContentPane.getChildren().add(albumVBox);
         ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys_album.jpg", 300, 300, true, true));
@@ -163,21 +185,27 @@ public class AlbumView extends View {
         buttonHBox.setSpacing(10);
         buttonHBox.setPadding(new Insets(0, 0, 10, 0));
         buttonHBox.setAlignment(Pos.CENTER);
-        Button removeButton = new Button("See Wiki");
-        buttonHBox.getChildren().add(removeButton);
-        Button saveButton = new Button("Edit");
-        buttonHBox.getChildren().add(saveButton);
+        wikiButton = new Button("See Wiki");
+        buttonHBox.getChildren().add(wikiButton);
+        editAlbumButton = new Button("Edit");
+        buttonHBox.getChildren().add(editAlbumButton);
         contentVBox.getChildren().add(buttonHBox);
-        saveButton.setMinWidth(50);
-        removeButton.setMinWidth(50);
+        editAlbumButton.setMinWidth(50);
+        wikiButton.setMinWidth(50);
 
         contentVBox.setAlignment(Pos.BOTTOM_CENTER);
         artistDisplayContentPane.getChildren().add(contentVBox);
-
+        albumVBox.setVisible(false);
     }
 
     @Override
     public Parent getRoot() {
         return rootHorizontalBox;
+    }
+
+    @Override
+    public void setState(VIEW_STATE state) {
+        albumVBox.setVisible(state == VIEW_STATE.VIEW);
+        gridPane.setVisible(state == VIEW_STATE.EDIT);
     }
 }

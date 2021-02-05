@@ -2,10 +2,12 @@ package practicumopdracht;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import practicumopdracht.views.AlbumView;
-import practicumopdracht.views.ArtistView;
+import practicumopdracht.controllers.AlbumController;
+import practicumopdracht.controllers.ArtistController;
+import practicumopdracht.controllers.Controller;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,39 +15,20 @@ import java.io.FileNotFoundException;
 public class MainApplication extends Application {
 
     private static Stage stage;
+    private final int WIDTH = 640;
+    private final int HEIGHT = 480;
+    private final int MIN_WIDTH = 530;
+    private final int MIN_HEIGHT = 350;
 
     public static Stage getStage() {
         return stage;
     }
 
-    @Override
-    public void start(Stage stage) {
-        if (!Main.launchedFromMain) {
-            System.err.println("Je moet deze applicatie opstarten vanuit de Main-class, niet de MainApplication-class!");
-            System.exit(1337);
-
-            return;
-        }
-
-        MainApplication.stage = stage;
-        ArtistView.openEditPanel = true; //Show / Hides the edit panel on the Artist View.
-        ArtistView artistView = new ArtistView();
-        AlbumView.openEditPanel = true;  //Show / Hides the edit panel on the Album View.
-        AlbumView albumView = new AlbumView();
-
-        Scene scene = new Scene(artistView.getRoot());
+    public static void switchController(Controller controller) {
+        Scene scene = new Scene(controller.getView().getRoot());
         //Stylesheet from https://github.com/joffrey-bion/javafx-themes
-        scene.getStylesheets().add(getClass().getResource("default.css").toString());
-//        stage.initStyle(StageStyle.UNDECORATED);
-        stage.setTitle(String.format("Practicumopdracht OOP2 - %s", Main.studentNaam));
-        stage.setWidth(640);
-        stage.setHeight(480);
-        //set the minimal dimensions the program supports
-        stage.setMinWidth(530);
-        stage.setMinHeight(350);
+        scene.getStylesheets().add("practicumopdracht/default.css");
         stage.setScene(scene);
-        stage.show();
-
     }
 
     public static Image loadImage(String fileUrl) {
@@ -66,5 +49,35 @@ public class MainApplication extends Application {
 
         }
         return null;
+    }
+
+    @Override
+    public void start(Stage stage) {
+        if (!Main.launchedFromMain) {
+            System.err.println("Je moet deze applicatie opstarten vanuit de Main-class, niet de MainApplication-class!");
+            System.exit(1337);
+
+            return;
+        }
+        MainApplication.stage = stage;
+
+        ArtistController artistController = new ArtistController();
+
+        System.out.println(getClass().getResource("default.css"));
+//        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setTitle(String.format("Practicumopdracht OOP2 - %s", Main.studentNaam));
+        stage.setWidth(WIDTH);
+        stage.setHeight(HEIGHT);
+        //set the minimal dimensions the program supports
+        stage.setMinWidth(MIN_WIDTH);
+        stage.setMinHeight(MIN_HEIGHT);
+        MainApplication.switchController(artistController);
+        stage.show();
+    }
+
+    public static void showAlert(String text){
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setContentText(text);
+        a.show();
     }
 }

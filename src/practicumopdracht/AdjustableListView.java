@@ -21,6 +21,13 @@ public class AdjustableListView extends VBox {
     private Button addButton;
     private Button removeButton;
 
+    public Button getAddButton() {
+        return addButton;
+    }
+
+    public Button getRemoveButton() {
+        return removeButton;
+    }
 
     public AdjustableListView(String listTitle, String addButtonText, String removeButtonText) {
         setMinWidth(200);
@@ -42,9 +49,9 @@ public class AdjustableListView extends VBox {
         getChildren().add(listView);
         //Add button row
         buttonHBox = new HBox();
-        addButton = new Button("Add");
+        addButton = new Button(addButtonText);
         buttonHBox.getChildren().add(addButton);
-        removeButton = new Button("Remove");
+        removeButton = new Button(removeButtonText);
         buttonHBox.getChildren().add(removeButton);
         getChildren().add(buttonHBox);
         //Determine how the buttons should be scaled.
