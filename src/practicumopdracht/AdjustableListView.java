@@ -28,6 +28,13 @@ public class AdjustableListView extends VBox {
         //Add title label.
         titleLabel = new Label(listTitle);
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
+        //Allows the window to be dragged by the label as well.
+        titleLabel.setOnMousePressed(pressEvent -> {
+            titleLabel.setOnMouseDragged(dragEvent -> {
+                MainApplication.getStage().setX(dragEvent.getScreenX() - pressEvent.getSceneX());
+                MainApplication.getStage().setY(dragEvent.getScreenY() - pressEvent.getSceneY());
+            });
+        });
         getChildren().add(titleLabel);
         //add the list view
         listView = new ListView();

@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
 import java.io.FileInputStream;
@@ -52,7 +53,7 @@ public class AlbumView extends View {
         VBox.setVgrow(rootPane, Priority.ALWAYS);
 
         BackgroundImage bgImage = new BackgroundImage(
-                loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"
+                MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"
                         , 24, 24, true, true),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -64,6 +65,16 @@ public class AlbumView extends View {
         artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
         rootHorizontalBox.getChildren().add(rootPane);
         rootPane.getChildren().add(artistDisplayContentPane);
+
+        ComboBox albumBox = new ComboBox();
+        albumBox.getItems().addAll(ArtistView.TEST_ARTIST_NAMES);
+        artistListBox.addToTop(albumBox);
+        albumBox.setMaxWidth(999);
+
+        Button backButton = new Button("Back to Artist");
+        backButton.setMaxWidth(999);
+        artistListBox.addToTop(backButton);
+
         if (openEditPanel)
             initArtistEditView();
         else
@@ -73,23 +84,41 @@ public class AlbumView extends View {
     private void initArtistEditView() {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setStyle("-fx-background-color: cornflowerblue;");
         artistDisplayContentPane.getChildren().add(gridPane);
 
         StackPane pane = new StackPane();
         pane.setMinSize(100,100);
-        pane.setStyle("-fx-background-color: red;");
         gridPane.getChildren().add(pane);
 
+        VBox groupBox = new VBox();
+        groupBox.setSpacing(5);
+        pane.getChildren().add(groupBox);
         VBox artistNameHBox =  UIComponents.createTextfieldGroup("Album name:","Type album name here...");
-        pane.getChildren().add(artistNameHBox);
+        groupBox.getChildren().add(artistNameHBox);
+
+        VBox wikilinkTextArea = UIComponents.createTextAreaGroup("Wiki Link:","Type wiki URL here...");
+        groupBox.getChildren().add(wikilinkTextArea);
+
+        VBox datePicker =  UIComponents.createDatepickerGroup("Release date:");
+        groupBox.getChildren().add(datePicker);
+
+        VBox intSelector =  UIComponents.createIntSelectorGroup("Rating:");
+        groupBox.getChildren().add(intSelector);
+
+        Button changeImageButton = new Button("Change Album Image");
+        changeImageButton.setMaxWidth(300);
+        groupBox.getChildren().add(changeImageButton);
+
+        //Buttons
+        HBox editButtonHBox = UIComponents.createEditButtonGroup();
+        groupBox.getChildren().add(editButtonHBox);
     }
 
     private void initArtistContentView() {
         VBox albumVBox = new VBox();
         albumVBox.setAlignment(Pos.CENTER);
         artistDisplayContentPane.getChildren().add(albumVBox);
-        ImageView imageView = new ImageView(loadImage("src/practicumopdracht/content/arcticmonkeys_album.jpg", 300, 300, true, true));
+        ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys_album.jpg", 300, 300, true, true));
         imageView.setPreserveRatio(true);
 
         StackPane pane = new StackPane();
@@ -145,25 +174,6 @@ public class AlbumView extends View {
         contentVBox.setAlignment(Pos.BOTTOM_CENTER);
         artistDisplayContentPane.getChildren().add(contentVBox);
 
-        ComboBox albumBox = new ComboBox();
-        albumBox.getItems().addAll(ArtistView.TEST_ARTIST_NAMES);
-        artistListBox.addToTop(albumBox);
-        albumBox.setMaxWidth(999);
-
-        Button backButton = new Button("Back to Artist");
-        backButton.setMaxWidth(999);
-        artistListBox.addToTop(backButton);
-
-    }
-
-    private Image loadImage(String fileUrl, int requestedWidth, int requestedHeight, boolean preserveRatio, boolean smooth) {
-        try {
-            FileInputStream input = new FileInputStream(fileUrl);
-            return new Image(input, requestedWidth, requestedHeight, preserveRatio, smooth);
-        } catch (FileNotFoundException e) {
-
-        }
-        return null;
     }
 
     @Override

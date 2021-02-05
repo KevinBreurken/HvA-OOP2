@@ -9,6 +9,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.Main;
+import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
 import java.io.FileInputStream;
@@ -27,24 +29,17 @@ public class ArtistView extends View {
     private StackPane artistDisplayContentPane;
     private HBox rootHorizontalBox;
     //Artist List
-    private VBox artistListVBox;
     private AdjustableListView artistListBox;
-    private ListView artistListView;
-    private HBox artistListButtonHBox;
 
     public ArtistView() {
         this.rootHorizontalBox = new HBox();
-        this.artistListView = new ListView();
         this.artistListBox = new AdjustableListView("Artist", "Add", "Remove");
         this.artistListBox.addTestNames(TEST_ARTIST_NAMES);
-        this.artistListVBox = new VBox();
-        this.artistListButtonHBox = new HBox();
         initLayout();
     }
 
     @Override
     protected void initLayout() {
-
         initArtistDisplay();
 
         rootHorizontalBox.getChildren().add(artistListBox);
@@ -61,7 +56,7 @@ public class ArtistView extends View {
         VBox.setVgrow(rootPane, Priority.ALWAYS);
 
         BackgroundImage bgImage = new BackgroundImage(
-                loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"),
+                MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -83,7 +78,7 @@ public class ArtistView extends View {
         artistDisplayContentPane.getChildren().add(contentVBox);
         contentVBox.setAlignment(Pos.CENTER);
 
-        ImageView favImage = new ImageView(loadImage("src/practicumopdracht/content/fav-on-32.png"));
+        ImageView favImage = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png"));
         favImage.setSmooth(true);
         contentVBox.getChildren().add(favImage);
         //Add / Remove Button
@@ -122,75 +117,12 @@ public class ArtistView extends View {
         contentVBox.getChildren().add(artistNameHBox);
         VBox labelNameHBox =  UIComponents.createTextfieldGroup("Label name:","Type label name here...");
         contentVBox.getChildren().add(labelNameHBox);
-        HBox favoriteHBox = createfavoriteGroup("Favorite:");
+        HBox favoriteHBox = UIComponents.createfavoriteGroup("Favorite:");
         contentVBox.getChildren().add(favoriteHBox);
 
         //Buttons
-        HBox buttonHBox = new HBox();
-        buttonHBox.setSpacing(10);
-        buttonHBox.setPadding(new Insets(20, 0, 0, 0));
-        buttonHBox.setAlignment(Pos.CENTER);
-        Button removeButton = new Button("Save");
-        buttonHBox.getChildren().add(removeButton);
-        Button saveButton = new Button("Cancel");
-        buttonHBox.getChildren().add(saveButton);
-        contentVBox.getChildren().add(buttonHBox);
-        saveButton.setMinWidth(50);
-        removeButton.setMinWidth(50);
-
-    }
-
-    private Image loadImage(String fileUrl) {
-        try {
-            FileInputStream input = new FileInputStream(fileUrl);
-            return new Image(input);
-        } catch (FileNotFoundException e) {
-
-        }
-        return null;
-    }
-
-    private VBox createTextfieldGroup(String preText, String promptText) {
-        VBox groupHBox = new VBox();
-        groupHBox.setAlignment(Pos.BASELINE_CENTER);
-        groupHBox.setPadding(new Insets(0, 0, 15, 0));
-
-        Label preTextLabel = new Label(preText);
-        preTextLabel.setWrapText(true);
-        preTextLabel.setTextAlignment(TextAlignment.RIGHT);
-        preTextLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1);");
-        preTextLabel.setPadding(new Insets(0, 10, 0, 0));
-        groupHBox.getChildren().add(preTextLabel);
-
-        TextField artistName = new TextField();
-        artistName.setAlignment(Pos.CENTER);
-        artistName.setPromptText(promptText);
-        artistName.setPrefWidth(140);
-        artistName.setMaxWidth(140);
-        groupHBox.getChildren().add(artistName);
-        return groupHBox;
-    }
-
-    private HBox createfavoriteGroup(String preText) {
-        HBox favoriteGroupHBox = new HBox();
-        favoriteGroupHBox.setAlignment(Pos.BASELINE_CENTER);
-        favoriteGroupHBox.setPadding(new Insets(10, 0, 0, 50));
-
-        Label preTextLabel = new Label(preText);
-        preTextLabel.setPadding(new Insets(0, 1, 0, 0));
-        preTextLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1);");
-
-        preTextLabel.setTextAlignment(TextAlignment.RIGHT);
-        favoriteGroupHBox.getChildren().add(preTextLabel);
-
-        CheckBox favoriteCheckbox = new CheckBox();
-        favoriteCheckbox.setAlignment(Pos.CENTER_LEFT);
-        favoriteCheckbox.setPadding(new Insets(0, 0, 0, 10));
-        favoriteCheckbox.setPrefWidth(80);
-        favoriteCheckbox.setMaxWidth(80);
-        favoriteGroupHBox.getChildren().add(favoriteCheckbox);
-
-        return favoriteGroupHBox;
+        HBox editButtonHBox = UIComponents.createEditButtonGroup();
+        contentVBox.getChildren().add(editButtonHBox);
     }
 
     @Override

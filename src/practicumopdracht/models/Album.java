@@ -1,5 +1,9 @@
 package practicumopdracht.models;
 
+import javafx.scene.image.Image;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 
 /**
@@ -29,4 +33,5 @@ public class Album {
                 ", rating=" + rating +
                 '}';
     }
+
 }
