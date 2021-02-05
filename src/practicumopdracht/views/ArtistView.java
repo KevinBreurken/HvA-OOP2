@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
@@ -67,13 +68,16 @@ public class ArtistView extends View {
     @Override
     protected void initLayout() {
         initArtistDisplay();
-
-        Pane pane = new Pane();
-        pane.setMinHeight(20);
-        rootVerticalBox.getChildren().add(pane);
+        VBox.setVgrow(rootVerticalBox, Priority.ALWAYS);
+        rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
+        rootVerticalBox.getChildren().add(new CustomWindowHandle());
         rootVerticalBox.getChildren().add(rootHorizontalBox);
+        Pane bottomEdge = new Pane();
+        bottomEdge.setMinHeight(10);
+        rootVerticalBox.getChildren().add(bottomEdge);
         rootHorizontalBox.getChildren().add(adjustableListBox);
         rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
+
     }
 
     private void initArtistDisplay() {
