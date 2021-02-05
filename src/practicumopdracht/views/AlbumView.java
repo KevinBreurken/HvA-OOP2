@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
@@ -27,19 +28,38 @@ public class AlbumView extends View {
     private Button editAlbumButton;
     private Button wikiButton;
 
+    private Button albumEditApplyButton;
+    private Button albumEditCancelButton;
+    private Button changeImageButton;
+    private Button ratingDecreaseButton;
+
+    private Button ratingIncreaseButton;
 
     //Album Edit
     private GridPane gridPane;
     //Album List
     private AdjustableListView adjustableListBox;
-
-
+    private VBox rootVerticalBox;
+    private VBox contentVBox;
 
     public AlbumView() {
+        this.rootVerticalBox = new VBox();
         this.rootHorizontalBox = new HBox();
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
         this.adjustableListBox.addTestNames(TEST_ALBUM_NAMES);
         initLayout();
+    }
+
+    public Button getRatingDecreaseButton() {
+        return ratingDecreaseButton;
+    }
+
+    public Button getRatingIncreaseButton() {
+        return ratingIncreaseButton;
+    }
+
+    public Button getChangeImageButton() {
+        return changeImageButton;
     }
 
     public Button getEditAlbumButton() {
@@ -58,12 +78,27 @@ public class AlbumView extends View {
         return backToArtistButton;
     }
 
+    public Button getAlbumEditApplyButton() {
+        return albumEditApplyButton;
+    }
+
+    public Button getAlbumEditCancelButton() {
+        return albumEditCancelButton;
+    }
+
     @Override
     protected void initLayout() {
         initArtistDisplay();
-
+        VBox.setVgrow(rootVerticalBox, Priority.ALWAYS);
+        rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
+        rootVerticalBox.getChildren().add(new CustomWindowHandle());
+        rootVerticalBox.getChildren().add(rootHorizontalBox);
+        Pane bottomEdge = new Pane();
+        bottomEdge.setMinHeight(10);
+        rootVerticalBox.getChildren().add(bottomEdge);
         rootHorizontalBox.getChildren().add(adjustableListBox);
         rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
+        
     }
 
     private void initArtistDisplay() {
@@ -91,11 +126,6 @@ public class AlbumView extends View {
         albumBox.getItems().addAll(ArtistView.TEST_ARTIST_NAMES);
         adjustableListBox.addToTop(albumBox);
         albumBox.setMaxWidth(999);
-
-        backToArtistButton = new Button("Back to Artist");
-        backToArtistButton.setMaxWidth(999);
-        adjustableListBox.addToTop(backToArtistButton);
-
 
         initArtistEditView();
         initArtistContentView();
@@ -125,13 +155,17 @@ public class AlbumView extends View {
 
         VBox intSelector = UIComponents.createIntSelectorGroup("Rating:");
         groupBox.getChildren().add(intSelector);
+        ratingDecreaseButton = (Button) intSelector.getChildren().get(0);
+        ratingIncreaseButton = (Button) intSelector.getChildren().get(2);
 
-        Button changeImageButton = new Button("Change Album Image");
+        changeImageButton = new Button("Change Album Image");
         changeImageButton.setMaxWidth(300);
         groupBox.getChildren().add(changeImageButton);
 
         //Buttons
         HBox editButtonHBox = UIComponents.createEditButtonGroup();
+        albumEditApplyButton = (Button) editButtonHBox.getChildren().get(0);
+        albumEditCancelButton = (Button) editButtonHBox.getChildren().get(1);
         groupBox.getChildren().add(editButtonHBox);
         gridPane.setVisible(false);
     }
@@ -148,7 +182,7 @@ public class AlbumView extends View {
         StackPane.setAlignment(imageView, Pos.CENTER);
 
         albumVBox.getChildren().add(pane);
-        VBox contentVBox = new VBox();
+        contentVBox = new VBox();
         contentVBox.setSpacing(15);
         contentVBox.setPadding(new Insets(0, 0, 10, 0));
         Label albumTitleLabel = new Label("Tranquility Base Hotel & Casino");
@@ -193,19 +227,29 @@ public class AlbumView extends View {
         editAlbumButton.setMinWidth(50);
         wikiButton.setMinWidth(50);
 
+        backToArtistButton = new Button("");
+        backToArtistButton.setMinSize(50, 50);
+        rootPane.setAlignment(Pos.TOP_LEFT);
+        rootPane.getChildren().add(backToArtistButton);
+        backToArtistButton.setStyle("-fx-background-color: transparent;");
+        backToArtistButton.setPadding(new Insets(0, 0, 0, 10));
+        backToArtistButton.setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/navigation/back.png")));
+
         contentVBox.setAlignment(Pos.BOTTOM_CENTER);
-        artistDisplayContentPane.getChildren().add(contentVBox);
         albumVBox.setVisible(false);
+        artistDisplayContentPane.getChildren().add(contentVBox);
+
     }
 
     @Override
     public Parent getRoot() {
-        return rootHorizontalBox;
+        return rootVerticalBox;
     }
 
     @Override
     public void setState(VIEW_STATE state) {
         albumVBox.setVisible(state == VIEW_STATE.VIEW);
+        contentVBox.setVisible(state == VIEW_STATE.VIEW);
         gridPane.setVisible(state == VIEW_STATE.EDIT);
     }
 }

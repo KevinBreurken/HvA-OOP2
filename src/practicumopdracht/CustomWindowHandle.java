@@ -21,12 +21,10 @@ public class CustomWindowHandle extends HBox {
                 MainApplication.getStage().setY(dragEvent.getScreenY() - pressEvent.getSceneY());
             });
         });
-        System.out.println(MainApplication.title);
         Label titleLabel = new Label(MainApplication.title);
         setAlignment(Pos.CENTER_LEFT);
         titleLabel.setPadding(new Insets(10, 10, 0, 0));
-        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
-//        getChildren().add(titleLabel);
+        titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15; ");
 
         setPadding(new Insets(0, 0, 10, 10));
 

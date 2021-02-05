@@ -32,6 +32,7 @@ public class MainApplication extends Application {
         //Stylesheet from https://github.com/joffrey-bion/javafx-themes
         scene.getStylesheets().add("practicumopdracht/default.css");
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
     }
 
     public static Image loadImage(String fileUrl) {
@@ -76,7 +77,6 @@ public class MainApplication extends Application {
         stage.setMinWidth(MIN_WIDTH);
         stage.setMinHeight(MIN_HEIGHT);
         MainApplication.switchController(artistController);
-        ResizeHelper.addResizeListener(stage);
         stage.show();
     }
 
@@ -84,9 +84,5 @@ public class MainApplication extends Application {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setContentText(text);
         a.show();
-    }
-
-    public static void getTitle(){
-
     }
 }
