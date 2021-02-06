@@ -29,7 +29,7 @@ public class Album {
         StringBuilder sb = new StringBuilder();
         sb.append("Album:\n")
                 .append(String.format("\tName: %s\n", name))
-                .append(String.format("\tSales: %d\n", sales))
+                .append(String.format("\tSales: %f\n", sales))
                 .append(String.format("\tWiki: %s\n",wikiLink))
                 .append(String.format("\tRelease date: %s\n",releaseDate.toString()))
                 .append(String.format("\tRating: (%d/%d)\n",rating,MAX_RATING));

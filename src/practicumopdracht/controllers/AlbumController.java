@@ -11,10 +11,11 @@ import practicumopdracht.views.AlbumView;
 import practicumopdracht.views.View;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class AlbumController extends Controller {
 
-    private Album album;
+    private ArrayList<Album> albums;
     private AlbumView view;
 
     public AlbumController() {
@@ -29,6 +30,10 @@ public class AlbumController extends Controller {
         view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
         view.getAdjustableListBox().getAddButton().setOnAction(event -> handleListAddClick());
         view.getAdjustableListBox().getRemoveButton().setOnAction(event -> handleListRemoveClick());
+
+        albums = new ArrayList<>();
+        if(albums.size() == 0)
+            view.setState(View.VIEW_STATE.EDIT);
     }
 
     private void validateEdit() {
@@ -98,13 +103,23 @@ public class AlbumController extends Controller {
             alert.setContentText(newAlbum.toString());
             alert.show();
             view.setState(View.VIEW_STATE.VIEW);
+            albums.add(newAlbum);
         } else {
             messageBuilder.createAlert();
         }
     }
 
+    private void clearEditFields(){
+        view.getNameInputField().setText("");
+        view.getAlbumSalesTextField().setText("");
+        view.getWikiLinkInputField().setText("");
+        view.getDateInputField().setValue(null);
+        view.getRatingTextField().setText("0");
+    }
+
+
     private void handleListAddClick() {
-        MainApplication.showAlert("List add click");
+        clearEditFields();
     }
 
     private void handleListRemoveClick() {
@@ -116,6 +131,7 @@ public class AlbumController extends Controller {
     }
 
     private void handleEditAlbumClick() {
+        clearEditFields();
         view.setState(View.VIEW_STATE.EDIT);
     }
 
@@ -128,7 +144,8 @@ public class AlbumController extends Controller {
     }
 
     private void handleAlbumEditCancelClick() {
-        view.setState(View.VIEW_STATE.VIEW);
+        if (albums.size() != 0)
+            view.setState(View.VIEW_STATE.VIEW);
     }
 
     private void handleChangePictureClick() {
