@@ -188,6 +188,7 @@ public class AlbumView extends View {
         HBox rootSelector = (HBox) intSelector.getChildren().get(1);
         ratingDecreaseButton = (Button) rootSelector.getChildren().get(0);
         ratingTextField = (TextField) rootSelector.getChildren().get(1);
+        System.out.println(ratingTextField.getText());
         ratingIncreaseButton = (Button) rootSelector.getChildren().get(2);
 
         changeImageButton = new Button("Change Album Image");

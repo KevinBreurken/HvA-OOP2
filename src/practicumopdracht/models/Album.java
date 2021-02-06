@@ -1,9 +1,5 @@
 package practicumopdracht.models;
 
-import javafx.scene.image.Image;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
 
 /**
@@ -30,12 +26,15 @@ public class Album {
 
     @Override
     public String toString() {
-        return "Album{" +
-                "releaseDate=" + releaseDate +
-                ", name='" + name + '\'' +
-                ", sales=" + sales +
-                ", rating=" + rating +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Album:\n")
+                .append(String.format("\tName: %s\n", name))
+                .append(String.format("\tSales: %d\n", rating))
+                .append(String.format("\tWiki: %s\n",wikiLink))
+                .append(String.format("\tRelease date: %s\n",releaseDate.toString()))
+                .append(String.format("\tRating: (%d/%d)\n",rating,MAX_RATING));
+
+        return sb.toString();
     }
 
 }

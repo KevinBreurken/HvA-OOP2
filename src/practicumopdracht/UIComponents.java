@@ -90,7 +90,7 @@ public class UIComponents {
         removeButton.setMinSize(30,10);
         removeButton.setMaxHeight(20);
         //Create the rating value display.
-        TextField valueLabel = new TextField("4");
+        TextField valueLabel = new TextField("0");
         valueLabel.setEffect(createDropShadowEffect());
         valueLabel.setMaxWidth(30);
 //        valueLabel.setWrapText(true);

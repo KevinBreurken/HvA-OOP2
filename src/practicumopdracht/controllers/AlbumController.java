@@ -1,11 +1,12 @@
 package practicumopdracht.controllers;
 
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.stage.StageStyle;
+import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import practicumopdracht.MainApplication;
+import practicumopdracht.PopupMessageBuilder;
 import practicumopdracht.models.Album;
-import practicumopdracht.vendors.ResizeHelper;
 import practicumopdracht.views.AlbumView;
 import practicumopdracht.views.View;
 
@@ -31,13 +32,16 @@ public class AlbumController extends Controller {
     }
 
     private void validateEdit() {
-        ErrorMessageBuilder messageBuilder = new ErrorMessageBuilder();
+        PopupMessageBuilder messageBuilder = new PopupMessageBuilder();
         //Album Name
         TextField nameField = view.getNameInputField();
         String albumName = nameField.getText().toString();
         boolean albumNameValid = (albumName.length() > 0);
         if (albumNameValid) nameField.getStyleClass().removeAll("error");
-        else nameField.getStyleClass().add("error");
+        else {
+            nameField.getStyleClass().add("error");
+            messageBuilder.append("Name: No name entered.");
+        }
 
         //Sales amount
         TextField salesField = view.getAlbumSalesTextField();
@@ -48,7 +52,7 @@ public class AlbumController extends Controller {
         } catch (Exception e) {
             salesCount = -1;
             salesField.getStyleClass().add("error");
-            messageBuilder.append("Salesfield is incorrect.");
+            messageBuilder.append("Sales: Value is incorrect.");
         }
 
         //Wiki link:
@@ -56,20 +60,27 @@ public class AlbumController extends Controller {
         String wikiLink = textArea.getText().toString();
         boolean wikiLinkValid = (wikiLink.contains("wiki") && !wikiLink.contains(" "));
         if (wikiLinkValid) textArea.getStyleClass().removeAll("error");
-        else textArea.getStyleClass().add("error");
+        else {
+            textArea.getStyleClass().add("error");
+            messageBuilder.append("Wiki: Incorrect wiki link.");
+        }
+        ;
 
         //Release date:
         DatePicker datePicker = view.getDateInputField();
         LocalDate pickedDate = datePicker.getValue();
         boolean dateValid = (pickedDate != null) && pickedDate.isBefore(LocalDate.now());
         if (dateValid) datePicker.getStyleClass().removeAll("error");
-        else datePicker.getStyleClass().add("error");
+        else {
+            datePicker.getStyleClass().add("error");
+            messageBuilder.append("Date: Incorrect date.");
+        }
 
         //Rating value
         TextField ratingField = view.getRatingTextField();
         int ratingCount;
         try {
-            ratingCount = Integer.parseInt(salesField.getText());
+            ratingCount = Integer.parseInt(ratingField.getText());
             if (ratingCount < Album.MIN_RATING || ratingCount > Album.MAX_RATING) {
                 throw new Exception();
             } else {
@@ -78,11 +89,14 @@ public class AlbumController extends Controller {
         } catch (Exception e) {
             ratingCount = -1;
             ratingField.getStyleClass().add("error");
-            messageBuilder.append("Rating is incorrect.");
+            messageBuilder.append("Rating: Incorrect value. (0/5)");
         }
 
         if (messageBuilder.getTotalAppendCount() == 0) {
             Album newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink);
+            Alert alert = PopupMessageBuilder.createAlertTemplate();
+            alert.setContentText(newAlbum.toString());
+            alert.show();
         } else {
             messageBuilder.createAlert();
         }
@@ -122,56 +136,36 @@ public class AlbumController extends Controller {
     }
 
     private void handleIncreaseRatingClick() {
-        MainApplication.showAlert("Increase value.");
+        TextField ratingField = view.getRatingTextField();
+        int ratingCount;
+        try {
+            ratingCount = Integer.parseInt(ratingField.getText());
+            if (ratingCount < Album.MAX_RATING) {
+                ratingCount++;
+            }
+            ratingField.setText("" + ratingCount);
+        } catch (Exception e) {
+            ratingField.setText("0");
+        }
     }
 
     private void handleDecreaseRatingClick() {
-        MainApplication.showAlert("Decrease value.");
+        TextField ratingField = view.getRatingTextField();
+        int ratingCount;
+        try {
+            ratingCount = Integer.parseInt(ratingField.getText());
+            if (ratingCount > Album.MIN_RATING) {
+                ratingCount--;
+            }
+            ratingField.setText("" + ratingCount);
+        } catch (Exception e) {
+            ratingField.setText("0");
+        }
     }
 
     @Override
     public View getView() {
         return view;
-    }
-
-    public class ErrorMessageBuilder {
-
-        private StringBuilder sb;
-        private int totalAppendCount = 0;
-
-        public ErrorMessageBuilder() {
-            this.sb = new StringBuilder();
-            sb.append("Errors found: \n\n");
-        }
-
-        public void append(String text) {
-            sb.append(text + "\n");
-            totalAppendCount++;
-        }
-
-        public int getTotalAppendCount() {
-            return totalAppendCount;
-        }
-
-        public void createAlert(){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            DialogPane dialogPane = alert.getDialogPane();
-            alert.getDialogPane().setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/error.png")));
-            dialogPane.getChildren().get(0).setOnMousePressed(pressEvent -> {
-                dialogPane.getChildren().get(0).setOnMouseDragged(dragEvent -> {
-                    alert.setX(dragEvent.getScreenX() - pressEvent.getSceneX());
-                    alert.setY(dragEvent.getScreenY() - pressEvent.getSceneY());
-                });
-            });
-            alert.initStyle(StageStyle.UNDECORATED);
-            dialogPane.getStylesheets().add("practicumopdracht/default.css");
-            alert.setContentText(sb.toString());
-            alert.show();
-        }
-        @Override
-        public String toString() {
-            return sb.toString();
-        }
     }
 
 }
