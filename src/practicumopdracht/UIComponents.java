@@ -14,7 +14,7 @@ import javafx.scene.text.TextAlignment;
  */
 public class UIComponents {
 
-    private static DropShadow createDropShadowEffect(){
+    public static DropShadow createDropShadowEffect(){
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5.0);
         dropShadow.setOffsetX(3.0);
@@ -22,6 +22,7 @@ public class UIComponents {
         dropShadow.setColor(Color.color(0, 0, 0));
         return dropShadow;
     }
+
     private static VBox createComponentContainer(String preText,Insets insets){
         VBox componentVBox = new VBox();
         componentVBox.setAlignment(Pos.BASELINE_CENTER);

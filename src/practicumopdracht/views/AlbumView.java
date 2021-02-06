@@ -98,7 +98,7 @@ public class AlbumView extends View {
         rootVerticalBox.getChildren().add(bottomEdge);
         rootHorizontalBox.getChildren().add(adjustableListBox);
         rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
-        
+
     }
 
     private void initArtistDisplay() {
@@ -155,8 +155,10 @@ public class AlbumView extends View {
 
         VBox intSelector = UIComponents.createIntSelectorGroup("Rating:");
         groupBox.getChildren().add(intSelector);
-        ratingDecreaseButton = (Button) intSelector.getChildren().get(0);
-        ratingIncreaseButton = (Button) intSelector.getChildren().get(2);
+
+        HBox rootSelector = (HBox) intSelector.getChildren().get(1);
+        ratingDecreaseButton = (Button) rootSelector.getChildren().get(0);
+        ratingIncreaseButton = (Button) rootSelector.getChildren().get(2);
 
         changeImageButton = new Button("Change Album Image");
         changeImageButton.setMaxWidth(300);
@@ -186,6 +188,7 @@ public class AlbumView extends View {
         contentVBox.setSpacing(15);
         contentVBox.setPadding(new Insets(0, 0, 10, 0));
         Label albumTitleLabel = new Label("Tranquility Base Hotel & Casino");
+        albumTitleLabel.setEffect(UIComponents.createDropShadowEffect());
         albumTitleLabel.setWrapText(true);
         albumTitleLabel.setMaxWidth(300);
         albumTitleLabel.setTextAlignment(TextAlignment.CENTER);
@@ -194,6 +197,7 @@ public class AlbumView extends View {
         contentVBox.getChildren().add(albumTitleLabel);
 
         Label dateLabel = new Label("12 / 6 / 2018");
+        dateLabel.setEffect(UIComponents.createDropShadowEffect());
         dateLabel.setWrapText(true);
         dateLabel.setTextAlignment(TextAlignment.CENTER);
         dateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
@@ -201,6 +205,7 @@ public class AlbumView extends View {
         contentVBox.getChildren().add(dateLabel);
 
         Label salesLabel = new Label("Sales: 257382");
+        salesLabel.setEffect(UIComponents.createDropShadowEffect());
         salesLabel.setWrapText(true);
         salesLabel.setTextAlignment(TextAlignment.CENTER);
         salesLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
@@ -208,6 +213,7 @@ public class AlbumView extends View {
         contentVBox.getChildren().add(salesLabel);
 
         Label ratingLabel = new Label("Rating: (4/5)");
+        ratingLabel.setEffect(UIComponents.createDropShadowEffect());
         ratingLabel.setWrapText(true);
         ratingLabel.setTextAlignment(TextAlignment.CENTER);
         ratingLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
