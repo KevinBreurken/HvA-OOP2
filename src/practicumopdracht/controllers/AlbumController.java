@@ -97,6 +97,7 @@ public class AlbumController extends Controller {
             Alert alert = PopupMessageBuilder.createAlertTemplate();
             alert.setContentText(newAlbum.toString());
             alert.show();
+            view.setState(View.VIEW_STATE.VIEW);
         } else {
             messageBuilder.createAlert();
         }
@@ -124,7 +125,6 @@ public class AlbumController extends Controller {
 
     private void handleAlbumEditApplyClick() {
         validateEdit();
-//        view.setState(View.VIEW_STATE.VIEW);
     }
 
     private void handleAlbumEditCancelClick() {
@@ -137,12 +137,11 @@ public class AlbumController extends Controller {
 
     private void handleIncreaseRatingClick() {
         TextField ratingField = view.getRatingTextField();
-        int ratingCount;
         try {
-            ratingCount = Integer.parseInt(ratingField.getText());
-            if (ratingCount < Album.MAX_RATING) {
+            int ratingCount = Integer.parseInt(ratingField.getText());
+            if (ratingCount < Album.MAX_RATING)
                 ratingCount++;
-            }
+
             ratingField.setText("" + ratingCount);
         } catch (Exception e) {
             ratingField.setText("0");
@@ -151,12 +150,11 @@ public class AlbumController extends Controller {
 
     private void handleDecreaseRatingClick() {
         TextField ratingField = view.getRatingTextField();
-        int ratingCount;
         try {
-            ratingCount = Integer.parseInt(ratingField.getText());
-            if (ratingCount > Album.MIN_RATING) {
+            int ratingCount = Integer.parseInt(ratingField.getText());
+            if (ratingCount > Album.MIN_RATING)
                 ratingCount--;
-            }
+
             ratingField.setText("" + ratingCount);
         } catch (Exception e) {
             ratingField.setText("0");

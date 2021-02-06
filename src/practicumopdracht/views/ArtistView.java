@@ -4,7 +4,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -15,15 +17,10 @@ import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
+import java.awt.*;
+
 public class ArtistView extends View {
 
-    public final static String[] TEST_ARTIST_NAMES = new String[]{
-            "Anamanaguchi", "Periphery", "Haywyre", "Maduk", "Chase & Status", "Darren Korb",
-            "Paramore", "Spiritbox", "Arctic Monkeys", "The Kooks", "Minus the Bear",
-            "Infected Mushrooms", "Jamiroquai", "David Maxim Micic", "Iron Maiden", "Tesseract",
-            "Dua Lipa", "Dance Gavin Dance", "Carpenter Brut", "Crazy Astronaut"
-    };
-    public static boolean openEditPanel = false;
     //Artist Content
     private VBox artistContentBox;
     private StackPane artistDisplayContentPane;
@@ -32,6 +29,10 @@ public class ArtistView extends View {
     private VBox artistEditBox;
     private Button artistEditApplyButton;
     private Button artistEditCancelButton;
+    //Artist Edit - Input
+    private CheckBox favoriteCheckBox;
+    private TextField artistNameTextField;
+    private TextField labelNameTextField;
 
     //Artist List
     private AdjustableListView adjustableListBox;
@@ -43,7 +44,6 @@ public class ArtistView extends View {
         this.rootVerticalBox = new VBox();
         this.rootHorizontalBox = new HBox();
         this.adjustableListBox = new AdjustableListView("Artist", "Add", "Remove");
-        this.adjustableListBox.addTestNames(TEST_ARTIST_NAMES);
         initLayout();
     }
 
@@ -65,6 +65,18 @@ public class ArtistView extends View {
 
     public AdjustableListView getAdjustableListBox() {
         return adjustableListBox;
+    }
+
+    public CheckBox getFavoriteCheckBox() {
+        return favoriteCheckBox;
+    }
+
+    public TextField getArtistNameTextField() {
+        return artistNameTextField;
+    }
+
+    public TextField getLabelNameTextField() {
+        return labelNameTextField;
     }
 
     @Override
@@ -152,10 +164,13 @@ public class ArtistView extends View {
         artistDisplayContentPane.getChildren().add(artistEditBox);
         artistEditBox.setAlignment(Pos.CENTER);
         VBox artistNameHBox = UIComponents.createTextfieldGroup("Artist name:", "Type artist name here...");
+        artistNameTextField = (TextField) artistNameHBox.getChildren().get(1);
         artistEditBox.getChildren().add(artistNameHBox);
         VBox labelNameHBox = UIComponents.createTextfieldGroup("Label name:", "Type label name here...");
+        labelNameTextField = (TextField) labelNameHBox.getChildren().get(1);
         artistEditBox.getChildren().add(labelNameHBox);
         HBox favoriteHBox = UIComponents.createfavoriteGroup("Favorite:");
+        favoriteCheckBox = (CheckBox) favoriteHBox.getChildren().get(1);
         artistEditBox.getChildren().add(favoriteHBox);
 
         //Buttons

@@ -19,7 +19,14 @@ public class Artist {
         this.favorited = favorited;
     }
 
-    public void AddAlbum(Album album) {
-        albums.add(album);
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Artist:\n")
+                .append(String.format("\tName: %s\n", name))
+                .append(String.format("\tSales: %s\n",label))
+                .append(String.format("\tFavorite: %s\n", favorited));
+
+        return sb.toString();
     }
 }

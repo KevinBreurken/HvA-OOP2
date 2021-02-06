@@ -13,10 +13,7 @@ import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
 public class AlbumView extends View {
-    private final static String[] TEST_ALBUM_NAMES = new String[]{
-            "Tranquility Base Hotel & Casino", "AM", "Suck it and see", "Humbug", "Favourite worst nightmare",
-            "Whatever people say I am, that's what I'm not"
-    };
+
     private StackPane rootPane;
     private HBox rootHorizontalBox;
     private VBox rootVerticalBox;
@@ -49,7 +46,7 @@ public class AlbumView extends View {
         this.rootVerticalBox = new VBox();
         this.rootHorizontalBox = new HBox();
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
-        this.adjustableListBox.addTestNames(TEST_ALBUM_NAMES);
+
         initLayout();
     }
 
@@ -145,7 +142,6 @@ public class AlbumView extends View {
         rootPane.getChildren().add(artistDisplayContentPane);
 
         ComboBox albumBox = new ComboBox();
-        albumBox.getItems().addAll(ArtistView.TEST_ARTIST_NAMES);
         adjustableListBox.addToTop(albumBox);
         albumBox.setMaxWidth(999);
 
