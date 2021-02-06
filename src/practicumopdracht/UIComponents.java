@@ -52,11 +52,11 @@ public class UIComponents {
     }
 
     public static VBox createTextAreaGroup(String preText, String promptText) {
-        VBox groupVBox = createComponentContainer(preText,new Insets(-10, 0, 15, 0));
+        VBox groupVBox = createComponentContainer(preText,new Insets(-10, 0, 20, 0));
         groupVBox.setMaxHeight(0);
 
         TextArea textArea = new TextArea();
-        textArea.setPadding(new Insets(0,0,-10,0));
+        textArea.setPadding(new Insets(0,0,0,0));
         textArea.setPromptText(promptText);
         textArea.setPrefWidth(140);
         textArea.setMaxWidth(140);
@@ -90,10 +90,11 @@ public class UIComponents {
         removeButton.setMinSize(30,10);
         removeButton.setMaxHeight(20);
         //Create the rating value display.
-        Label valueLabel = new Label("4");
+        TextField valueLabel = new TextField("4");
         valueLabel.setEffect(createDropShadowEffect());
-        valueLabel.setWrapText(true);
-        valueLabel.setTextAlignment(TextAlignment.RIGHT);
+        valueLabel.setMaxWidth(30);
+//        valueLabel.setWrapText(true);
+        valueLabel.setAlignment(Pos.CENTER);
         valueLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1);");
         buttonHBox.getChildren().add(valueLabel);
         //Create the add button.

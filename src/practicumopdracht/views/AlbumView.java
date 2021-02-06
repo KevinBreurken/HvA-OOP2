@@ -3,9 +3,7 @@ package practicumopdracht.views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
@@ -20,27 +18,32 @@ public class AlbumView extends View {
             "Whatever people say I am, that's what I'm not"
     };
     private StackPane rootPane;
-    private Button backToArtistButton;
-    //Album Content
-    private VBox albumVBox;
     private HBox rootHorizontalBox;
+    private VBox rootVerticalBox;
+    //Album Content
     private StackPane artistDisplayContentPane;
+    private VBox albumVBox;
+    private Button backToArtistButton;
     private Button editAlbumButton;
     private Button wikiButton;
+    private VBox contentVBox;
 
+    //Album Edit
+    private GridPane gridPane;
     private Button albumEditApplyButton;
     private Button albumEditCancelButton;
     private Button changeImageButton;
     private Button ratingDecreaseButton;
-
     private Button ratingIncreaseButton;
+    //Album Edit Input
+    private TextField nameInputField;
+    private TextField albumSalesTextField;
+    private TextArea wikiLinkInputField;
+    private DatePicker dateInputField;
 
-    //Album Edit
-    private GridPane gridPane;
+    private TextField ratingTextField;
     //Album List
     private AdjustableListView adjustableListBox;
-    private VBox rootVerticalBox;
-    private VBox contentVBox;
 
     public AlbumView() {
         this.rootVerticalBox = new VBox();
@@ -48,6 +51,14 @@ public class AlbumView extends View {
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
         this.adjustableListBox.addTestNames(TEST_ALBUM_NAMES);
         initLayout();
+    }
+
+    public TextField getAlbumSalesTextField() {
+        return albumSalesTextField;
+    }
+
+    public TextField getRatingTextField() {
+        return ratingTextField;
     }
 
     public Button getRatingDecreaseButton() {
@@ -86,10 +97,21 @@ public class AlbumView extends View {
         return albumEditCancelButton;
     }
 
+    public TextField getNameInputField() {
+        return nameInputField;
+    }
+
+    public TextArea getWikiLinkInputField() {
+        return wikiLinkInputField;
+    }
+
+    public DatePicker getDateInputField() {
+        return dateInputField;
+    }
+
     @Override
     protected void initLayout() {
         initArtistDisplay();
-        VBox.setVgrow(rootVerticalBox, Priority.ALWAYS);
         rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
         rootVerticalBox.getChildren().add(new CustomWindowHandle());
         rootVerticalBox.getChildren().add(rootHorizontalBox);
@@ -145,12 +167,19 @@ public class AlbumView extends View {
         groupBox.setSpacing(5);
         pane.getChildren().add(groupBox);
         VBox artistNameHBox = UIComponents.createTextfieldGroup("Album name:", "Type album name here...");
+        nameInputField = (TextField) artistNameHBox.getChildren().get(1);
         groupBox.getChildren().add(artistNameHBox);
 
+        VBox albumSalesVBox = UIComponents.createTextfieldGroup("Total sales:", "Type total sales value here...");
+        albumSalesTextField = (TextField) albumSalesVBox.getChildren().get(1);
+        groupBox.getChildren().add(albumSalesVBox);
+
         VBox wikilinkTextArea = UIComponents.createTextAreaGroup("Wiki Link:", "Type wiki URL here...");
+        wikiLinkInputField = (TextArea) wikilinkTextArea.getChildren().get(1);
         groupBox.getChildren().add(wikilinkTextArea);
 
         VBox datePicker = UIComponents.createDatepickerGroup("Release date:");
+        dateInputField = (DatePicker) datePicker.getChildren().get(1);
         groupBox.getChildren().add(datePicker);
 
         VBox intSelector = UIComponents.createIntSelectorGroup("Rating:");
@@ -158,6 +187,7 @@ public class AlbumView extends View {
 
         HBox rootSelector = (HBox) intSelector.getChildren().get(1);
         ratingDecreaseButton = (Button) rootSelector.getChildren().get(0);
+        ratingTextField = (TextField) rootSelector.getChildren().get(1);
         ratingIncreaseButton = (Button) rootSelector.getChildren().get(2);
 
         changeImageButton = new Button("Change Album Image");

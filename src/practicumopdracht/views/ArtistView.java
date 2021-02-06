@@ -5,8 +5,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
@@ -68,6 +70,7 @@ public class ArtistView extends View {
     @Override
     protected void initLayout() {
         initArtistDisplay();
+
         VBox.setVgrow(rootVerticalBox, Priority.ALWAYS);
         rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
         rootVerticalBox.getChildren().add(new CustomWindowHandle());

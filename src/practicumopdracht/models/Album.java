@@ -10,6 +10,10 @@ import java.time.LocalDate;
  * Model for containing data related to an Album.
  */
 public class Album {
+
+    public static final int MIN_RATING = 0;
+    public static final int MAX_RATING = 5;
+
     private LocalDate releaseDate;
     private String name;
     private String wikiLink;

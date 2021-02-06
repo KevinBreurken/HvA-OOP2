@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import practicumopdracht.controllers.ArtistController;
@@ -21,7 +22,7 @@ public class MainApplication extends Application {
     private final int WIDTH = 640;
     private final int HEIGHT = 480;
     private final int MIN_WIDTH = 530;
-    private final int MIN_HEIGHT = 350;
+    private final int MIN_HEIGHT = 450;
 
     public static Stage getStage() {
         return stage;
@@ -67,7 +68,6 @@ public class MainApplication extends Application {
 
         title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);
         ArtistController artistController = new ArtistController();
-        System.out.println(getClass().getResource("default.css"));
         stage.initStyle(StageStyle.UNDECORATED);
         System.out.println(title);
         stage.setTitle(title);
