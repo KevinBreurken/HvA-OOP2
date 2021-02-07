@@ -4,11 +4,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import practicumopdracht.controllers.ArtistController;
 import practicumopdracht.controllers.Controller;
+import practicumopdracht.data.AlbumDAO;
+import practicumopdracht.data.ArtistDAO;
+import practicumopdracht.data.FakeAlbumDAO;
+import practicumopdracht.data.FakeArtistDAO;
 import practicumopdracht.vendors.ResizeHelper;
 
 import java.io.FileInputStream;
@@ -16,8 +19,11 @@ import java.io.FileNotFoundException;
 
 public class MainApplication extends Application {
 
-    private static Stage stage;
     public static String title;
+
+    private static Stage stage;
+    private static ArtistDAO artistDAO;
+    private static AlbumDAO albumDAO;
 
     private final int WIDTH = 640;
     private final int HEIGHT = 480;
@@ -27,6 +33,8 @@ public class MainApplication extends Application {
     public static Stage getStage() {
         return stage;
     }
+    public static ArtistDAO getArtistDAO() { return artistDAO;}
+    public static AlbumDAO getAlbumDAO() { return albumDAO;}
 
     public static void switchController(Controller controller) {
         Scene scene = new Scene(controller.getView().getRoot());
@@ -56,6 +64,12 @@ public class MainApplication extends Application {
         return null;
     }
 
+    public static void showAlert(String text) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setContentText(text);
+        a.show();
+    }
+
     @Override
     public void start(Stage stage) {
         if (!Main.launchedFromMain) {
@@ -65,6 +79,10 @@ public class MainApplication extends Application {
             return;
         }
         MainApplication.stage = stage;
+        artistDAO = new FakeArtistDAO();
+        artistDAO.load();
+        albumDAO = new FakeAlbumDAO();
+        albumDAO.load();
 
         title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);
         ArtistController artistController = new ArtistController();
@@ -78,11 +96,5 @@ public class MainApplication extends Application {
         stage.setMinHeight(MIN_HEIGHT);
         MainApplication.switchController(artistController);
         stage.show();
-    }
-
-    public static void showAlert(String text){
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setContentText(text);
-        a.show();
     }
 }

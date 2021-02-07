@@ -98,7 +98,7 @@ public class AlbumController extends Controller {
         }
 
         if (messageBuilder.getTotalAppendCount() == 0) {
-            Album newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink);
+            Album newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink,null);
             Alert alert = PopupMessageBuilder.createAlertTemplate();
             alert.setContentText(newAlbum.toString());
             alert.show();

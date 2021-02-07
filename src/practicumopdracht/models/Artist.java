@@ -11,7 +11,9 @@ public class Artist {
     private String label;
     private boolean favorited;
 
-    private ArrayList<Album> albums;
+    public String getName() {
+        return name;
+    }
 
     public Artist(String name, String label, boolean favorited) {
         this.name = name;
@@ -22,10 +24,21 @@ public class Artist {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Artist:\n")
-                .append(String.format("\tName: %s\n", name))
+        sb.append(String.format("\tName: %s\n", name))
                 .append(String.format("\tSales: %s\n",label))
                 .append(String.format("\tFavorite: %s\n", favorited));
+
+        return sb.toString();
+    }
+
+    /**
+     * Used for displaying an artist in the List View.
+     * @return
+     */
+    public String getListString() {
+        StringBuilder sb = new StringBuilder();
+        String favUnicodeString = favorited ? "\u2605" : "\u2606";
+        sb.append(String.format("%s - %s %s", name,label,favUnicodeString));
 
         return sb.toString();
     }

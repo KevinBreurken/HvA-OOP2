@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import practicumopdracht.models.Artist;
 
 /**
  * Reusable listview used in both Artist and Album view.
@@ -15,6 +16,7 @@ import javafx.util.Callback;
 public class AdjustableListView extends VBox {
 
     private Label titleLabel;
+
     private ListView listView;
     //Buttons
     private HBox buttonHBox;
@@ -27,6 +29,10 @@ public class AdjustableListView extends VBox {
 
     public Button getRemoveButton() {
         return removeButton;
+    }
+
+    public ListView getListView() {
+        return listView;
     }
 
     public AdjustableListView(String listTitle, String addButtonText, String removeButtonText) {
@@ -45,6 +51,7 @@ public class AdjustableListView extends VBox {
         getChildren().add(titleLabel);
         //add the list view
         listView = new ListView();
+        listView.setStyle("-fx-font-family: 'Arial Unicode MS'");
         VBox.setVgrow(listView, Priority.ALWAYS);
         getChildren().add(listView);
         //Add button row
@@ -59,24 +66,6 @@ public class AdjustableListView extends VBox {
         addButton.prefWidthProperty().bind(buttonHBox.widthProperty().divide(btnCount));
         removeButton.prefWidthProperty().bind(buttonHBox.widthProperty().divide(btnCount));
 
-        //Disables vertical scroll view by setting the cell width
-        //Solution from: https://stackoverflow.com/a/37131860
-        listView.setCellFactory(param -> new ListCell<String>() {
-            {
-                prefWidthProperty().bind(listView.widthProperty().subtract(2));
-                setMaxWidth(Control.USE_PREF_SIZE);
-            }
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (item != null && !empty) {
-                    setText(item);
-                } else {
-                    setText(null);
-                }
-            }
-        });
     }
 
     public void addToTop(Node node){

@@ -1,6 +1,10 @@
 package practicumopdracht.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import practicumopdracht.MainApplication;
 import practicumopdracht.PopupMessageBuilder;
@@ -12,7 +16,6 @@ import java.util.ArrayList;
 
 public class ArtistController extends Controller{
 
-    private ArrayList<Artist> artist;
     private ArtistView view;
 
     public ArtistController(){
@@ -23,11 +26,26 @@ public class ArtistController extends Controller{
         view.getArtistEditCancelButton().setOnAction(event -> handleEditCancelClick());
         view.getAdjustableListBox().getAddButton().setOnAction(event -> handleListAddClick());
         view.getAdjustableListBox().getRemoveButton().setOnAction(event -> handleListRemoveClick());
+        updateList();
+    }
 
-        artist = new ArrayList<>();
-        if(artist.size() == 0){
-            view.setState(View.VIEW_STATE.EDIT);
-        }
+    private void updateList(){
+        ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
+        ListView listView = view.getAdjustableListBox().getListView();
+        listView.setItems(FXCollections.observableList(artists));
+        //Source: https://stackoverflow.com/a/36657553
+        listView.setCellFactory(param -> new ListCell<Artist>() {
+            @Override
+            protected void updateItem(Artist item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null || item.getListString() == null) {
+                    setText(null);
+                } else {
+                    setText(item.getListString());
+                }
+            }
+        });
     }
 
     private void validateEdit() {
@@ -55,11 +73,16 @@ public class ArtistController extends Controller{
             Alert alert = PopupMessageBuilder.createAlertTemplate();
             alert.setContentText(newArtist.toString());
             alert.show();
-            view.setState(View.VIEW_STATE.VIEW);
-            artist.add(newArtist);
+            applyFromEditView(newArtist);
         } else {
             messageBuilder.createAlert();
         }
+    }
+
+    private void applyFromEditView(Artist artist){
+        MainApplication.getArtistDAO().addOrUpdate(artist);
+        updateList();
+        view.setState(View.VIEW_STATE.VIEW);
     }
 
     private void clearEditFields() {
@@ -89,9 +112,9 @@ public class ArtistController extends Controller{
 
     private void handleEditCancelClick(){
         //We need atleast one artist to exit edit view.
-        if(artist.size() != 0){
-            view.setState(View.VIEW_STATE.VIEW);
-        }
+//        if(artist.size() != 0){
+//            view.setState(View.VIEW_STATE.VIEW);
+//        }
     }
 
     private void handleEditApplyClick(){
