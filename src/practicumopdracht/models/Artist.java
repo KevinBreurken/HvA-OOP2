@@ -15,6 +15,14 @@ public class Artist {
         return name;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public boolean isFavorited() {
+        return favorited;
+    }
+
     public Artist(String name, String label, boolean favorited) {
         this.name = name;
         this.label = label;

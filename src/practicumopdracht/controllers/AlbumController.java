@@ -1,12 +1,12 @@
 package practicumopdracht.controllers;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
+import javafx.util.Callback;
 import practicumopdracht.MainApplication;
 import practicumopdracht.PopupMessageBuilder;
 import practicumopdracht.models.Album;
+import practicumopdracht.models.Artist;
 import practicumopdracht.views.AlbumView;
 import practicumopdracht.views.View;
 
@@ -32,8 +32,41 @@ public class AlbumController extends Controller {
         view.getAdjustableListBox().getRemoveButton().setOnAction(event -> handleListRemoveClick());
 
         albums = new ArrayList<>();
-        if(albums.size() == 0)
-            view.setState(View.VIEW_STATE.EDIT);
+
+        setArtistComboBox();
+    }
+
+    private void setArtistComboBox(){
+        //Source:https://stackoverflow.com/a/40325634
+        //required for setting the combobox button and content to the item.getListString();
+        Callback<ListView<Artist>, ListCell<Artist>> cellFactory = new Callback<ListView<Artist>, ListCell<Artist>>() {
+
+            @Override
+            public ListCell<Artist> call(ListView<Artist> l) {
+                return new ListCell<Artist>() {
+
+                    @Override
+                    protected void updateItem(Artist item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setGraphic(null);
+                        } else {
+                            setText(item.getListString());
+                        }
+                    }
+                } ;
+            }
+        };
+
+        ComboBox artistComboBox = view.getArtistComboBox();
+        ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
+        artistComboBox.setItems(FXCollections.observableList(artists));
+        artistComboBox.getSelectionModel().select(ArtistController.getCurrentArtist());
+        artistComboBox.setMaxWidth(999);
+
+        artistComboBox.setButtonCell(cellFactory.call(null));
+        artistComboBox.setCellFactory(cellFactory);
+
     }
 
     private void validateEdit() {

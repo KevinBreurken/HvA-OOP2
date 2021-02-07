@@ -7,17 +7,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
-
-import java.awt.*;
 
 public class ArtistView extends View {
 
@@ -25,6 +22,12 @@ public class ArtistView extends View {
     private VBox artistContentBox;
     private StackPane artistDisplayContentPane;
     private HBox rootHorizontalBox;
+    private ImageView favImageView;
+    private Image favImageOn;
+    private Image favImageOff;
+    private Label contentTitle;
+    private Label recordlabelTitle;
+
     //Artist Edit
     private VBox artistEditBox;
     private Button artistEditApplyButton;
@@ -63,7 +66,7 @@ public class ArtistView extends View {
         return editArtistButton;
     }
 
-    public AdjustableListView getAdjustableListBox() {
+    public AdjustableListView getAdjustableListView() {
         return adjustableListBox;
     }
 
@@ -77,6 +80,18 @@ public class ArtistView extends View {
 
     public TextField getLabelNameTextField() {
         return labelNameTextField;
+    }
+
+    public Label getArtistDisplay() {
+        return contentTitle;
+    }
+
+    public Label getLabelDisplay() {
+        return recordlabelTitle;
+    }
+
+    public void setFavoriteDisplayState(boolean state){
+        favImageView.setImage(state ? favImageOn : favImageOff);
     }
 
     @Override
@@ -105,7 +120,7 @@ public class ArtistView extends View {
         VBox.setVgrow(rootPane, Priority.ALWAYS);
 
         BackgroundImage bgImage = new BackgroundImage(
-                MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"),
+                MainApplication.loadImage("src/practicumopdracht/content/default_bg.png"),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -120,7 +135,7 @@ public class ArtistView extends View {
         initArtistEditView();
         initArtistContentView();
 
-        setState(VIEW_STATE.VIEW);
+        setState(VIEW_STATE.EMPTY);
     }
 
     private void initArtistContentView() {
@@ -128,18 +143,21 @@ public class ArtistView extends View {
         artistDisplayContentPane.getChildren().add(artistContentBox);
         artistContentBox.setAlignment(Pos.CENTER);
 
-        ImageView favImage = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png"));
-        favImage.setSmooth(true);
-        artistContentBox.getChildren().add(favImage);
+        favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");
+        favImageOff = MainApplication.loadImage("src/practicumopdracht/content/fav-off-32.png");
+        favImageView = new ImageView();
+        favImageView.setSmooth(true);
+        artistContentBox.getChildren().add(favImageView);
+
         //Add / Remove Button
-        Label contentTitle = new Label("Arctic Monkeys");
+        contentTitle = new Label("Arctic Monkeys");
         contentTitle.setWrapText(true);
         contentTitle.setTextAlignment(TextAlignment.CENTER);
         contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
                 "-fx-font-size: 30; -fx-font-family: Broadway");
         artistContentBox.getChildren().add(contentTitle);
 
-        Label recordlabelTitle = new Label("Domino Records");
+        recordlabelTitle = new Label("Domino Records");
         recordlabelTitle.setWrapText(true);
         recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
         recordlabelTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
@@ -188,7 +206,7 @@ public class ArtistView extends View {
 
     @Override
     public void setState(VIEW_STATE state) {
-        artistContentBox.setVisible(state == VIEW_STATE.VIEW);
-        artistEditBox.setVisible(state == VIEW_STATE.EDIT);
+        artistContentBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.VIEW);
+        artistEditBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.EDIT);
     }
 }

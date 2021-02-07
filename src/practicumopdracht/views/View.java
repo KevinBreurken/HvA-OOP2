@@ -10,6 +10,7 @@ public abstract class View {
     protected abstract void initLayout();
 
     public static enum VIEW_STATE {
+        EMPTY,
         VIEW,
         EDIT
     }

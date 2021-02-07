@@ -1,5 +1,6 @@
 package practicumopdracht.views;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -7,10 +8,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Callback;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
+import practicumopdracht.controllers.ArtistController;
+import practicumopdracht.models.Artist;
+
+import java.util.ArrayList;
 
 public class AlbumView extends View {
 
@@ -41,6 +47,11 @@ public class AlbumView extends View {
     private TextField ratingTextField;
     //Album List
     private AdjustableListView adjustableListBox;
+    private ComboBox artistComboBox;
+
+    public ComboBox getArtistComboBox() {
+        return artistComboBox;
+    }
 
     public AlbumView() {
         this.rootVerticalBox = new VBox();
@@ -141,13 +152,12 @@ public class AlbumView extends View {
         rootHorizontalBox.getChildren().add(rootPane);
         rootPane.getChildren().add(artistDisplayContentPane);
 
-        ComboBox albumBox = new ComboBox();
-        adjustableListBox.addToTop(albumBox);
-        albumBox.setMaxWidth(999);
+        artistComboBox = new ComboBox();
+        adjustableListBox.addToTop(artistComboBox);
 
         initArtistEditView();
         initArtistContentView();
-        setState(VIEW_STATE.VIEW);
+        setState(VIEW_STATE.EMPTY);
     }
 
     private void initArtistEditView() {
@@ -203,7 +213,7 @@ public class AlbumView extends View {
         albumVBox = new VBox();
         albumVBox.setAlignment(Pos.CENTER);
         artistDisplayContentPane.getChildren().add(albumVBox);
-        ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys_album.jpg", 300, 300, true, true));
+        ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/default_album.png", 300, 300, true, true));
         imageView.setPreserveRatio(true);
 
         StackPane pane = new StackPane();
@@ -281,8 +291,8 @@ public class AlbumView extends View {
 
     @Override
     public void setState(VIEW_STATE state) {
-        albumVBox.setVisible(state == VIEW_STATE.VIEW);
-        contentVBox.setVisible(state == VIEW_STATE.VIEW);
-        gridPane.setVisible(state == VIEW_STATE.EDIT);
+        albumVBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.VIEW);
+        contentVBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.VIEW);
+        gridPane.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.EDIT);
     }
 }
