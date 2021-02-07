@@ -17,6 +17,8 @@ public class AlbumController extends Controller {
 
     private ArrayList<Album> albums;
     private AlbumView view;
+    private Album currentAlbum;
+
 
     public AlbumController() {
         view = new AlbumView();
@@ -28,15 +30,71 @@ public class AlbumController extends Controller {
         view.getRatingIncreaseButton().setOnAction(event -> handleIncreaseRatingClick());
         view.getAlbumEditApplyButton().setOnAction(event -> handleAlbumEditApplyClick());
         view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
-        view.getAdjustableListBox().getAddButton().setOnAction(event -> handleListAddClick());
-        view.getAdjustableListBox().getRemoveButton().setOnAction(event -> handleListRemoveClick());
+        view.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
+        view.getAdjustableListView().getRemoveButton().setOnAction(event -> handleListRemoveClick());
+        view.getAdjustableListView().getRemoveButton().setDisable(true);
+        view.getArtistComboBox().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            onComboArtistSelected((Artist) newValue);
+        });
 
+        view.getAdjustableListView().getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            onAlbumListSelected((Album) newValue);
+        });
         albums = new ArrayList<>();
 
         setArtistComboBox();
+        updateList();
     }
 
-    private void setArtistComboBox(){
+    private void onComboArtistSelected(Artist item) {
+        if (item == null) //caused when selected item is removed.
+            return;
+        ArtistController.setCurrentArtist(item);
+        updateList();
+    }
+
+    private void onAlbumListSelected(Album item) {
+        if (item == null) //caused when selected item is removed.
+            return;
+        displayAlbum(item);
+        view.getAdjustableListView().getRemoveButton().setDisable(false);
+    }
+
+    private void displayAlbum(Album album) {
+        currentAlbum = album;
+        view.getAlbumTitleLabel().setText(album.getName());
+        view.getSalesLabel().setText(String.format("Sales: %.0f", album.getSales()));
+        view.getRatingLabel().setText(String.format("Rating: (%d/%d)", album.getRating(), Album.MAX_RATING));
+        view.getDateLabel().setText(String.format("Release date: \n%s", album.getReleaseDate().toString()));
+        view.setState(View.VIEW_STATE.VIEW);
+    }
+
+    private void updateList() {
+        ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(ArtistController.getCurrentArtist());
+        ListView listView = view.getAdjustableListView().getListView();
+        listView.setItems(FXCollections.observableList(albums));
+        //Source: https://stackoverflow.com/a/36657553
+        listView.setCellFactory(param -> new ListCell<Album>() {
+            @Override
+            protected void updateItem(Album item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null || item.getListString() == null) {
+                    setText(null);
+                } else {
+                    setText(item.getListString());
+                }
+            }
+        });
+        if (albums.size() > 0)
+            view.getAdjustableListView().getListView().getSelectionModel().select(0);
+        else {
+            view.setState(View.VIEW_STATE.EMPTY);
+            view.getAdjustableListView().getRemoveButton().setDisable(true);
+        }
+    }
+
+    private void setArtistComboBox() {
         //Source:https://stackoverflow.com/a/40325634
         //required for setting the combobox button and content to the item.getListString();
         Callback<ListView<Artist>, ListCell<Artist>> cellFactory = new Callback<ListView<Artist>, ListCell<Artist>>() {
@@ -54,7 +112,7 @@ public class AlbumController extends Controller {
                             setText(item.getListString());
                         }
                     }
-                } ;
+                };
             }
         };
 
@@ -131,7 +189,7 @@ public class AlbumController extends Controller {
         }
 
         if (messageBuilder.getTotalAppendCount() == 0) {
-            Album newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink,null);
+            Album newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, null);
             Alert alert = PopupMessageBuilder.createAlertTemplate();
             alert.setContentText(newAlbum.toString());
             alert.show();
@@ -142,7 +200,7 @@ public class AlbumController extends Controller {
         }
     }
 
-    private void clearEditFields(){
+    private void clearEditFields() {
         view.getNameInputField().setText("");
         view.getAlbumSalesTextField().setText("");
         view.getWikiLinkInputField().setText("");

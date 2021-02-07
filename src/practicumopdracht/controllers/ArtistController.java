@@ -34,10 +34,19 @@ public class ArtistController extends Controller {
         });
 
         updateList();
+        //Sets the selection back to currentArtist when the user returns from the Album View.
+        if (currentArtist != null) {
+            view.getAdjustableListView().getListView().getSelectionModel().select(currentArtist);
+            onListItemSelected(currentArtist);
+        }
     }
 
     public static Artist getCurrentArtist() {
         return currentArtist;
+    }
+
+    public static void setCurrentArtist(Artist artist) {
+        currentArtist = artist;
     }
 
     private void updateList() {

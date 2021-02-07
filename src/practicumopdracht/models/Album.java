@@ -30,8 +30,28 @@ public class Album {
         return name;
     }
 
+    public double getSales() {
+        return sales;
+    }
+
+    public String getWikiLink() {
+        return wikiLink;
+    }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
     public Artist getArtist() {
         return hoortBij;
+    }
+
+    public String getListString() {
+        return name;
     }
 
     @Override

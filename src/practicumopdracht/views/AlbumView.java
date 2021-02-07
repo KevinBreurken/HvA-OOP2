@@ -30,6 +30,10 @@ public class AlbumView extends View {
     private Button editAlbumButton;
     private Button wikiButton;
     private VBox contentVBox;
+    private Label albumTitleLabel;
+    private Label dateLabel;
+    private Label salesLabel;
+    private Label ratingLabel;
 
     //Album Edit
     private GridPane gridPane;
@@ -49,9 +53,6 @@ public class AlbumView extends View {
     private AdjustableListView adjustableListBox;
     private ComboBox artistComboBox;
 
-    public ComboBox getArtistComboBox() {
-        return artistComboBox;
-    }
 
     public AlbumView() {
         this.rootVerticalBox = new VBox();
@@ -59,6 +60,26 @@ public class AlbumView extends View {
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
 
         initLayout();
+    }
+
+    public ComboBox getArtistComboBox() {
+        return artistComboBox;
+    }
+
+    public Label getAlbumTitleLabel() {
+        return albumTitleLabel;
+    }
+
+    public Label getDateLabel() {
+        return dateLabel;
+    }
+
+    public Label getSalesLabel() {
+        return salesLabel;
+    }
+
+    public Label getRatingLabel() {
+        return ratingLabel;
     }
 
     public TextField getAlbumSalesTextField() {
@@ -89,7 +110,7 @@ public class AlbumView extends View {
         return wikiButton;
     }
 
-    public AdjustableListView getAdjustableListBox() {
+    public AdjustableListView getAdjustableListView() {
         return adjustableListBox;
     }
 
@@ -153,6 +174,7 @@ public class AlbumView extends View {
         rootPane.getChildren().add(artistDisplayContentPane);
 
         artistComboBox = new ComboBox();
+        adjustableListBox.setMaxWidth(250);
         adjustableListBox.addToTop(artistComboBox);
 
         initArtistEditView();
@@ -224,16 +246,17 @@ public class AlbumView extends View {
         contentVBox = new VBox();
         contentVBox.setSpacing(15);
         contentVBox.setPadding(new Insets(0, 0, 10, 0));
-        Label albumTitleLabel = new Label("Tranquility Base Hotel & Casino");
+        albumTitleLabel = new Label("Tranquility Base Hotel & Casino");
         albumTitleLabel.setEffect(UIComponents.createDropShadowEffect());
         albumTitleLabel.setWrapText(true);
         albumTitleLabel.setMaxWidth(300);
+        albumTitleLabel.setAlignment(Pos.CENTER);
         albumTitleLabel.setTextAlignment(TextAlignment.CENTER);
         albumTitleLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
                 "-fx-font-size: 20; -fx-font-family: Broadway");
         contentVBox.getChildren().add(albumTitleLabel);
 
-        Label dateLabel = new Label("12 / 6 / 2018");
+        dateLabel = new Label("12 / 6 / 2018");
         dateLabel.setEffect(UIComponents.createDropShadowEffect());
         dateLabel.setWrapText(true);
         dateLabel.setTextAlignment(TextAlignment.CENTER);
@@ -241,7 +264,7 @@ public class AlbumView extends View {
                 "-fx-font-size: 20; -fx-font-family: Broadway;");
         contentVBox.getChildren().add(dateLabel);
 
-        Label salesLabel = new Label("Sales: 257382");
+        salesLabel = new Label("Sales: 257382");
         salesLabel.setEffect(UIComponents.createDropShadowEffect());
         salesLabel.setWrapText(true);
         salesLabel.setTextAlignment(TextAlignment.CENTER);
@@ -249,7 +272,7 @@ public class AlbumView extends View {
                 "-fx-font-size: 20; -fx-font-family: Broadway");
         contentVBox.getChildren().add(salesLabel);
 
-        Label ratingLabel = new Label("Rating: (4/5)");
+        ratingLabel = new Label("Rating: (4/5)");
         ratingLabel.setEffect(UIComponents.createDropShadowEffect());
         ratingLabel.setWrapText(true);
         ratingLabel.setTextAlignment(TextAlignment.CENTER);
