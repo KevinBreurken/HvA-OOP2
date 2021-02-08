@@ -1,6 +1,8 @@
 package practicumopdracht.controllers;
 
 import javafx.collections.FXCollections;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import practicumopdracht.MainApplication;
@@ -10,8 +12,12 @@ import practicumopdracht.models.Artist;
 import practicumopdracht.views.AlbumView;
 import practicumopdracht.views.View;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class AlbumController extends Controller {
 
@@ -62,6 +68,7 @@ public class AlbumController extends Controller {
 
     private void displayAlbum(Album album) {
         currentAlbum = album;
+        view.getEditArtistComboBox().setValue(ArtistController.getCurrentArtist());
         view.getAlbumTitleLabel().setText(album.getName());
         view.getSalesLabel().setText(String.format("Sales: %.0f", album.getSales()));
         view.getRatingLabel().setText(String.format("Rating: (%d/%d)", album.getRating(), Album.MAX_RATING));
@@ -121,10 +128,14 @@ public class AlbumController extends Controller {
         artistComboBox.setItems(FXCollections.observableList(artists));
         artistComboBox.getSelectionModel().select(ArtistController.getCurrentArtist());
         artistComboBox.setMaxWidth(999);
-
         artistComboBox.setButtonCell(cellFactory.call(null));
         artistComboBox.setCellFactory(cellFactory);
 
+        ComboBox artistEditComboBox = view.getEditArtistComboBox();
+        artistEditComboBox.setItems(FXCollections.observableList(artists));
+        artistEditComboBox.getSelectionModel().select(ArtistController.getCurrentArtist());
+        artistEditComboBox.setButtonCell(cellFactory.call(null));
+        artistEditComboBox.setCellFactory(cellFactory);
     }
 
     private void validateEdit() {
@@ -189,15 +200,39 @@ public class AlbumController extends Controller {
         }
 
         if (messageBuilder.getTotalAppendCount() == 0) {
-            Album newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, null);
-            Alert alert = PopupMessageBuilder.createAlertTemplate();
+            Artist artistCurrentlySelected = (Artist) view.getEditArtistComboBox().getValue();
+            Album newAlbum;
+            if(currentAlbum != null){
+                currentAlbum.setName(albumName);
+                currentAlbum.setReleaseDate(pickedDate);
+                currentAlbum.setSales(salesCount);
+                currentAlbum.setRating(ratingCount);
+                currentAlbum.setWikiLink(wikiLink);
+                currentAlbum.setHoortBij(artistCurrentlySelected);
+                newAlbum = currentAlbum;
+            }else {
+            newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
+            }
+            Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
             alert.setContentText(newAlbum.toString());
             alert.show();
-            view.setState(View.VIEW_STATE.VIEW);
-            albums.add(newAlbum);
+            view.getArtistComboBox().setValue(artistCurrentlySelected);
+            ArtistController.setCurrentArtist(artistCurrentlySelected);
+            applyFromEditView(newAlbum);
         } else {
             messageBuilder.createAlert();
         }
+    }
+
+    private void applyFromEditView(Album album) {
+        //Remove the currently selected Artist.
+        if (currentAlbum != null)
+            MainApplication.getAlbumDAO().remove(currentAlbum);
+        //Add the newly made Artist.
+        MainApplication.getAlbumDAO().addOrUpdate(album);
+        updateList();
+        view.getAdjustableListView().getListView().getSelectionModel().select(album);
+        view.setState(View.VIEW_STATE.VIEW);
     }
 
     private void clearEditFields() {
@@ -208,13 +243,31 @@ public class AlbumController extends Controller {
         view.getRatingTextField().setText("0");
     }
 
+    private void setEditFieldsByAlbum(Album album) {
+        view.getNameInputField().setText(album.getName());
+        view.getAlbumSalesTextField().setText("" + album.getSales());
+        view.getWikiLinkInputField().setText(album.getWikiLink());
+        view.getDateInputField().setValue(album.getReleaseDate());
+        view.getRatingTextField().setText("" + album.getRating());
+    }
+
 
     private void handleListAddClick() {
         clearEditFields();
+        currentAlbum = null;
+        view.setState(View.VIEW_STATE.EDIT);
     }
 
     private void handleListRemoveClick() {
-        MainApplication.showAlert("List remove click");
+        Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(String.format("Are you sure you want to remove %s?\n", currentAlbum.getName(), ""));
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            MainApplication.getAlbumDAO().remove(currentAlbum);
+            currentAlbum = null;
+            updateList();
+        }
     }
 
     private void handleBackToArtistClick() {
@@ -222,12 +275,17 @@ public class AlbumController extends Controller {
     }
 
     private void handleEditAlbumClick() {
-        clearEditFields();
+        setEditFieldsByAlbum(currentAlbum);
         view.setState(View.VIEW_STATE.EDIT);
     }
 
     private void handleOpenWikiClick() {
-        MainApplication.showAlert("Open Wiki page");
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.browse(URI.create(currentAlbum.getWikiLink()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleAlbumEditApplyClick() {
@@ -235,7 +293,9 @@ public class AlbumController extends Controller {
     }
 
     private void handleAlbumEditCancelClick() {
-        if (albums.size() != 0)
+        if (MainApplication.getAlbumDAO().getAll().size() == 0)
+            view.setState(View.VIEW_STATE.EMPTY);
+        else
             view.setState(View.VIEW_STATE.VIEW);
     }
 

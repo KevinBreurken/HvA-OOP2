@@ -47,6 +47,8 @@ public class AlbumView extends View {
     private TextField albumSalesTextField;
     private TextArea wikiLinkInputField;
     private DatePicker dateInputField;
+    private ComboBox editArtistComboBox;
+
 
     private TextField ratingTextField;
     //Album List
@@ -60,6 +62,10 @@ public class AlbumView extends View {
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
 
         initLayout();
+    }
+
+    public ComboBox getEditArtistComboBox() {
+        return editArtistComboBox;
     }
 
     public ComboBox getArtistComboBox() {
@@ -174,6 +180,7 @@ public class AlbumView extends View {
         rootPane.getChildren().add(artistDisplayContentPane);
 
         artistComboBox = new ComboBox();
+        artistComboBox.setMaxWidth(100);
         adjustableListBox.setMaxWidth(250);
         adjustableListBox.addToTop(artistComboBox);
 
@@ -194,6 +201,11 @@ public class AlbumView extends View {
         VBox groupBox = new VBox();
         groupBox.setSpacing(5);
         pane.getChildren().add(groupBox);
+
+        VBox comboVBox = UIComponents.createComboBoxGroup("From Artist:");
+        editArtistComboBox = (ComboBox) comboVBox.getChildren().get(1);
+        groupBox.getChildren().add(comboVBox);
+
         VBox artistNameHBox = UIComponents.createTextfieldGroup("Album name:", "Type album name here...");
         nameInputField = (TextField) artistNameHBox.getChildren().get(1);
         groupBox.getChildren().add(artistNameHBox);

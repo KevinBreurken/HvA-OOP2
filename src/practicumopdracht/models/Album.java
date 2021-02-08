@@ -17,6 +17,30 @@ public class Album {
     private int rating;
     private Artist hoortBij;
 
+    public void setHoortBij(Artist hoortBij) {
+        this.hoortBij = hoortBij;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSales(double sales) {
+        this.sales = sales;
+    }
+
+    public void setWikiLink(String wikiLink) {
+        this.wikiLink = wikiLink;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
     public Album(LocalDate releaseDate, String name, double sales, int rating, String wikiLink, Artist hoortBij) {
         this.releaseDate = releaseDate;
         this.wikiLink = wikiLink;

@@ -187,7 +187,7 @@ public class ArtistView extends View {
         VBox labelNameHBox = UIComponents.createTextfieldGroup("Label name:", "Type label name here...");
         labelNameTextField = (TextField) labelNameHBox.getChildren().get(1);
         artistEditBox.getChildren().add(labelNameHBox);
-        HBox favoriteHBox = UIComponents.createfavoriteGroup("Favorite:");
+        HBox favoriteHBox = UIComponents.createFavoriteGroup("Favorite:");
         favoriteCheckBox = (CheckBox) favoriteHBox.getChildren().get(1);
         artistEditBox.getChildren().add(favoriteHBox);
 

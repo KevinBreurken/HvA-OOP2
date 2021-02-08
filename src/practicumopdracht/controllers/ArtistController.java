@@ -1,10 +1,7 @@
 package practicumopdracht.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.MainApplication;
 import practicumopdracht.PopupMessageBuilder;
@@ -13,6 +10,7 @@ import practicumopdracht.views.ArtistView;
 import practicumopdracht.views.View;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class ArtistController extends Controller {
 
@@ -103,8 +101,16 @@ public class ArtistController extends Controller {
         }
 
         if (messageBuilder.getTotalAppendCount() == 0) {
-            Artist newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected());
-            Alert alert = PopupMessageBuilder.createAlertTemplate();
+            Artist newArtist;
+            if(currentArtist != null) {
+                currentArtist.setName(artistName);
+                currentArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
+                currentArtist.setLabel(labelName);
+                newArtist = currentArtist;
+            }else {
+                newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected());
+            }
+            Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
             alert.setContentText(newArtist.toString());
             alert.show();
             applyFromEditView(newArtist);
@@ -115,8 +121,8 @@ public class ArtistController extends Controller {
 
     private void applyFromEditView(Artist artist) {
         //Remove the currently selected Artist.
-        if (currentArtist != null)
-            MainApplication.getArtistDAO().remove(currentArtist);
+//        if (currentArtist != null)
+//            MainApplication.getArtistDAO().remove(currentArtist);
         //Add the newly made Artist.
         MainApplication.getArtistDAO().addOrUpdate(artist);
         updateList();
@@ -152,11 +158,17 @@ public class ArtistController extends Controller {
     }
 
     private void handleListRemoveClick() {
-        MainApplication.getArtistDAO().remove(currentArtist);
-        currentArtist = null;
-        view.getAdjustableListView().getRemoveButton().setDisable(true);
-        updateList();
-        view.setState(View.VIEW_STATE.EMPTY);
+        Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(String.format("Are you sure you want to remove %s?", currentArtist.getName()));
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            MainApplication.getArtistDAO().remove(currentArtist);
+            currentArtist = null;
+            view.getAdjustableListView().getRemoveButton().setDisable(true);
+            updateList();
+            view.setState(View.VIEW_STATE.EMPTY);
+        }
     }
 
     private void handleEditCancelClick() {

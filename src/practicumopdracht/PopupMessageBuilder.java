@@ -1,6 +1,8 @@
 package practicumopdracht;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
@@ -15,8 +17,8 @@ public class PopupMessageBuilder {
         sb.append("Errors found: \n\n");
     }
 
-    public static Alert createAlertTemplate() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    public static Alert createAlertTemplate(Alert.AlertType type) {
+        Alert alert = new Alert(type);
         DialogPane dialogPane = alert.getDialogPane();
         alert.getDialogPane().setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/error.png")));
         dialogPane.getChildren().get(0).setOnMousePressed(pressEvent -> {
@@ -40,7 +42,7 @@ public class PopupMessageBuilder {
     }
 
     public void createAlert() {
-        Alert alert = createAlertTemplate();
+        Alert alert = createAlertTemplate(Alert.AlertType.ERROR);
         alert.setContentText(sb.toString());
         alert.show();
     }

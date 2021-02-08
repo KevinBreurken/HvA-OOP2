@@ -15,6 +15,18 @@ public class Artist {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
     public String getLabel() {
         return label;
     }

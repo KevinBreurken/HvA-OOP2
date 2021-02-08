@@ -38,15 +38,26 @@ public class UIComponents {
         return componentVBox;
     }
 
+
+    public static VBox createComboBoxGroup(String preText) {
+        VBox groupVBox = createComponentContainer(preText,new Insets(0, 0, 15, 0));
+
+        ComboBox comboBox = new ComboBox();
+        comboBox.setMaxWidth(250);
+        groupVBox.getChildren().add(comboBox);
+
+        return groupVBox;
+    }
+
     public static VBox createTextfieldGroup(String preText, String promptText) {
         VBox groupVBox = createComponentContainer(preText,new Insets(0, 0, 15, 0));
 
-        TextField artistName = new TextField();
-        artistName.setAlignment(Pos.CENTER);
-        artistName.setPromptText(promptText);
-        artistName.setPrefWidth(140);
-        artistName.setMaxWidth(140);
-        groupVBox.getChildren().add(artistName);
+        TextField textField = new TextField();
+        textField.setAlignment(Pos.CENTER);
+        textField.setPromptText(promptText);
+        textField.setPrefWidth(140);
+        textField.setMaxWidth(140);
+        groupVBox.getChildren().add(textField);
 
         return groupVBox;
     }
@@ -56,10 +67,11 @@ public class UIComponents {
         groupVBox.setMaxHeight(0);
 
         TextArea textArea = new TextArea();
-        textArea.setPadding(new Insets(0,0,0,0));
+        VBox.setMargin(textArea,new Insets(0,0,-18,0));
         textArea.setPromptText(promptText);
         textArea.setPrefWidth(140);
         textArea.setMaxWidth(140);
+        textArea.setMinHeight(40);
         groupVBox.getChildren().add(textArea);
 
         return groupVBox;
@@ -122,7 +134,7 @@ public class UIComponents {
         return buttonHBox;
     }
 
-    public static HBox createfavoriteGroup(String preText) {
+    public static HBox createFavoriteGroup(String preText) {
         HBox favoriteGroupHBox = new HBox();
         favoriteGroupHBox.setAlignment(Pos.BASELINE_CENTER);
         favoriteGroupHBox.setPadding(new Insets(10, 0, 0, 50));

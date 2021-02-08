@@ -18,6 +18,8 @@ public class AdjustableListView extends VBox {
     private Label titleLabel;
 
     private ListView listView;
+
+
     //Buttons
     private HBox buttonHBox;
     private Button addButton;
@@ -72,10 +74,4 @@ public class AdjustableListView extends VBox {
         this.getChildren().add(0,node);
     }
 
-    //Only for testing purposes
-    public void addTestNames(String[] names) {
-        for (int i = 0; i < names.length; i++) {
-            listView.getItems().add(names[i]);
-        }
-    }
 }

@@ -26,9 +26,9 @@ public class MainApplication extends Application {
     private static AlbumDAO albumDAO;
 
     private final int WIDTH = 640;
-    private final int HEIGHT = 480;
+    private final int HEIGHT = 500;
     private final int MIN_WIDTH = 530;
-    private final int MIN_HEIGHT = 450;
+    private final int MIN_HEIGHT = 500;
 
     public static Stage getStage() {
         return stage;

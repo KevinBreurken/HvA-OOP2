@@ -22,10 +22,10 @@ public abstract class ArtistDAO implements DAO {
 
     @Override
     public void addOrUpdate(Object T) {
-
-        if(objects.contains(T)) {
-
-            System.out.println(T);
+        for (int i = 0; i < objects.size(); i++) {
+            System.out.println(objects.get(i).toString());
+        }
+        if (objects.contains(T)) {
             return;
         }
         objects.add((Artist) T);
