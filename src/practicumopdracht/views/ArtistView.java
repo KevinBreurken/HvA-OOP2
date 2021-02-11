@@ -21,7 +21,7 @@ public class ArtistView extends View {
     //Artist Content
     private VBox artistContentBox;
     private StackPane artistDisplayContentPane;
-    private HBox rootHorizontalBox;
+    private HBox rootHorizontalBox = new HBox();
     private ImageView favImageView;
     private Image favImageOn;
     private Image favImageOff;
@@ -41,11 +41,9 @@ public class ArtistView extends View {
     private AdjustableListView adjustableListBox;
     private Button viewAlbumsButton;
     private Button editArtistButton;
-    private VBox rootVerticalBox;
+    private VBox rootVerticalBox = new VBox();
 
     public ArtistView() {
-        this.rootVerticalBox = new VBox();
-        this.rootHorizontalBox = new HBox();
         this.adjustableListBox = new AdjustableListView("Artist", "Add", "Remove");
         initLayout();
     }

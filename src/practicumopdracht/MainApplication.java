@@ -17,9 +17,12 @@ import practicumopdracht.vendors.ResizeHelper;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Starts the JavaFX application and handles general application operations.
+ */
 public class MainApplication extends Application {
 
-    public static String title;
+    public static final String title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);;
 
     private static Stage stage;
     private static ArtistDAO artistDAO;
@@ -36,9 +39,13 @@ public class MainApplication extends Application {
     public static ArtistDAO getArtistDAO() { return artistDAO;}
     public static AlbumDAO getAlbumDAO() { return albumDAO;}
 
+    /**
+     * Switches the controller to a new controller and scene.
+     * @param controller the newly applied controller.
+     */
     public static void switchController(Controller controller) {
         Scene scene = new Scene(controller.getView().getRoot());
-        //Stylesheet from https://github.com/joffrey-bion/javafx-themes
+        //Source: Stylesheet from https://github.com/joffrey-bion/javafx-themes
         scene.getStylesheets().add("practicumopdracht/default.css");
         stage.setScene(scene);
         ResizeHelper.addResizeListener(stage);
@@ -64,12 +71,6 @@ public class MainApplication extends Application {
         return null;
     }
 
-    public static void showAlert(String text) {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setContentText(text);
-        a.show();
-    }
-
     @Override
     public void start(Stage stage) {
         if (!Main.launchedFromMain) {
@@ -84,7 +85,6 @@ public class MainApplication extends Application {
         albumDAO = new FakeAlbumDAO();
         albumDAO.load();
 
-        title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);
         ArtistController artistController = new ArtistController();
         stage.initStyle(StageStyle.UNDECORATED);
         System.out.println(title);

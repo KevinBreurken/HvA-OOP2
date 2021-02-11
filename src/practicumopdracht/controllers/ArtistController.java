@@ -14,28 +14,36 @@ import java.util.Optional;
 
 public class ArtistController extends Controller {
 
+    /**
+     * Reference to the artist that is selected on the Artist View, is used in other controllers as well.
+     */
     private static Artist currentArtist;
     private ArtistView view;
 
     public ArtistController() {
         view = new ArtistView();
-        view.getViewAlbumsButton().setOnAction(event -> handleAlbumsClick());
-        view.getEditArtistButton().setOnAction(event -> handleEditClick());
-        view.getArtistEditApplyButton().setOnAction(event -> handleEditApplyClick());
-        view.getArtistEditCancelButton().setOnAction(event -> handleEditCancelClick());
         AdjustableListView adjustableListView = view.getAdjustableListView();
+        //ARTIST - GENERAL
         adjustableListView.getAddButton().setOnAction(event -> handleListAddClick());
         adjustableListView.getRemoveButton().setOnAction(event -> handleListRemoveClick());
         adjustableListView.getRemoveButton().setDisable(true);
+        //Add listeners for when an item is selected in the item list.
         adjustableListView.getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            onListItemSelected((Artist) newValue);
+            onArtistListItemSelected((Artist) newValue);
         });
 
-        updateList();
+        //ARTIST - CONTENT
+        view.getEditArtistButton().setOnAction(event -> handleEditClick());
+        view.getViewAlbumsButton().setOnAction(event -> handleAlbumsClick());
+        //ARTIST - EDIT CONTENT
+        view.getArtistEditApplyButton().setOnAction(event -> handleEditApplyClick());
+        view.getArtistEditCancelButton().setOnAction(event -> handleEditCancelClick());
+
+        updateArtistList();
         //Sets the selection back to currentArtist when the user returns from the Album View.
         if (currentArtist != null) {
             view.getAdjustableListView().getListView().getSelectionModel().select(currentArtist);
-            onListItemSelected(currentArtist);
+            onArtistListItemSelected(currentArtist);
         }
     }
 
@@ -47,7 +55,7 @@ public class ArtistController extends Controller {
         currentArtist = artist;
     }
 
-    private void updateList() {
+    private void updateArtistList() {
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(artists));
@@ -66,8 +74,8 @@ public class ArtistController extends Controller {
         });
     }
 
-    private void onListItemSelected(Artist item) {
-        if (item == null) //caused when selected item is removed.
+    private void onArtistListItemSelected(Artist item) {
+        if (item == null) //called when selected item is removed.
             return;
         displayArtist(item);
         view.getAdjustableListView().getRemoveButton().setDisable(false);
@@ -120,12 +128,8 @@ public class ArtistController extends Controller {
     }
 
     private void applyFromEditView(Artist artist) {
-        //Remove the currently selected Artist.
-//        if (currentArtist != null)
-//            MainApplication.getArtistDAO().remove(currentArtist);
-        //Add the newly made Artist.
         MainApplication.getArtistDAO().addOrUpdate(artist);
-        updateList();
+        updateArtistList();
         view.getAdjustableListView().getListView().getSelectionModel().select(artist);
         view.setState(View.VIEW_STATE.VIEW);
     }
@@ -166,7 +170,7 @@ public class ArtistController extends Controller {
             MainApplication.getArtistDAO().remove(currentArtist);
             currentArtist = null;
             view.getAdjustableListView().getRemoveButton().setDisable(true);
-            updateList();
+            updateArtistList();
             view.setState(View.VIEW_STATE.EMPTY);
         }
     }

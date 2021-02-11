@@ -21,42 +21,47 @@ import java.util.Optional;
 
 public class AlbumController extends Controller {
 
-    private ArrayList<Album> albums;
     private AlbumView view;
     private Album currentAlbum;
 
-
     public AlbumController() {
         view = new AlbumView();
+
+        //ALBUM - GENERAL
         view.getBackToArtistButton().setOnAction(event -> handleBackToArtistClick());
+        view.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
+        view.getAdjustableListView().getRemoveButton().setOnAction(event -> handleListRemoveClick());
+        view.getAdjustableListView().getRemoveButton().setDisable(true);
+        //Add listeners for when an item is selected in the Artist ComboBox
+        view.getArtistComboBox().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            onComboArtistSelected((Artist) newValue);
+        });
+        //Add listeners for when an item is selected in the Album ListView.
+        view.getAdjustableListView().getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            onAlbumListSelected((Album) newValue);
+        });
+
+        //ALBUM - CONTENT
         view.getWikiButton().setOnAction(event -> handleOpenWikiClick());
         view.getEditAlbumButton().setOnAction(event -> handleEditAlbumClick());
-        view.getChangeImageButton().setOnAction(event -> handleChangePictureClick());
+
+        //ALBUM - EDIT CONTENT
         view.getRatingDecreaseButton().setOnAction(event -> handleDecreaseRatingClick());
         view.getRatingIncreaseButton().setOnAction(event -> handleIncreaseRatingClick());
         view.getAlbumEditApplyButton().setOnAction(event -> handleAlbumEditApplyClick());
         view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
-        view.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
-        view.getAdjustableListView().getRemoveButton().setOnAction(event -> handleListRemoveClick());
-        view.getAdjustableListView().getRemoveButton().setDisable(true);
-        view.getArtistComboBox().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            onComboArtistSelected((Artist) newValue);
-        });
+        view.getChangeImageButton().setOnAction(event -> handleChangePictureClick());
 
-        view.getAdjustableListView().getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            onAlbumListSelected((Album) newValue);
-        });
-        albums = new ArrayList<>();
 
         setArtistComboBox();
-        updateList();
+        updateAlbumList();
     }
 
     private void onComboArtistSelected(Artist item) {
         if (item == null) //caused when selected item is removed.
             return;
         ArtistController.setCurrentArtist(item);
-        updateList();
+        updateAlbumList();
     }
 
     private void onAlbumListSelected(Album item) {
@@ -76,7 +81,7 @@ public class AlbumController extends Controller {
         view.setState(View.VIEW_STATE.VIEW);
     }
 
-    private void updateList() {
+    private void updateAlbumList() {
         ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(ArtistController.getCurrentArtist());
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));
@@ -225,12 +230,12 @@ public class AlbumController extends Controller {
     }
 
     private void applyFromEditView(Album album) {
-        //Remove the currently selected Artist.
+        //Remove the currently selected Album.
         if (currentAlbum != null)
             MainApplication.getAlbumDAO().remove(currentAlbum);
-        //Add the newly made Artist.
+        //Add the newly made Album.
         MainApplication.getAlbumDAO().addOrUpdate(album);
-        updateList();
+        updateAlbumList();
         view.getAdjustableListView().getListView().getSelectionModel().select(album);
         view.setState(View.VIEW_STATE.VIEW);
     }
@@ -266,7 +271,7 @@ public class AlbumController extends Controller {
         if (result.get() == ButtonType.OK) {
             MainApplication.getAlbumDAO().remove(currentAlbum);
             currentAlbum = null;
-            updateList();
+            updateAlbumList();
         }
     }
 
@@ -300,7 +305,9 @@ public class AlbumController extends Controller {
     }
 
     private void handleChangePictureClick() {
-        MainApplication.showAlert("Change Picture.");
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setContentText("Change Picture.");
+        a.show();
     }
 
     private void handleIncreaseRatingClick() {
