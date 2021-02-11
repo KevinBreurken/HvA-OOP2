@@ -8,10 +8,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import practicumopdracht.controllers.ArtistController;
 import practicumopdracht.controllers.Controller;
-import practicumopdracht.data.AlbumDAO;
-import practicumopdracht.data.ArtistDAO;
-import practicumopdracht.data.FakeAlbumDAO;
-import practicumopdracht.data.FakeArtistDAO;
+import practicumopdracht.data.*;
 import practicumopdracht.vendors.ResizeHelper;
 
 import java.io.FileInputStream;
@@ -80,10 +77,12 @@ public class MainApplication extends Application {
             return;
         }
         MainApplication.stage = stage;
-        artistDAO = new FakeArtistDAO();
+        artistDAO = new TextArtistDAO();
         artistDAO.load();
-        albumDAO = new FakeAlbumDAO();
+        artistDAO.save();
+        albumDAO = new TextAlbumDAO();
         albumDAO.load();
+        albumDAO.save();
 
         ArtistController artistController = new ArtistController();
         stage.initStyle(StageStyle.UNDECORATED);

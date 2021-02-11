@@ -11,7 +11,6 @@ public class FakeAlbumDAO extends AlbumDAO{
 
     @Override
     public boolean save() {
-
         return super.save();
     }
 

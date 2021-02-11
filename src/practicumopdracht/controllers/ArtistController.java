@@ -57,6 +57,8 @@ public class ArtistController extends Controller {
 
     private void updateArtistList() {
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
+        if(artists == null)
+            return;
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(artists));
         //Source: https://stackoverflow.com/a/36657553

@@ -15,6 +15,14 @@ public abstract class ArtistDAO implements DAO {
         }
     }
 
+    public int getIDFor(Artist artist){
+        for (int i = 0; i < objects.size(); i++) {
+            if(objects.get(i) == artist)
+                return i;
+        }
+        return -1;
+    }
+
     @Override
     public List getAll() {
         return objects;
@@ -22,9 +30,6 @@ public abstract class ArtistDAO implements DAO {
 
     @Override
     public void addOrUpdate(Object T) {
-        for (int i = 0; i < objects.size(); i++) {
-            System.out.println(objects.get(i).toString());
-        }
         if (objects.contains(T)) {
             return;
         }
