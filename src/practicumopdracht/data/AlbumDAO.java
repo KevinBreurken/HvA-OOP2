@@ -8,6 +8,12 @@ import java.util.List;
 
 public abstract class AlbumDAO implements DAO {
     protected List<Album> objects;
+    private int addOrUpdateCallSinceLoad;
+
+    @Override
+    public boolean isEdited() {
+        return (addOrUpdateCallSinceLoad != 0);
+    }
 
     public List<Album> getAllFor(Artist object){
         ArrayList<Album> newListOfType = new ArrayList<>();
@@ -25,6 +31,7 @@ public abstract class AlbumDAO implements DAO {
 
     @Override
     public void addOrUpdate(Object T) {
+        addOrUpdateCallSinceLoad++;
         if(objects.contains(T))
             return;
 
@@ -38,11 +45,13 @@ public abstract class AlbumDAO implements DAO {
 
     @Override
     public boolean load() {
+        addOrUpdateCallSinceLoad = 0;
         return true;
     }
 
     @Override
     public boolean save() {
+        addOrUpdateCallSinceLoad = 0;
         return true;
     }
 }

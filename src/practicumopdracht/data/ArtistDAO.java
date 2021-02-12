@@ -6,6 +6,12 @@ import java.util.List;
 
 public abstract class ArtistDAO implements DAO {
     protected List<Artist> objects;
+    private int addOrUpdateCallSinceLoad;
+
+    @Override
+    public boolean isEdited() {
+        return (addOrUpdateCallSinceLoad != 0);
+    }
 
     public Artist getById(int id) {
         try {
@@ -15,9 +21,9 @@ public abstract class ArtistDAO implements DAO {
         }
     }
 
-    public int getIDFor(Artist artist){
+    public int getIDFor(Artist artist) {
         for (int i = 0; i < objects.size(); i++) {
-            if(objects.get(i) == artist)
+            if (objects.get(i) == artist)
                 return i;
         }
         return -1;
@@ -30,6 +36,7 @@ public abstract class ArtistDAO implements DAO {
 
     @Override
     public void addOrUpdate(Object T) {
+        addOrUpdateCallSinceLoad++;
         if (objects.contains(T)) {
             return;
         }
@@ -43,11 +50,13 @@ public abstract class ArtistDAO implements DAO {
 
     @Override
     public boolean load() {
+        addOrUpdateCallSinceLoad = 0;
         return true;
     }
 
     @Override
     public boolean save() {
+        addOrUpdateCallSinceLoad = 0;
         return true;
     }
 

@@ -23,7 +23,6 @@ public class TextArtistDAO extends ArtistDAO {
                 String[] split = line.split(SPLIT_SEQUENCE);
                 addOrUpdate(new Artist(split[0],split[1],Boolean.parseBoolean(split[2])));
             }
-
         } catch (Exception e) {
             System.out.println(e);
             return false;

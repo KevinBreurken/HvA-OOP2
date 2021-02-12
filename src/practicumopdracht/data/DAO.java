@@ -8,4 +8,5 @@ public interface DAO<T> {
     void remove(Object T);
     boolean save();
     boolean load();
+    boolean isEdited();
 }

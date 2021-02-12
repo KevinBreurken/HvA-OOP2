@@ -65,7 +65,7 @@ public class CustomWindowHandle extends HBox {
 
         //Adds extra padding to the buttons left side.
         Label lbl = new Label("");
-        lbl.setPrefWidth(50);
+        lbl.setPrefWidth(85);
         MenuButton menuButton = new MenuButton("File", null, fileSaveButton, loadSaveButton);
         menuButton.setMinWidth(160);
         fileSaveButton.setGraphic(lbl);
@@ -104,7 +104,13 @@ public class CustomWindowHandle extends HBox {
     }
 
     private void handleCloseClick() {
-        if (CustomWindowHandle.handleFileLoadClick()) {
+        if (MainApplication.getAlbumDAO().isEdited() || MainApplication.getArtistDAO().isEdited()) {
+            if (CustomWindowHandle.handleFileLoadClick()) {
+                MainApplication.getArtistDAO().save();
+                MainApplication.getAlbumDAO().save();
+                Platform.exit();
+            }
+        } else {
             Platform.exit();
         }
     }
