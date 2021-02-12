@@ -18,6 +18,7 @@ import practicumopdracht.UIComponents;
 
 public class ArtistView extends View {
 
+    private CustomWindowHandle windowHandle;
     //Artist Content
     private VBox artistContentBox;
     private StackPane artistDisplayContentPane;
@@ -27,7 +28,6 @@ public class ArtistView extends View {
     private Image favImageOff;
     private Label contentTitle;
     private Label recordlabelTitle;
-
     //Artist Edit
     private VBox artistEditBox;
     private Button artistEditApplyButton;
@@ -36,16 +36,18 @@ public class ArtistView extends View {
     private CheckBox favoriteCheckBox;
     private TextField artistNameTextField;
     private TextField labelNameTextField;
-
     //Artist List
     private AdjustableListView adjustableListBox;
     private Button viewAlbumsButton;
     private Button editArtistButton;
     private VBox rootVerticalBox = new VBox();
-
     public ArtistView() {
         this.adjustableListBox = new AdjustableListView("Artist", "Add", "Remove");
         initLayout();
+    }
+
+    public CustomWindowHandle getWindowHandle() {
+        return windowHandle;
     }
 
     public Button getArtistEditApplyButton() {
@@ -88,7 +90,7 @@ public class ArtistView extends View {
         return recordlabelTitle;
     }
 
-    public void setFavoriteDisplayState(boolean state){
+    public void setFavoriteDisplayState(boolean state) {
         favImageView.setImage(state ? favImageOn : favImageOff);
     }
 
@@ -97,8 +99,9 @@ public class ArtistView extends View {
         initArtistDisplay();
 
         VBox.setVgrow(rootVerticalBox, Priority.ALWAYS);
+        windowHandle = new CustomWindowHandle();
         rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
-        rootVerticalBox.getChildren().add(new CustomWindowHandle());
+        rootVerticalBox.getChildren().add(windowHandle);
         rootVerticalBox.getChildren().add(rootHorizontalBox);
         Pane bottomEdge = new Pane();
         bottomEdge.setMinHeight(10);

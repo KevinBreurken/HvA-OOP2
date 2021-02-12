@@ -1,6 +1,5 @@
 package practicumopdracht.views;
 
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -8,18 +7,14 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Callback;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
-import practicumopdracht.controllers.ArtistController;
-import practicumopdracht.models.Artist;
-
-import java.util.ArrayList;
 
 public class AlbumView extends View {
 
+    private CustomWindowHandle windowHandle;
     private StackPane rootPane;
     private HBox rootHorizontalBox;
     private VBox rootVerticalBox;
@@ -34,7 +29,6 @@ public class AlbumView extends View {
     private Label dateLabel;
     private Label salesLabel;
     private Label ratingLabel;
-
     //Album Edit
     private GridPane gridPane;
     private Button albumEditApplyButton;
@@ -48,20 +42,21 @@ public class AlbumView extends View {
     private TextArea wikiLinkInputField;
     private DatePicker dateInputField;
     private ComboBox editArtistComboBox;
-
-
     private TextField ratingTextField;
     //Album List
     private AdjustableListView adjustableListBox;
     private ComboBox artistComboBox;
-
-
+    
     public AlbumView() {
         this.rootVerticalBox = new VBox();
         this.rootHorizontalBox = new HBox();
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
 
         initLayout();
+    }
+
+    public CustomWindowHandle getWindowHandle() {
+        return windowHandle;
     }
 
     public ComboBox getEditArtistComboBox() {
@@ -146,9 +141,10 @@ public class AlbumView extends View {
 
     @Override
     protected void initLayout() {
+        windowHandle = new CustomWindowHandle();
         initArtistDisplay();
         rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
-        rootVerticalBox.getChildren().add(new CustomWindowHandle());
+        rootVerticalBox.getChildren().add(windowHandle);
         rootVerticalBox.getChildren().add(rootHorizontalBox);
         Pane bottomEdge = new Pane();
         bottomEdge.setMinHeight(10);

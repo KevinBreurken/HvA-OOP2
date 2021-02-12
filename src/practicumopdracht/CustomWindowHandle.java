@@ -1,17 +1,21 @@
 package practicumopdracht;
 
-import com.sun.glass.ui.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
 public class CustomWindowHandle extends HBox {
+
+    MenuItem fileSaveButton;
+    MenuItem loadSaveButton;
 
     public CustomWindowHandle() {
         setMinHeight(30);
@@ -41,6 +45,7 @@ public class CustomWindowHandle extends HBox {
         closeButton.setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/navigation/close.png")));
         closeButton.setOnAction(event -> handleCloseClick());
 
+
         final Button maximiseButton = new Button("");
         maximiseButton.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);
         maximiseButton.setStyle("-fx-background-color: transparent;");
@@ -55,18 +60,61 @@ public class CustomWindowHandle extends HBox {
         minimiseButton.setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/navigation/minimise.png")));
         minimiseButton.setOnAction(event -> handleMinimiseClick());
 
-        getChildren().addAll(titleLabel, spacer, minimiseButton, maximiseButton, closeButton);
+        fileSaveButton = new MenuItem("Save Data");
+        loadSaveButton = new MenuItem("Load Data");
+
+        //Adds extra padding to the buttons left side.
+        Label lbl = new Label("");
+        lbl.setPrefWidth(50);
+        MenuButton menuButton = new MenuButton("File", null, fileSaveButton, loadSaveButton);
+        menuButton.setMinWidth(160);
+        fileSaveButton.setGraphic(lbl);
+
+        getChildren().addAll(titleLabel, spacer, menuButton, minimiseButton, maximiseButton, closeButton);
     }
 
-    private void handleCloseClick(){
-        Platform.exit();
+    public static boolean handleFileSaveClick() {
+        if (MessageBuilder.showConfirmationAlert("Do you want to save the currently loaded Artist and Album data?")) {
+            boolean succes = MainApplication.getArtistDAO().save();
+            succes = MainApplication.getAlbumDAO().save() || succes;
+            String displayString = succes ? "Saved Data" : "Save Failed";
+            MessageBuilder.showPopupAlert(displayString);
+            return succes;
+        }
+        return false;
     }
 
-    private void handleMinimiseClick(){
+    public static boolean handleFileLoadClick() {
+        if (MessageBuilder.showConfirmationAlert("Do you want to load the currently stored Artist and Album data?")) {
+            boolean succes = MainApplication.getArtistDAO().load();
+            succes = MainApplication.getAlbumDAO().load() || succes;
+            String displayString = succes ? "Data Loaded" : "Load Failed";
+            MessageBuilder.showPopupAlert(displayString);
+            return succes;
+        }
+        return false;
+    }
+
+    public MenuItem getFileSaveButton() {
+        return fileSaveButton;
+    }
+
+    public MenuItem getFileLoadButton() {
+        return loadSaveButton;
+    }
+
+    private void handleCloseClick() {
+        if (CustomWindowHandle.handleFileLoadClick()) {
+            Platform.exit();
+        }
+    }
+
+    private void handleMinimiseClick() {
         MainApplication.getStage().setIconified(true);
     }
 
-    private void handleMaximiseClick(){
+    private void handleMaximiseClick() {
         MainApplication.getStage().setMaximized(!MainApplication.getStage().isMaximized());
     }
+
 }

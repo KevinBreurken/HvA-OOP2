@@ -14,9 +14,13 @@ public class TextAlbumDAO extends AlbumDAO {
 
     private static final String FILENAME = "src/albums.txt";
     private static final String SPLIT_SEQUENCE = ",_,";
+
+    public TextAlbumDAO(){
+        objects = new ArrayList<>();
+    }
+
     @Override
     public boolean load() {
-        objects = new ArrayList<>();
         try (Scanner scanner = new Scanner(new File(FILENAME))) {
 
             while (scanner.hasNextLine()){
@@ -34,20 +38,20 @@ public class TextAlbumDAO extends AlbumDAO {
 
     @Override
     public boolean save() {
-//        try {
-//            PrintWriter printWriter = new PrintWriter(FILENAME);
-//            for (Album album : objects) {
-//                printWriter.print(album.getName() + ",_,");
-//                printWriter.print(album.getSales() + ",_,");
-//                printWriter.print(album.getWikiLink() + ",_,");
-//                printWriter.print(album.getReleaseDate() + ",_,");
-//                printWriter.print(album.getRating()+ ",_,");
-//                printWriter.println(MainApplication.getArtistDAO().getIDFor(album.getArtist()) + ",_,");
-//            }
-//            printWriter.close();
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
+        try {
+            PrintWriter printWriter = new PrintWriter(FILENAME);
+            for (Album album : objects) {
+                printWriter.print(album.getName() + ",_,");
+                printWriter.print(album.getSales() + ",_,");
+                printWriter.print(album.getWikiLink() + ",_,");
+                printWriter.print(album.getReleaseDate() + ",_,");
+                printWriter.print(album.getRating()+ ",_,");
+                printWriter.println(MainApplication.getArtistDAO().getIDFor(album.getArtist()) + ",_,");
+            }
+            printWriter.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return super.save();
     }
 }

@@ -1,18 +1,19 @@
 package practicumopdracht;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
 
-public class PopupMessageBuilder {
+import java.util.Optional;
+
+public class MessageBuilder {
 
     private StringBuilder sb;
     private int totalAppendCount = 0;
 
-    public PopupMessageBuilder() {
+    public MessageBuilder() {
         this.sb = new StringBuilder();
         sb.append("Errors found: \n\n");
     }
@@ -30,6 +31,21 @@ public class PopupMessageBuilder {
         alert.initStyle(StageStyle.UNDECORATED);
         dialogPane.getStylesheets().add("practicumopdracht/default.css");
         return alert;
+    }
+
+    public static boolean showConfirmationAlert(String contentText) {
+        Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(contentText);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.get() == ButtonType.OK);
+
+    }
+
+    public static void showPopupAlert(String contentText) {
+        Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.INFORMATION);
+        alert.setContentText(contentText);
+        alert.show();
     }
 
     public void append(String text) {

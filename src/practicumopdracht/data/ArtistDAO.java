@@ -43,12 +43,12 @@ public abstract class ArtistDAO implements DAO {
 
     @Override
     public boolean load() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean save() {
-        return false;
+        return true;
     }
 
 }

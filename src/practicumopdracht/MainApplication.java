@@ -78,11 +78,7 @@ public class MainApplication extends Application {
         }
         MainApplication.stage = stage;
         artistDAO = new TextArtistDAO();
-        artistDAO.load();
-        artistDAO.save();
         albumDAO = new TextAlbumDAO();
-        albumDAO.load();
-        albumDAO.save();
 
         ArtistController artistController = new ArtistController();
         stage.initStyle(StageStyle.UNDECORATED);

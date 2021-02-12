@@ -26,6 +26,7 @@ public class TextArtistDAO extends ArtistDAO {
 
         } catch (Exception e) {
             System.out.println(e);
+            return false;
         }
         return super.load();
     }

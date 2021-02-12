@@ -5,8 +5,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.util.Callback;
+import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
-import practicumopdracht.PopupMessageBuilder;
+import practicumopdracht.MessageBuilder;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.AlbumView;
@@ -24,9 +25,22 @@ public class AlbumController extends Controller {
     private AlbumView view;
     private Album currentAlbum;
 
+    private void handleFileSaveClick() {
+        CustomWindowHandle.handleFileSaveClick();
+    }
+
+    private void handleFileLoadClick() {
+        if(CustomWindowHandle.handleFileLoadClick()){
+            updateAlbumList();
+        }
+    }
+
     public AlbumController() {
         view = new AlbumView();
 
+        //HEADER - SAVE/LOAD
+        view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
+        view.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
         //ALBUM - GENERAL
         view.getBackToArtistButton().setOnAction(event -> handleBackToArtistClick());
         view.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
@@ -83,6 +97,8 @@ public class AlbumController extends Controller {
 
     private void updateAlbumList() {
         ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(ArtistController.getCurrentArtist());
+        if(albums == null)
+            return;
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));
         //Source: https://stackoverflow.com/a/36657553
@@ -144,7 +160,7 @@ public class AlbumController extends Controller {
     }
 
     private void validateEdit() {
-        PopupMessageBuilder messageBuilder = new PopupMessageBuilder();
+        MessageBuilder messageBuilder = new MessageBuilder();
         //Album Name
         TextField nameField = view.getNameInputField();
         String albumName = nameField.getText().toString();
@@ -218,7 +234,7 @@ public class AlbumController extends Controller {
             }else {
             newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
             }
-            Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
+            Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
             alert.setContentText(newAlbum.toString());
             alert.show();
             view.getArtistComboBox().setValue(artistCurrentlySelected);
@@ -264,7 +280,7 @@ public class AlbumController extends Controller {
     }
 
     private void handleListRemoveClick() {
-        Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
+        Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
         alert.setContentText(String.format("Are you sure you want to remove %s?\n", currentAlbum.getName(), ""));
 
         Optional<ButtonType> result = alert.showAndWait();

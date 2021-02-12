@@ -1,3 +1,4 @@
 Arctic Monkeys,_,Domino Records,_,true,_,
 The Kooks,_,Winestone Labels,_,true,_,
 Infected Mushrooms,_,Mushside Records,_,false,_,
+Pendulum,_,DnB Records,_,false,_,

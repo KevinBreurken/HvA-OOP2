@@ -1,16 +1,19 @@
 package practicumopdracht.controllers;
 
 import javafx.collections.FXCollections;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import practicumopdracht.AdjustableListView;
+import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
-import practicumopdracht.PopupMessageBuilder;
+import practicumopdracht.MessageBuilder;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.ArtistView;
 import practicumopdracht.views.View;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class ArtistController extends Controller {
 
@@ -23,6 +26,9 @@ public class ArtistController extends Controller {
     public ArtistController() {
         view = new ArtistView();
         AdjustableListView adjustableListView = view.getAdjustableListView();
+        //HEADER - SAVE/LOAD
+        view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
+        view.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
         //ARTIST - GENERAL
         adjustableListView.getAddButton().setOnAction(event -> handleListAddClick());
         adjustableListView.getRemoveButton().setOnAction(event -> handleListRemoveClick());
@@ -55,9 +61,19 @@ public class ArtistController extends Controller {
         currentArtist = artist;
     }
 
+    private void handleFileSaveClick() {
+        CustomWindowHandle.handleFileSaveClick();
+    }
+
+    private void handleFileLoadClick() {
+        if(CustomWindowHandle.handleFileLoadClick()){
+            updateArtistList();
+        }
+    }
+
     private void updateArtistList() {
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
-        if(artists == null)
+        if (artists == null)
             return;
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(artists));
@@ -92,7 +108,7 @@ public class ArtistController extends Controller {
     }
 
     private void validateEdit() {
-        PopupMessageBuilder messageBuilder = new PopupMessageBuilder();
+        MessageBuilder messageBuilder = new MessageBuilder();
         //Album Name
         TextField nameField = view.getArtistNameTextField();
         String artistName = nameField.getText();
@@ -112,15 +128,15 @@ public class ArtistController extends Controller {
 
         if (messageBuilder.getTotalAppendCount() == 0) {
             Artist newArtist;
-            if(currentArtist != null) {
+            if (currentArtist != null) {
                 currentArtist.setName(artistName);
                 currentArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
                 currentArtist.setLabel(labelName);
                 newArtist = currentArtist;
-            }else {
+            } else {
                 newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected());
             }
-            Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
+            Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
             alert.setContentText(newArtist.toString());
             alert.show();
             applyFromEditView(newArtist);
@@ -164,11 +180,8 @@ public class ArtistController extends Controller {
     }
 
     private void handleListRemoveClick() {
-        Alert alert = PopupMessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
-        alert.setContentText(String.format("Are you sure you want to remove %s?", currentArtist.getName()));
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
+        String popupText = String.format("Are you sure you want to remove %s?", currentArtist.getName());
+        if (MessageBuilder.showConfirmationAlert(popupText)) {
             MainApplication.getArtistDAO().remove(currentArtist);
             currentArtist = null;
             view.getAdjustableListView().getRemoveButton().setDisable(true);
