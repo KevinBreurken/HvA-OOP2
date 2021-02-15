@@ -77,7 +77,7 @@ public class MainApplication extends Application {
             return;
         }
         MainApplication.stage = stage;
-        artistDAO = new TextArtistDAO();
+        artistDAO = new BinaryArtistDAO();
         albumDAO = new TextAlbumDAO();
 
         ArtistController artistController = new ArtistController();

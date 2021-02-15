@@ -37,6 +37,7 @@ public abstract class ArtistDAO implements DAO {
     @Override
     public void addOrUpdate(Object T) {
         addOrUpdateCallSinceLoad++;
+        System.out.println(objects.size());
         if (objects.contains(T)) {
             return;
         }

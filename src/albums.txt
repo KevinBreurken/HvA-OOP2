@@ -1,4 +1,0 @@
-Tranquility Base Hotel & Casino,_,238742.0,_,https://en.wikipedia.org/wiki/Tranquility_Base_Hotel_%26_Casino,_,2018-12-01,_,5,_,0,_,
-Humbug,_,525323.0,_,https://en.wikipedia.org/wiki/Humbug_(album),_,2008-05-03,_,3,_,0,_,
-Whatever people say I am, that's what I'm not,_,52323.0,_,https://en.wikipedia.org/wiki/Whatever_People_Say_I_Am,_That%27s_What_I%27m_Not,_,1998-02-03,_,4,_,0,_,
-Test,_,1258.0,_,wiki.nl	,_,2021-01-31,_,2,_,0,_,
