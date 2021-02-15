@@ -22,6 +22,7 @@ public class ArtistController extends Controller {
      */
     private static Artist currentArtist;
     private ArtistView view;
+    private boolean isListAscending = false;
 
     public ArtistController() {
         view = new ArtistView();
@@ -33,6 +34,9 @@ public class ArtistController extends Controller {
         adjustableListView.getAddButton().setOnAction(event -> handleListAddClick());
         adjustableListView.getRemoveButton().setOnAction(event -> handleListRemoveClick());
         adjustableListView.getRemoveButton().setDisable(true);
+        //Artist - Sort
+        view.getSortButton().setOnAction(event -> handleSortClick());
+        view.setSortingButtonGraphic(isListAscending);
         //Add listeners for when an item is selected in the item list.
         adjustableListView.getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             onArtistListItemSelected((Artist) newValue);
@@ -66,9 +70,14 @@ public class ArtistController extends Controller {
     }
 
     private void handleFileLoadClick() {
-        if(CustomWindowHandle.handleFileLoadClick()){
+        if (CustomWindowHandle.handleFileLoadClick()) {
             updateArtistList();
         }
+    }
+
+    private void handleSortClick() {
+        isListAscending = !isListAscending;
+        view.setSortingButtonGraphic(isListAscending);
     }
 
     private void updateArtistList() {

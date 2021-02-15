@@ -40,7 +40,12 @@ public class ArtistView extends View {
     private AdjustableListView adjustableListBox;
     private Button viewAlbumsButton;
     private Button editArtistButton;
+    private Image sortDescendingImage = MainApplication.loadImage("src/practicumopdracht/content/sort-descending.png");
+    private Image sortAscendingImage = MainApplication.loadImage("src/practicumopdracht/content/sort-ascending.png");
+    private Button sortButton;
+    private ImageView sortImageView;
     private VBox rootVerticalBox = new VBox();
+
     public ArtistView() {
         this.adjustableListBox = new AdjustableListView("Artist", "Add", "Remove");
         initLayout();
@@ -64,6 +69,10 @@ public class ArtistView extends View {
 
     public Button getEditArtistButton() {
         return editArtistButton;
+    }
+
+    public Button getSortButton() {
+        return sortButton;
     }
 
     public AdjustableListView getAdjustableListView() {
@@ -133,10 +142,23 @@ public class ArtistView extends View {
         rootHorizontalBox.getChildren().add(rootPane);
         rootPane.getChildren().add(artistDisplayContentPane);
 
+        sortImageView = new ImageView();
+        sortButton = new Button("");
+        sortButton.setGraphic(sortImageView);
+        sortButton.setStyle("-fx-background-color: transparent;");
+        sortButton.setMinSize(30,30);
+        StackPane.setAlignment(sortButton, Pos.CENTER_RIGHT);
+        adjustableListBox.getHeaderStackPane().getChildren().add(sortButton);
+
         initArtistEditView();
         initArtistContentView();
 
         setState(VIEW_STATE.EMPTY);
+    }
+
+    public void setSortingButtonGraphic(boolean ascending) {
+        Image imageToSetTo = ascending ? sortAscendingImage : sortDescendingImage;
+        sortImageView.setImage(imageToSetTo);
     }
 
     private void initArtistContentView() {
@@ -157,7 +179,6 @@ public class ArtistView extends View {
         contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
                 "-fx-font-size: 30; -fx-font-family: Broadway");
         artistContentBox.getChildren().add(contentTitle);
-
         recordlabelTitle = new Label("Domino Records");
         recordlabelTitle.setWrapText(true);
         recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
@@ -175,6 +196,7 @@ public class ArtistView extends View {
         buttonHBox.getChildren().add(editArtistButton);
         artistContentBox.getChildren().add(buttonHBox);
         buttonHBox.setMinWidth(200);
+
         artistContentBox.setVisible(false);
     }
 

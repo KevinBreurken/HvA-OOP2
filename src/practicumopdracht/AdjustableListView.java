@@ -3,8 +3,11 @@ package practicumopdracht;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -18,7 +21,7 @@ public class AdjustableListView extends VBox {
     private Label titleLabel;
 
     private ListView listView;
-
+    private StackPane headerStackPane;
 
     //Buttons
     private HBox buttonHBox;
@@ -37,9 +40,14 @@ public class AdjustableListView extends VBox {
         return listView;
     }
 
+    public StackPane getHeaderStackPane() {
+        return headerStackPane;
+    }
+
     public AdjustableListView(String listTitle, String addButtonText, String removeButtonText) {
         setMinWidth(200);
         setAlignment(Pos.CENTER);
+        headerStackPane = new StackPane();
         //Add title label.
         titleLabel = new Label(listTitle);
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
@@ -50,7 +58,10 @@ public class AdjustableListView extends VBox {
                 MainApplication.getStage().setY(dragEvent.getScreenY() - pressEvent.getSceneY());
             });
         });
-        getChildren().add(titleLabel);
+
+        headerStackPane.getChildren().add(titleLabel);
+        getChildren().add(headerStackPane);
+
         //add the list view
         listView = new ListView();
         listView.setStyle("-fx-font-family: 'Arial Unicode MS'");
