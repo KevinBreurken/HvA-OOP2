@@ -113,7 +113,7 @@ public class ArtistController extends Controller {
         view.setFavoriteDisplayState(artist.isFavorited());
         view.getArtistDisplay().setText(artist.getName());
         view.getLabelDisplay().setText(artist.getLabel());
-        view.setState(View.VIEW_STATE.VIEW);
+        view.setState(View.ViewState.VIEW);
     }
 
     private void validateEdit() {
@@ -158,7 +158,7 @@ public class ArtistController extends Controller {
         MainApplication.getArtistDAO().addOrUpdate(artist);
         updateArtistList();
         view.getAdjustableListView().getListView().getSelectionModel().select(artist);
-        view.setState(View.VIEW_STATE.VIEW);
+        view.setState(View.ViewState.VIEW);
     }
 
     private void clearEditFields() {
@@ -179,12 +179,12 @@ public class ArtistController extends Controller {
 
     private void handleEditClick() {
         setEditFieldsByArtist(currentArtist);
-        view.setState(View.VIEW_STATE.EDIT);
+        view.setState(View.ViewState.EDIT);
     }
 
     private void handleListAddClick() {
         clearEditFields();
-        view.setState(View.VIEW_STATE.EDIT);
+        view.setState(View.ViewState.EDIT);
 
     }
 
@@ -195,15 +195,15 @@ public class ArtistController extends Controller {
             currentArtist = null;
             view.getAdjustableListView().getRemoveButton().setDisable(true);
             updateArtistList();
-            view.setState(View.VIEW_STATE.EMPTY);
+            view.setState(View.ViewState.EMPTY);
         }
     }
 
     private void handleEditCancelClick() {
         if (MainApplication.getArtistDAO().getAll().size() == 0)
-            view.setState(View.VIEW_STATE.EMPTY);
+            view.setState(View.ViewState.EMPTY);
         else
-            view.setState(View.VIEW_STATE.VIEW);
+            view.setState(View.ViewState.VIEW);
     }
 
     private void handleEditApplyClick() {

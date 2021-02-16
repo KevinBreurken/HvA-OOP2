@@ -182,7 +182,7 @@ public class AlbumView extends View {
 
         initArtistEditView();
         initArtistContentView();
-        setState(VIEW_STATE.EMPTY);
+        setState(ViewState.EMPTY);
     }
 
     private void initArtistEditView() {
@@ -321,9 +321,9 @@ public class AlbumView extends View {
     }
 
     @Override
-    public void setState(VIEW_STATE state) {
-        albumVBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.VIEW);
-        contentVBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.VIEW);
-        gridPane.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.EDIT);
+    public void setState(ViewState state) {
+        albumVBox.setVisible(state != ViewState.EMPTY && state == ViewState.VIEW);
+        contentVBox.setVisible(state != ViewState.EMPTY && state == ViewState.VIEW);
+        gridPane.setVisible(state != ViewState.EMPTY && state == ViewState.EDIT);
     }
 }

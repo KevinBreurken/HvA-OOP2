@@ -24,7 +24,7 @@ public class ArtistView extends View {
     private StackPane artistDisplayContentPane;
     private HBox rootHorizontalBox = new HBox();
     private ImageView favImageView;
-    private Image favImageOn;
+    private Image favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");;
     private Image favImageOff;
     private Label contentTitle;
     private Label recordlabelTitle;
@@ -153,7 +153,7 @@ public class ArtistView extends View {
         initArtistEditView();
         initArtistContentView();
 
-        setState(VIEW_STATE.EMPTY);
+        setState(ViewState.EMPTY);
     }
 
     public void setSortingButtonGraphic(boolean ascending) {
@@ -228,8 +228,8 @@ public class ArtistView extends View {
     }
 
     @Override
-    public void setState(VIEW_STATE state) {
-        artistContentBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.VIEW);
-        artistEditBox.setVisible(state != VIEW_STATE.EMPTY && state == VIEW_STATE.EDIT);
+    public void setState(ViewState state) {
+        artistContentBox.setVisible(state != ViewState.EMPTY && state == ViewState.VIEW);
+        artistEditBox.setVisible(state != ViewState.EMPTY && state == ViewState.EDIT);
     }
 }

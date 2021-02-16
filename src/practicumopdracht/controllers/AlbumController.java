@@ -92,7 +92,7 @@ public class AlbumController extends Controller {
         view.getSalesLabel().setText(String.format("Sales: %.0f", album.getSales()));
         view.getRatingLabel().setText(String.format("Rating: (%d/%d)", album.getRating(), Album.MAX_RATING));
         view.getDateLabel().setText(String.format("Release date: \n%s", album.getReleaseDate().toString()));
-        view.setState(View.VIEW_STATE.VIEW);
+        view.setState(View.ViewState.VIEW);
     }
 
     private void updateAlbumList() {
@@ -117,7 +117,7 @@ public class AlbumController extends Controller {
         if (albums.size() > 0)
             view.getAdjustableListView().getListView().getSelectionModel().select(0);
         else {
-            view.setState(View.VIEW_STATE.EMPTY);
+            view.setState(View.ViewState.EMPTY);
             view.getAdjustableListView().getRemoveButton().setDisable(true);
         }
     }
@@ -253,7 +253,7 @@ public class AlbumController extends Controller {
         MainApplication.getAlbumDAO().addOrUpdate(album);
         updateAlbumList();
         view.getAdjustableListView().getListView().getSelectionModel().select(album);
-        view.setState(View.VIEW_STATE.VIEW);
+        view.setState(View.ViewState.VIEW);
     }
 
     private void clearEditFields() {
@@ -276,7 +276,7 @@ public class AlbumController extends Controller {
     private void handleListAddClick() {
         clearEditFields();
         currentAlbum = null;
-        view.setState(View.VIEW_STATE.EDIT);
+        view.setState(View.ViewState.EDIT);
     }
 
     private void handleListRemoveClick() {
@@ -297,7 +297,7 @@ public class AlbumController extends Controller {
 
     private void handleEditAlbumClick() {
         setEditFieldsByAlbum(currentAlbum);
-        view.setState(View.VIEW_STATE.EDIT);
+        view.setState(View.ViewState.EDIT);
     }
 
     private void handleOpenWikiClick() {
@@ -315,9 +315,9 @@ public class AlbumController extends Controller {
 
     private void handleAlbumEditCancelClick() {
         if (MainApplication.getAlbumDAO().getAll().size() == 0)
-            view.setState(View.VIEW_STATE.EMPTY);
+            view.setState(View.ViewState.EMPTY);
         else
-            view.setState(View.VIEW_STATE.VIEW);
+            view.setState(View.ViewState.VIEW);
     }
 
     private void handleChangePictureClick() {
