@@ -27,7 +27,7 @@ public class MainApplication extends Application {
 
     private final int WIDTH = 640;
     private final int HEIGHT = 500;
-    private final int MIN_WIDTH = 530;
+    private final int MIN_WIDTH = 580;
     private final int MIN_HEIGHT = 500;
 
     public static Stage getStage() {
@@ -79,7 +79,8 @@ public class MainApplication extends Application {
         MainApplication.stage = stage;
         artistDAO = new BinaryArtistDAO();
         albumDAO = new ObjectAlbumDAO();
-
+        artistDAO.load();
+        albumDAO.load();
         stage.initStyle(StageStyle.UNDECORATED);
         System.out.println(title);
         stage.setTitle(title);

@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
@@ -19,7 +20,7 @@ public class AlbumView extends View {
     private HBox rootHorizontalBox;
     private VBox rootVerticalBox;
     //Album Content
-    private StackPane artistDisplayContentPane;
+    private StackPane albumDisplayContentPane;
     private VBox albumVBox;
     private Button backToArtistButton;
     private Button editAlbumButton;
@@ -46,6 +47,8 @@ public class AlbumView extends View {
     //Album List
     private AdjustableListView adjustableListBox;
     private ComboBox artistComboBox;
+    //Sorting
+
 
     public AlbumView() {
         this.rootVerticalBox = new VBox();
@@ -142,7 +145,7 @@ public class AlbumView extends View {
     @Override
     protected void initLayout() {
         windowHandle = new CustomWindowHandle();
-        initArtistDisplay();
+        initAlbumDisplay();
         rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
         rootVerticalBox.getChildren().add(windowHandle);
         rootVerticalBox.getChildren().add(rootHorizontalBox);
@@ -154,9 +157,9 @@ public class AlbumView extends View {
 
     }
 
-    private void initArtistDisplay() {
+    private void initAlbumDisplay() {
         rootPane = new StackPane();
-        artistDisplayContentPane = new StackPane();
+        albumDisplayContentPane = new StackPane();
 
         HBox.setHgrow(rootPane, Priority.ALWAYS);
         VBox.setVgrow(rootPane, Priority.ALWAYS);
@@ -171,24 +174,65 @@ public class AlbumView extends View {
         );
 
         rootPane.setBackground(new Background(bgImage));
-        artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
+        albumDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
         rootHorizontalBox.getChildren().add(rootPane);
-        rootPane.getChildren().add(artistDisplayContentPane);
+        rootPane.getChildren().add(albumDisplayContentPane);
 
         artistComboBox = new ComboBox();
         artistComboBox.setMaxWidth(100);
         adjustableListBox.setMaxWidth(250);
         adjustableListBox.addToTop(artistComboBox);
 
-        initArtistEditView();
-        initArtistContentView();
+        initAlbumEditView();
+        initAlbumContentView();
+        initSortingRadioButtons();
         setState(ViewState.EMPTY);
     }
 
-    private void initArtistEditView() {
+    private void initSortingRadioButtons() {
+        StackPane headerPane = adjustableListBox.getHeaderStackPane();
+        final int groupSize = 2;
+
+        //Left Radio button group
+        HBox leftRadioButtonGroup = new HBox();
+        StackPane.setAlignment(leftRadioButtonGroup, Pos.CENTER_LEFT);
+        headerPane.getChildren().add(leftRadioButtonGroup);
+        leftRadioButtonGroup.setMaxWidth(90);
+        VBox firstRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-name.png");
+        VBox secondRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-name.png");
+        leftRadioButtonGroup.getChildren().addAll(firstRadioElement, secondRadioElement);
+        firstRadioElement.prefWidthProperty().bind(leftRadioButtonGroup.widthProperty().divide(groupSize));
+        secondRadioElement.prefWidthProperty().bind(leftRadioButtonGroup.widthProperty().divide(groupSize));
+
+        //Right Radio button group
+        HBox rightRadioButtonGroup = new HBox();
+        StackPane.setAlignment(rightRadioButtonGroup, Pos.CENTER_RIGHT);
+        headerPane.getChildren().add(rightRadioButtonGroup);
+        rightRadioButtonGroup.setMaxWidth(90);
+        VBox thirdRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-sales.png");
+        VBox fourthRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-sales.png");
+        rightRadioButtonGroup.getChildren().addAll(thirdRadioElement, fourthRadioElement);
+        thirdRadioElement.prefWidthProperty().bind(rightRadioButtonGroup.widthProperty().divide(groupSize));
+        fourthRadioElement.prefWidthProperty().bind(rightRadioButtonGroup.widthProperty().divide(groupSize));
+
+    }
+
+    private VBox createRadioButtonElement(String imagePath) {
+        VBox vBoxElement = new VBox();
+        vBoxElement.setPadding(new Insets(5, 0, 5, 0));
+        Image imageIcon = MainApplication.loadImage(imagePath);
+        ImageView view = new ImageView(imageIcon);
+        RadioButton radioButton = new RadioButton();
+        view.setSmooth(true);
+        vBoxElement.setAlignment(Pos.TOP_CENTER);
+        vBoxElement.getChildren().addAll(view, radioButton);
+        return vBoxElement;
+    }
+
+    private void initAlbumEditView() {
         gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        artistDisplayContentPane.getChildren().add(gridPane);
+        albumDisplayContentPane.getChildren().add(gridPane);
 
         StackPane pane = new StackPane();
         pane.setMinSize(100, 100);
@@ -202,9 +246,9 @@ public class AlbumView extends View {
         editArtistComboBox = (ComboBox) comboVBox.getChildren().get(1);
         groupBox.getChildren().add(comboVBox);
 
-        VBox artistNameHBox = UIComponents.createTextfieldGroup("Album name:", "Type album name here...");
-        nameInputField = (TextField) artistNameHBox.getChildren().get(1);
-        groupBox.getChildren().add(artistNameHBox);
+        VBox albumNameHBox = UIComponents.createTextfieldGroup("Album name:", "Type album name here...");
+        nameInputField = (TextField) albumNameHBox.getChildren().get(1);
+        groupBox.getChildren().add(albumNameHBox);
 
         VBox albumSalesVBox = UIComponents.createTextfieldGroup("Total sales:", "Type total sales value here...");
         albumSalesTextField = (TextField) albumSalesVBox.getChildren().get(1);
@@ -239,10 +283,10 @@ public class AlbumView extends View {
         gridPane.setVisible(false);
     }
 
-    private void initArtistContentView() {
+    private void initAlbumContentView() {
         albumVBox = new VBox();
         albumVBox.setAlignment(Pos.CENTER);
-        artistDisplayContentPane.getChildren().add(albumVBox);
+        albumDisplayContentPane.getChildren().add(albumVBox);
         ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/default_album.png", 300, 300, true, true));
         imageView.setPreserveRatio(true);
 
@@ -311,7 +355,7 @@ public class AlbumView extends View {
 
         contentVBox.setAlignment(Pos.BOTTOM_CENTER);
         albumVBox.setVisible(false);
-        artistDisplayContentPane.getChildren().add(contentVBox);
+        albumDisplayContentPane.getChildren().add(contentVBox);
 
     }
 
