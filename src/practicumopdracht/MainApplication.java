@@ -78,9 +78,8 @@ public class MainApplication extends Application {
         }
         MainApplication.stage = stage;
         artistDAO = new BinaryArtistDAO();
-        albumDAO = new TextAlbumDAO();
+        albumDAO = new ObjectAlbumDAO();
 
-        ArtistController artistController = new ArtistController();
         stage.initStyle(StageStyle.UNDECORATED);
         System.out.println(title);
         stage.setTitle(title);
@@ -89,6 +88,7 @@ public class MainApplication extends Application {
         //set the minimal dimensions the program supports
         stage.setMinWidth(MIN_WIDTH);
         stage.setMinHeight(MIN_HEIGHT);
+        ArtistController artistController = new ArtistController();
         MainApplication.switchController(artistController);
         stage.show();
     }

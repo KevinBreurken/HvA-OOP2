@@ -1,11 +1,14 @@
 package practicumopdracht.models;
 
+import practicumopdracht.MainApplication;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * Model for containing data related to an Album.
  */
-public class Album {
+public class Album implements Serializable {
 
     public static final int MIN_RATING = 0;
     public static final int MAX_RATING = 5;
@@ -15,7 +18,10 @@ public class Album {
     private String wikiLink;
     private LocalDate releaseDate;
     private int rating;
-    private Artist hoortBij;
+
+    private transient Artist hoortBij;
+
+    private int artistID;
 
     public void setHoortBij(Artist hoortBij) {
         this.hoortBij = hoortBij;
@@ -47,7 +53,9 @@ public class Album {
         this.name = name;
         this.sales = sales;
         this.rating = rating;
+        System.out.println("h: " + hoortBij);
         this.hoortBij = hoortBij;
+        artistID = MainApplication.getArtistDAO().getIDFor(hoortBij);
     }
 
     public String getName() {
@@ -78,6 +86,10 @@ public class Album {
         return name;
     }
 
+    public int getArtistID() {
+        return artistID;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -86,7 +98,8 @@ public class Album {
                 .append(String.format("\tSales: %f\n", sales))
                 .append(String.format("\tWiki: %s\n", wikiLink))
                 .append(String.format("\tRelease date: %s\n", releaseDate.toString()))
-                .append(String.format("\tRating: (%d/%d)\n", rating, MAX_RATING));
+                .append(String.format("\tRating: (%d/%d)\n", rating, MAX_RATING))
+                .append(String.format("\tArtist-ID: %s\n", artistID));
 
         if (hoortBij != null)
             sb.append(String.format("\tArtist: %s\n", hoortBij.getName()));

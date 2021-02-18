@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class BinaryArtistDAO extends ArtistDAO {
-    private static final String FILENAME = "src/albums.bin";
+    private static final String FILENAME = "src/artist.bin";
 
     public BinaryArtistDAO(){
         objects = new ArrayList<>();

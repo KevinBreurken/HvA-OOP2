@@ -46,7 +46,7 @@ public class AlbumView extends View {
     //Album List
     private AdjustableListView adjustableListBox;
     private ComboBox artistComboBox;
-    
+
     public AlbumView() {
         this.rootVerticalBox = new VBox();
         this.rootHorizontalBox = new HBox();
