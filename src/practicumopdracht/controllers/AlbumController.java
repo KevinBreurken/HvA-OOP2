@@ -8,6 +8,8 @@ import javafx.util.Callback;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.MessageBuilder;
+import practicumopdracht.comparators.AlbumComparatorAZ;
+import practicumopdracht.comparators.AlbumComparatorSales;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.AlbumView;
@@ -25,22 +27,13 @@ public class AlbumController extends Controller {
     private AlbumView view;
     private Album currentAlbum;
 
-    private void handleFileSaveClick() {
-        CustomWindowHandle.handleFileSaveClick();
-    }
-
-    private void handleFileLoadClick() {
-        if(CustomWindowHandle.handleFileLoadClick()){
-            updateAlbumList();
-        }
-    }
-
     public AlbumController() {
         view = new AlbumView();
 
         //HEADER - SAVE/LOAD
         view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
         view.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
+
         //ALBUM - GENERAL
         view.getBackToArtistButton().setOnAction(event -> handleBackToArtistClick());
         view.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
@@ -55,6 +48,13 @@ public class AlbumController extends Controller {
             onAlbumListSelected((Album) newValue);
         });
 
+        //ALBUM - SORTING
+        view.getAlphabetAscendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(true));
+        view.getAlphabetDescendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(false));
+        view.getSalesAscendingRadioButton().setOnAction(event -> onSalesSortingSelected(true));
+        view.getSalesDescendingRadioButton().setOnAction(event -> onSalesSortingSelected(false));
+
+
         //ALBUM - CONTENT
         view.getWikiButton().setOnAction(event -> handleOpenWikiClick());
         view.getEditAlbumButton().setOnAction(event -> handleEditAlbumClick());
@@ -66,8 +66,29 @@ public class AlbumController extends Controller {
         view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
         view.getChangeImageButton().setOnAction(event -> handleChangePictureClick());
 
-
         setArtistComboBox();
+        updateAlbumList();
+    }
+    private boolean isNameSortingAscending;
+    private boolean isNameSalesAscending;
+
+    private void handleFileSaveClick() {
+        CustomWindowHandle.handleFileSaveClick();
+    }
+
+    private void handleFileLoadClick() {
+        if (CustomWindowHandle.handleFileLoadClick()) {
+            updateAlbumList();
+        }
+    }
+
+    private void onAlphabetSortingSelected(boolean isAscending) {
+        isNameSortingAscending = isAscending;
+        updateAlbumList();
+    }
+
+    private void onSalesSortingSelected(boolean isAscending) {
+        isNameSalesAscending = isAscending;
         updateAlbumList();
     }
 
@@ -97,10 +118,13 @@ public class AlbumController extends Controller {
 
     private void updateAlbumList() {
         ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(ArtistController.getCurrentArtist());
-        if(albums == null)
+        if (albums == null)
             return;
+
+
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));
+        FXCollections.sort(listView.getItems(), new AlbumComparatorAZ(isNameSortingAscending).thenComparing(new AlbumComparatorSales(isNameSalesAscending)));
         //Source: https://stackoverflow.com/a/36657553
         listView.setCellFactory(param -> new ListCell<Album>() {
             @Override
@@ -120,6 +144,7 @@ public class AlbumController extends Controller {
             view.setState(View.ViewState.EMPTY);
             view.getAdjustableListView().getRemoveButton().setDisable(true);
         }
+
     }
 
     private void setArtistComboBox() {
@@ -223,7 +248,7 @@ public class AlbumController extends Controller {
         if (messageBuilder.getTotalAppendCount() == 0) {
             Artist artistCurrentlySelected = (Artist) view.getEditArtistComboBox().getValue();
             Album newAlbum;
-            if(currentAlbum != null){
+            if (currentAlbum != null) {
                 currentAlbum.setName(albumName);
                 currentAlbum.setReleaseDate(pickedDate);
                 currentAlbum.setSales(salesCount);
@@ -231,8 +256,8 @@ public class AlbumController extends Controller {
                 currentAlbum.setWikiLink(wikiLink);
                 currentAlbum.setHoortBij(artistCurrentlySelected);
                 newAlbum = currentAlbum;
-            }else {
-            newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
+            } else {
+                newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
             }
             Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
             alert.setContentText(newAlbum.toString());

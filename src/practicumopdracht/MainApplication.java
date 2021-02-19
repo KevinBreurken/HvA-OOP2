@@ -81,8 +81,8 @@ public class MainApplication extends Application {
         albumDAO = new ObjectAlbumDAO();
         artistDAO.load();
         albumDAO.load();
+
         stage.initStyle(StageStyle.UNDECORATED);
-        System.out.println(title);
         stage.setTitle(title);
         stage.setWidth(WIDTH);
         stage.setHeight(HEIGHT);

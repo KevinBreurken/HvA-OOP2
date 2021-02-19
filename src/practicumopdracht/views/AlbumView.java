@@ -48,7 +48,10 @@ public class AlbumView extends View {
     private AdjustableListView adjustableListBox;
     private ComboBox artistComboBox;
     //Sorting
-
+    private RadioButton alphabetDescendingRadioButton;
+    private RadioButton alphabetAscendingRadioButton;
+    private RadioButton salesDescendingRadioButton;
+    private RadioButton salesAscendingRadioButton;
 
     public AlbumView() {
         this.rootVerticalBox = new VBox();
@@ -56,6 +59,22 @@ public class AlbumView extends View {
         this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
 
         initLayout();
+    }
+
+    public RadioButton getAlphabetDescendingRadioButton() {
+        return alphabetDescendingRadioButton;
+    }
+
+    public RadioButton getAlphabetAscendingRadioButton() {
+        return alphabetAscendingRadioButton;
+    }
+
+    public RadioButton getSalesDescendingRadioButton() {
+        return salesDescendingRadioButton;
+    }
+
+    public RadioButton getSalesAscendingRadioButton() {
+        return salesAscendingRadioButton;
     }
 
     public CustomWindowHandle getWindowHandle() {
@@ -198,31 +217,40 @@ public class AlbumView extends View {
         StackPane.setAlignment(leftRadioButtonGroup, Pos.CENTER_LEFT);
         headerPane.getChildren().add(leftRadioButtonGroup);
         leftRadioButtonGroup.setMaxWidth(90);
-        VBox firstRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-name.png");
-        VBox secondRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-name.png");
+        ToggleGroup alphabetToggleGroup = new ToggleGroup();
+        VBox firstRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-name.png", alphabetToggleGroup);
+        VBox secondRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-name.png", alphabetToggleGroup);
         leftRadioButtonGroup.getChildren().addAll(firstRadioElement, secondRadioElement);
         firstRadioElement.prefWidthProperty().bind(leftRadioButtonGroup.widthProperty().divide(groupSize));
         secondRadioElement.prefWidthProperty().bind(leftRadioButtonGroup.widthProperty().divide(groupSize));
+        alphabetDescendingRadioButton = (RadioButton) firstRadioElement.getChildren().get(1);
+        alphabetDescendingRadioButton.setSelected(true);
+        alphabetAscendingRadioButton = (RadioButton) secondRadioElement.getChildren().get(1);
 
         //Right Radio button group
         HBox rightRadioButtonGroup = new HBox();
         StackPane.setAlignment(rightRadioButtonGroup, Pos.CENTER_RIGHT);
         headerPane.getChildren().add(rightRadioButtonGroup);
         rightRadioButtonGroup.setMaxWidth(90);
-        VBox thirdRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-sales.png");
-        VBox fourthRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-sales.png");
+        ToggleGroup salesToggleGroup = new ToggleGroup();
+        VBox thirdRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-sales.png", salesToggleGroup);
+        VBox fourthRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-sales.png", salesToggleGroup);
         rightRadioButtonGroup.getChildren().addAll(thirdRadioElement, fourthRadioElement);
         thirdRadioElement.prefWidthProperty().bind(rightRadioButtonGroup.widthProperty().divide(groupSize));
         fourthRadioElement.prefWidthProperty().bind(rightRadioButtonGroup.widthProperty().divide(groupSize));
+        salesDescendingRadioButton = (RadioButton) thirdRadioElement.getChildren().get(1);
+        salesDescendingRadioButton.setSelected(true);
+        salesAscendingRadioButton = (RadioButton) fourthRadioElement.getChildren().get(1);
 
     }
 
-    private VBox createRadioButtonElement(String imagePath) {
+    private VBox createRadioButtonElement(String imagePath, ToggleGroup group) {
         VBox vBoxElement = new VBox();
         vBoxElement.setPadding(new Insets(5, 0, 5, 0));
         Image imageIcon = MainApplication.loadImage(imagePath);
         ImageView view = new ImageView(imageIcon);
         RadioButton radioButton = new RadioButton();
+        radioButton.setToggleGroup(group);
         view.setSmooth(true);
         vBoxElement.setAlignment(Pos.TOP_CENTER);
         vBoxElement.getChildren().addAll(view, radioButton);
