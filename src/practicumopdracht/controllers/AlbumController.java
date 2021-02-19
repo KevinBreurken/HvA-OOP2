@@ -26,7 +26,8 @@ public class AlbumController extends Controller {
 
     private AlbumView view;
     private Album currentAlbum;
-
+    private boolean isNameSortingAscending;
+    private boolean isNameSalesAscending;
     public AlbumController() {
         view = new AlbumView();
 
@@ -69,8 +70,6 @@ public class AlbumController extends Controller {
         setArtistComboBox();
         updateAlbumList();
     }
-    private boolean isNameSortingAscending;
-    private boolean isNameSalesAscending;
 
     private void handleFileSaveClick() {
         CustomWindowHandle.handleFileSaveClick();
@@ -120,7 +119,6 @@ public class AlbumController extends Controller {
         ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(ArtistController.getCurrentArtist());
         if (albums == null)
             return;
-
 
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));

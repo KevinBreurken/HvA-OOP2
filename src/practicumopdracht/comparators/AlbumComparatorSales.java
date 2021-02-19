@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class AlbumComparatorSales implements Comparator<Album> {
 
-    private boolean isAscending = false;
+    private final boolean isAscending;
 
     public AlbumComparatorSales(boolean isAscending) {
         this.isAscending = isAscending;
@@ -14,7 +14,7 @@ public class AlbumComparatorSales implements Comparator<Album> {
 
     @Override
     public int compare(Album o1, Album o2) {
-        int compareVal = Double.compare(o1.getSales(), o2.getSales());
-        return (isAscending) ? -compareVal : compareVal;
+        int compareValue = Double.compare(o1.getSales(), o2.getSales());
+        return (isAscending) ? -compareValue : compareValue;
     }
 }

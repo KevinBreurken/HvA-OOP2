@@ -9,6 +9,9 @@ import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.MessageBuilder;
+import practicumopdracht.comparators.AlbumComparatorAZ;
+import practicumopdracht.comparators.AlbumComparatorSales;
+import practicumopdracht.comparators.ArtistComparatorAZ;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.ArtistView;
 import practicumopdracht.views.View;
@@ -78,6 +81,7 @@ public class ArtistController extends Controller {
     private void handleSortClick() {
         isListAscending = !isListAscending;
         view.setSortingButtonGraphic(isListAscending);
+        updateArtistList();
     }
 
     private void updateArtistList() {
@@ -86,6 +90,7 @@ public class ArtistController extends Controller {
             return;
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(artists));
+        FXCollections.sort(listView.getItems(), new ArtistComparatorAZ(isListAscending));
         //Source: https://stackoverflow.com/a/36657553
         listView.setCellFactory(param -> new ListCell<Artist>() {
             @Override
