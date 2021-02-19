@@ -103,9 +103,9 @@ public class CustomWindowHandle extends HBox {
         return loadSaveButton;
     }
 
-    private void handleCloseClick() {
+    private synchronized void handleCloseClick() {
         if (MainApplication.getAlbumDAO().isEdited() || MainApplication.getArtistDAO().isEdited()) {
-            if (CustomWindowHandle.handleFileLoadClick()) {
+            if (CustomWindowHandle.handleFileSaveClick()) {
                 MainApplication.getArtistDAO().save();
                 MainApplication.getAlbumDAO().save();
                 Platform.exit();

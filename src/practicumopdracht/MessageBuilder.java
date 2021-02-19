@@ -15,13 +15,27 @@ public class MessageBuilder {
 
     public MessageBuilder() {
         this.sb = new StringBuilder();
-        sb.append("Errors found: \n\n");
     }
 
     public static Alert createAlertTemplate(Alert.AlertType type) {
         Alert alert = new Alert(type);
         DialogPane dialogPane = alert.getDialogPane();
-        alert.getDialogPane().setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/error.png")));
+        String imagePath;
+        switch (type) {
+            case CONFIRMATION:
+                imagePath = "src/practicumopdracht/content/dialog/confirm.png";
+                break;
+            case ERROR:
+                imagePath = "src/practicumopdracht/content/dialog/error.png";
+                break;
+            case WARNING:
+                imagePath = "src/practicumopdracht/content/dialog/warning.png";
+                break;
+            default:
+                imagePath = "src/practicumopdracht/content/dialog/message.png";
+                break;
+        }
+        alert.getDialogPane().setGraphic(new ImageView(MainApplication.loadImage(imagePath)));
         dialogPane.getChildren().get(0).setOnMousePressed(pressEvent -> {
             dialogPane.getChildren().get(0).setOnMouseDragged(dragEvent -> {
                 alert.setX(dragEvent.getScreenX() - pressEvent.getSceneX());
@@ -57,9 +71,13 @@ public class MessageBuilder {
         return totalAppendCount;
     }
 
-    public void createAlert() {
-        Alert alert = createAlertTemplate(Alert.AlertType.ERROR);
-        alert.setContentText(sb.toString());
+    public void createAlert(Alert.AlertType type) {
+        createAlert(type, sb.toString());
+    }
+
+    public void createAlert(Alert.AlertType type, String content) {
+        Alert alert = createAlertTemplate(type);
+        alert.setContentText(content);
         alert.show();
     }
 

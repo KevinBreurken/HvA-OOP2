@@ -9,8 +9,6 @@ import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.MessageBuilder;
-import practicumopdracht.comparators.AlbumComparatorAZ;
-import practicumopdracht.comparators.AlbumComparatorSales;
 import practicumopdracht.comparators.ArtistComparatorAZ;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.ArtistView;
@@ -147,15 +145,14 @@ public class ArtistController extends Controller {
                 currentArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
                 currentArtist.setLabel(labelName);
                 newArtist = currentArtist;
+                messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Edited '%s'", newArtist.getName()));
             } else {
                 newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected());
+                messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list.", newArtist.getName()));
             }
-            Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
-            alert.setContentText(newArtist.toString());
-            alert.show();
             applyFromEditView(newArtist);
         } else {
-            messageBuilder.createAlert();
+            messageBuilder.createAlert(Alert.AlertType.ERROR);
         }
     }
 

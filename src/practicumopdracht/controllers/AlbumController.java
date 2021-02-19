@@ -257,14 +257,12 @@ public class AlbumController extends Controller {
             } else {
                 newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
             }
-            Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.ERROR);
-            alert.setContentText(newAlbum.toString());
-            alert.show();
+            messageBuilder.createAlert(Alert.AlertType.INFORMATION);
             view.getArtistComboBox().setValue(artistCurrentlySelected);
             ArtistController.setCurrentArtist(artistCurrentlySelected);
             applyFromEditView(newAlbum);
         } else {
-            messageBuilder.createAlert();
+            messageBuilder.createAlert(Alert.AlertType.ERROR);
         }
     }
 
