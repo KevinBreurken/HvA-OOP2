@@ -16,6 +16,8 @@ import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
+import java.io.File;
+
 public class ArtistView extends View {
 
     private CustomWindowHandle windowHandle;
@@ -24,7 +26,8 @@ public class ArtistView extends View {
     private StackPane artistDisplayContentPane;
     private HBox rootHorizontalBox = new HBox();
     private ImageView favImageView;
-    private Image favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");;
+    private Image favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");
+    ;
     private Image favImageOff;
     private Label contentTitle;
     private Label recordlabelTitle;
@@ -32,6 +35,8 @@ public class ArtistView extends View {
     private VBox artistEditBox;
     private Button artistEditApplyButton;
     private Button artistEditCancelButton;
+    private Button changeImageButton;
+
     //Artist Edit - Input
     private CheckBox favoriteCheckBox;
     private TextField artistNameTextField;
@@ -40,11 +45,12 @@ public class ArtistView extends View {
     private AdjustableListView adjustableListBox;
     private Button viewAlbumsButton;
     private Button editArtistButton;
-    private Image sortDescendingImage = MainApplication.loadImage("src/practicumopdracht/content/sort-descending.png");
-    private Image sortAscendingImage = MainApplication.loadImage("src/practicumopdracht/content/sort-ascending.png");
+    private Image sortDescendingImage = MainApplication.loadImage("src/practicumopdracht/content/sorting/sort-descending.png");
+    private Image sortAscendingImage = MainApplication.loadImage("src/practicumopdracht/content/sorting/sort-ascending.png");
     private Button sortButton;
     private ImageView sortImageView;
     private VBox rootVerticalBox = new VBox();
+    private StackPane rootPane;
 
     public ArtistView() {
         this.adjustableListBox = new AdjustableListView("Artist", "Add", "Remove");
@@ -69,6 +75,10 @@ public class ArtistView extends View {
 
     public Button getEditArtistButton() {
         return editArtistButton;
+    }
+
+    public Button getChangeImageButton() {
+        return changeImageButton;
     }
 
     public Button getSortButton() {
@@ -120,17 +130,17 @@ public class ArtistView extends View {
 
     }
 
-    private void initArtistDisplay() {
-
-        StackPane rootPane = new StackPane();
-        rootPane.setMinWidth(200);
-        artistDisplayContentPane = new StackPane();
-
-        HBox.setHgrow(rootPane, Priority.ALWAYS);
-        VBox.setVgrow(rootPane, Priority.ALWAYS);
-
+    public void setBackgroundImageByPath(String imagePath) {
+        File tempFile = new File(imagePath);
+        boolean exists = tempFile.exists();
+        Image image;
+        if(exists){
+            image = MainApplication.loadImage(imagePath);
+        }else {
+            image = MainApplication.loadImage("src/practicumopdracht/content/default_bg.png");
+        }
         BackgroundImage bgImage = new BackgroundImage(
-                MainApplication.loadImage("src/practicumopdracht/content/default_bg.png"),
+                image,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -138,6 +148,19 @@ public class ArtistView extends View {
         );
 
         rootPane.setBackground(new Background(bgImage));
+    }
+
+    private void initArtistDisplay() {
+
+        rootPane = new StackPane();
+        rootPane.setMinWidth(200);
+        artistDisplayContentPane = new StackPane();
+
+        HBox.setHgrow(rootPane, Priority.ALWAYS);
+        VBox.setVgrow(rootPane, Priority.ALWAYS);
+
+        setBackgroundImageByPath("src/practicumopdracht/content/default_bg.png");
+
         artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
         rootHorizontalBox.getChildren().add(rootPane);
         rootPane.getChildren().add(artistDisplayContentPane);
@@ -146,7 +169,7 @@ public class ArtistView extends View {
         sortButton = new Button("");
         sortButton.setGraphic(sortImageView);
         sortButton.setStyle("-fx-background-color: transparent;");
-        sortButton.setMinSize(30,30);
+        sortButton.setMinSize(30, 30);
         StackPane.setAlignment(sortButton, Pos.CENTER_RIGHT);
         adjustableListBox.getHeaderStackPane().getChildren().add(sortButton);
 
@@ -213,7 +236,10 @@ public class ArtistView extends View {
         HBox favoriteHBox = UIComponents.createFavoriteGroup("Favorite:");
         favoriteCheckBox = (CheckBox) favoriteHBox.getChildren().get(1);
         artistEditBox.getChildren().add(favoriteHBox);
-
+        changeImageButton = new Button("Change Album Image");
+        changeImageButton.setMaxWidth(150);
+        VBox.setMargin(changeImageButton, new Insets(10, 0, 0, 0));
+        artistEditBox.getChildren().add(changeImageButton);
         //Buttons
         HBox editButtonHBox = UIComponents.createEditButtonGroup();
         artistEditApplyButton = (Button) editButtonHBox.getChildren().get(0);

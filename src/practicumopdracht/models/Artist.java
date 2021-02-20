@@ -1,7 +1,5 @@
 package practicumopdracht.models;
 
-import java.util.ArrayList;
-
 /**
  * Model for containing data related to an Artist.
  * Can contain an collection of albums.
@@ -10,6 +8,34 @@ public class Artist {
     private String name;
     private String label;
     private boolean favorited;
+    private String imageFileName;
+    private String unsavedImageFileName;
+
+    public Artist(String name, String label, boolean favorited, String imagePath) {
+        this.name = name;
+        this.label = label;
+        this.favorited = favorited;
+        if (imagePath != null)
+            this.imageFileName = imagePath;
+        else
+            this.imageFileName = "?";
+    }
+
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
+    public String getUnsavedImageFileName() {
+        return imageFileName;
+    }
+
+    public void setUnsavedImageFileName(String unsavedImageFileName) {
+        this.unsavedImageFileName = unsavedImageFileName;
+    }
+
+    public String getCurrentFileName() {
+        return (unsavedImageFileName == null) ? imageFileName : unsavedImageFileName;
+    }
 
     public String getName() {
         return name;
@@ -19,25 +45,23 @@ public class Artist {
         this.name = name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public void setFavorited(boolean favorited) {
-        this.favorited = favorited;
+    public void setFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     public String getLabel() {
         return label;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     public boolean isFavorited() {
         return favorited;
     }
 
-    public Artist(String name, String label, boolean favorited) {
-        this.name = name;
-        this.label = label;
+    public void setFavorited(boolean favorited) {
         this.favorited = favorited;
     }
 
@@ -45,20 +69,22 @@ public class Artist {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("\tName: %s\n", name))
-                .append(String.format("\tSales: %s\n",label))
-                .append(String.format("\tFavorite: %s\n", favorited));
+                .append(String.format("\tSales: %s\n", label))
+                .append(String.format("\tFavorite: %s\n", favorited))
+                .append(String.format("\tImage filename: %s\n", imageFileName));
 
         return sb.toString();
     }
 
     /**
      * Used for displaying an artist in the List View.
+     *
      * @return
      */
     public String getListString() {
         StringBuilder sb = new StringBuilder();
         String favUnicodeString = favorited ? "\u2605" : "\u2606";
-        sb.append(String.format("%s - %s %s", name,label,favUnicodeString));
+        sb.append(String.format("%s - %s %s", name, label, favUnicodeString));
 
         return sb.toString();
     }

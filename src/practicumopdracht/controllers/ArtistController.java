@@ -5,6 +5,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
@@ -14,6 +16,7 @@ import practicumopdracht.models.Artist;
 import practicumopdracht.views.ArtistView;
 import practicumopdracht.views.View;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ArtistController extends Controller {
@@ -24,6 +27,8 @@ public class ArtistController extends Controller {
     private static Artist currentArtist;
     private ArtistView view;
     private boolean isListAscending = false;
+    private String imagePath;
+    private File selectedFile;
 
     public ArtistController() {
         view = new ArtistView();
@@ -49,6 +54,7 @@ public class ArtistController extends Controller {
         //ARTIST - EDIT CONTENT
         view.getArtistEditApplyButton().setOnAction(event -> handleEditApplyClick());
         view.getArtistEditCancelButton().setOnAction(event -> handleEditCancelClick());
+        view.getChangeImageButton().setOnAction(event -> handleChangeImageClick());
 
         updateArtistList();
         //Sets the selection back to currentArtist when the user returns from the Album View.
@@ -74,6 +80,16 @@ public class ArtistController extends Controller {
         if (CustomWindowHandle.handleFileLoadClick()) {
             updateArtistList();
         }
+    }
+
+    private void handleChangeImageClick() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open File");
+        File file = chooser.showOpenDialog(new Stage());
+        selectedFile = file;
+        System.out.println(file.getName());
+        imagePath = file.getName();
+        view.setBackgroundImageByPath(file.getAbsolutePath());
     }
 
     private void handleSortClick() {
@@ -108,6 +124,7 @@ public class ArtistController extends Controller {
         if (item == null) //called when selected item is removed.
             return;
         displayArtist(item);
+        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + item.getImageFileName());
         view.getAdjustableListView().getRemoveButton().setDisable(false);
     }
 
@@ -144,11 +161,23 @@ public class ArtistController extends Controller {
                 currentArtist.setName(artistName);
                 currentArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
                 currentArtist.setLabel(labelName);
+                if (selectedFile != null) {
+                    currentArtist.setUnsavedImageFileName(selectedFile.getName());
+                }
                 newArtist = currentArtist;
                 messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Edited '%s'", newArtist.getName()));
             } else {
-                newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected());
+                if (selectedFile != null) {
+                    imagePath = selectedFile.getName();
+                }
+                newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected(), imagePath);
                 messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list.", newArtist.getName()));
+            }
+
+            //Add/Image
+            if (selectedFile != null) {
+                MainApplication.getImageFileDAO().saveArtistImage(selectedFile);
+                newArtist.setFileName(selectedFile.getName());
             }
             applyFromEditView(newArtist);
         } else {
@@ -181,11 +210,14 @@ public class ArtistController extends Controller {
 
     private void handleEditClick() {
         setEditFieldsByArtist(currentArtist);
+        imagePath = "";
+        selectedFile = null;
         view.setState(View.ViewState.EDIT);
     }
 
     private void handleListAddClick() {
         clearEditFields();
+        currentArtist = null;
         view.setState(View.ViewState.EDIT);
 
     }

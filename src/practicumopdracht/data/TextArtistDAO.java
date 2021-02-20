@@ -21,7 +21,7 @@ public class TextArtistDAO extends ArtistDAO {
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine();
                 String[] split = line.split(SPLIT_SEQUENCE);
-                addOrUpdate(new Artist(split[0],split[1],Boolean.parseBoolean(split[2])));
+                addOrUpdate(new Artist(split[0],split[1],Boolean.parseBoolean(split[2]),split[3]));
             }
         } catch (Exception e) {
             System.out.println(e);

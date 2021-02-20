@@ -13,6 +13,7 @@ import practicumopdracht.vendors.ResizeHelper;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Starts the JavaFX application and handles general application operations.
@@ -24,6 +25,7 @@ public class MainApplication extends Application {
     private static Stage stage;
     private static ArtistDAO artistDAO;
     private static AlbumDAO albumDAO;
+    private static ImageFileDAO imageFileDAO;
 
     private final int WIDTH = 640;
     private final int HEIGHT = 500;
@@ -35,6 +37,7 @@ public class MainApplication extends Application {
     }
     public static ArtistDAO getArtistDAO() { return artistDAO;}
     public static AlbumDAO getAlbumDAO() { return albumDAO;}
+    public static ImageFileDAO getImageFileDAO() { return imageFileDAO;}
 
     /**
      * Switches the controller to a new controller and scene.
@@ -51,9 +54,13 @@ public class MainApplication extends Application {
     public static Image loadImage(String fileUrl) {
         try {
             FileInputStream input = new FileInputStream(fileUrl);
-            return new Image(input);
+            Image image = new Image(input);
+            input.close();
+            return image;
         } catch (FileNotFoundException e) {
-
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -61,9 +68,13 @@ public class MainApplication extends Application {
     public static Image loadImage(String fileUrl, int requestedWidth, int requestedHeight, boolean preserveRatio, boolean smooth) {
         try {
             FileInputStream input = new FileInputStream(fileUrl);
-            return new Image(input, requestedWidth, requestedHeight, preserveRatio, smooth);
+            Image image = new Image(input, requestedWidth, requestedHeight, preserveRatio, smooth);
+            input.close();
+            return image;
         } catch (FileNotFoundException e) {
-
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -79,8 +90,11 @@ public class MainApplication extends Application {
         MainApplication.stage = stage;
         artistDAO = new BinaryArtistDAO();
         albumDAO = new ObjectAlbumDAO();
+        imageFileDAO = new ImageFileDAO();
         artistDAO.load();
         albumDAO.load();
+
+
 
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(title);

@@ -178,8 +178,8 @@ public class ResizeHelper {
             }
 
             if (MouseEvent.MOUSE_DRAGGED.equals(mouseEventType) && Cursor.DEFAULT.equals(cursorEvent) && resizing == false) {
-                stage.setX(mouseEvent.getScreenX() + screenOffsetX);
-                stage.setY(mouseEvent.getScreenY() + screenOffsetY);
+//                stage.setX(mouseEvent.getScreenX() + screenOffsetX);
+//                stage.setY(mouseEvent.getScreenY() + screenOffsetY);
 
             }
 

@@ -9,6 +9,12 @@ public class BinaryArtistDAO extends ArtistDAO {
     private static final String FILENAME = "src/artist.bin";
 
     public BinaryArtistDAO(){
+        File file = new File(FILENAME);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         objects = new ArrayList<>();
     }
 
@@ -21,12 +27,15 @@ public class BinaryArtistDAO extends ArtistDAO {
         ) {
             dataOutputStream.writeInt(objects.size());
             for (Artist artist : objects) {
+                System.out.println("AS: " + artist.getCurrentFileName());
                 dataOutputStream.writeUTF(artist.getName());
                 dataOutputStream.writeUTF(artist.getLabel());
                 dataOutputStream.writeBoolean(artist.isFavorited());
+                dataOutputStream.writeUTF(artist.getCurrentFileName());
+
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
         }
         return super.save();
     }
@@ -46,11 +55,14 @@ public class BinaryArtistDAO extends ArtistDAO {
                 String name = dataInputStream.readUTF();
                 String label = dataInputStream.readUTF();
                 Boolean favorite = dataInputStream.readBoolean();
+                String imagePath = dataInputStream.readUTF();
 
-                objects.add(new Artist(name,label,favorite));
+                Artist loadedArtist = new Artist(name,label,favorite,imagePath);
+                System.out.println(loadedArtist);
+                objects.add(loadedArtist);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
         }
         return super.load();
     }
