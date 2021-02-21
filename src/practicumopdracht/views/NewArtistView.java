@@ -1,5 +1,6 @@
 package practicumopdracht.views;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -27,7 +29,7 @@ public class NewArtistView extends GeneralContentView {
     private ImageView favImageView;
     private Image favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");
     private Image favImageOff = MainApplication.loadImage("src/practicumopdracht/content/fav-off-32.png");
-    private Label contentTitle = new Label("Arctic Name");
+    private Label contentTitle = new Label("Artist Name");
     private Label recordlabelTitle = new Label("Label Name");
     private Button viewAlbumsButton = new Button("View Albums");
     private Button editArtistButton = new Button("Edit Artist");
@@ -106,20 +108,19 @@ public class NewArtistView extends GeneralContentView {
         //Favorite icon
         favImageView = new ImageView();
         favImageView.setSmooth(true);
-        contentViewBox.getChildren().add(favImageView);
         setFavoriteDisplayState(true);
 
         //Artist title
-        contentTitle = new Label("Arctic Monkeys");
         contentTitle.setWrapText(true);
         contentTitle.setTextAlignment(TextAlignment.CENTER);
+        contentTitle.setAlignment(Pos.CENTER);
         contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
                 "-fx-font-size: 30; -fx-font-family: Broadway");
 
         //Label name
-        recordlabelTitle = new Label("Domino Records");
         recordlabelTitle.setWrapText(true);
         recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
+        recordlabelTitle.setAlignment(Pos.CENTER);
         recordlabelTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
                 "-fx-font-size: 20; -fx-font-family: Broadway");
 
@@ -131,7 +132,19 @@ public class NewArtistView extends GeneralContentView {
         buttonHBox.getChildren().addAll(viewAlbumsButton, editArtistButton);
         buttonHBox.setMinWidth(200);
 
-        contentViewBox.getChildren().addAll(contentTitle, recordlabelTitle, buttonHBox);
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+
+        gridPane.add(favImageView,0,0);
+        GridPane.setHalignment(favImageView, HPos.CENTER);
+        gridPane.add(contentTitle,0,1);
+        GridPane.setHalignment(contentTitle, HPos.CENTER);
+        gridPane.add(recordlabelTitle,0,2);
+        GridPane.setHalignment(recordlabelTitle, HPos.CENTER);
+        gridPane.add(buttonHBox,0,3);
+        GridPane.setHalignment(buttonHBox, HPos.CENTER);
+
+        contentViewBox.getChildren().add(gridPane);
     }
 
     private void initEditView() {

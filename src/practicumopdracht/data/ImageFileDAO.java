@@ -19,26 +19,6 @@ public class ImageFileDAO {
 
     private ArrayList<String> filesToRemoveOnSave;
 
-    public void addImageToRemoveOnSave(String fileName){
-        filesToRemoveOnSave.add(fileName);
-    }
-
-    public void removeQueuedImages(){
-        for (int i = 0; i < filesToRemoveOnSave.size(); i++) {
-            removeArtistImage(filesToRemoveOnSave.get(i));
-        }
-        filesToRemoveOnSave.clear();
-    }
-
-    public void removeUnsavedImages(){
-        ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
-        for (int i = 0; i < artists.size(); i++) {
-            if(artists.get(i).getUnsavedImageFileName() != null){
-               removeArtistImage(artists.get(i).getUnsavedImageFileName());
-            }
-        }
-    }
-
     public ImageFileDAO() {
         try {
             Path path = Paths.get(directoryPath + albumPrefix);
@@ -53,6 +33,26 @@ public class ImageFileDAO {
         filesToRemoveOnSave = new ArrayList<>();
     }
 
+    public void addImageToRemoveOnSave(String fileName) {
+        filesToRemoveOnSave.add(fileName);
+    }
+
+    public void removeQueuedImages() {
+        for (int i = 0; i < filesToRemoveOnSave.size(); i++) {
+            removeArtistImage(filesToRemoveOnSave.get(i));
+        }
+        filesToRemoveOnSave.clear();
+    }
+
+    public void removeUnsavedImages() {
+        ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
+        for (int i = 0; i < artists.size(); i++) {
+            if (artists.get(i).getUnsavedImageFileName() != null) {
+                removeArtistImage(artists.get(i).getUnsavedImageFileName());
+            }
+        }
+    }
+
     public void saveArtistImage(File file) {
         try {
             Path copied = Paths.get(directoryPath + artistPrefix + "/" + file.getName());
@@ -65,26 +65,17 @@ public class ImageFileDAO {
 
     public void removeArtistImage(String filename) {
         try {
-            System.out.println("Remove: " + directoryPath + artistPrefix + "/" + filename);
             Files.delete(Paths.get(directoryPath + artistPrefix + "/" + filename));
         } catch (IOException e) {
             System.err.println(e);
         }
     }
 
-    public void removeOldArtistImage(Artist artist) {
-        if (artist.getUnsavedImageFileName() != null) {
-            removeArtistImage(artist.getImageFileName());
-            artist.setFileName(artist.getUnsavedImageFileName());
-            artist.setUnsavedImageFileName(null);
-        }
-    }
-
-    public void queRemoveAllImagesOfArtist(Artist artist) {
+    public void queueRemoveAllImagesOfArtist(Artist artist) {
         if (artist.getUnsavedImageFileName() != null)
             addImageToRemoveOnSave(artist.getUnsavedImageFileName());
 
-        if(artist.getImageFileName() != null)
+        if (artist.getImageFileName() != null)
             addImageToRemoveOnSave(artist.getImageFileName());
     }
 

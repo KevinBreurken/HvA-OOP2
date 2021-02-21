@@ -13,7 +13,6 @@ import practicumopdracht.MainApplication;
 import practicumopdracht.MessageBuilder;
 import practicumopdracht.comparators.ArtistComparatorAZ;
 import practicumopdracht.models.Artist;
-import practicumopdracht.views.ArtistView;
 import practicumopdracht.views.NewArtistView;
 import practicumopdracht.views.View;
 
@@ -230,7 +229,7 @@ public class ArtistController extends Controller {
     private void handleListRemoveClick() {
         String popupText = String.format("Are you sure you want to remove %s?", currentArtist.getName());
         if (MessageBuilder.showConfirmationAlert(popupText)) {
-            MainApplication.getImageFileDAO().queRemoveAllImagesOfArtist(currentArtist);
+            MainApplication.getImageFileDAO().queueRemoveAllImagesOfArtist(currentArtist);
             MainApplication.getArtistDAO().remove(currentArtist);
             currentArtist = null;
             view.getAdjustableListView().getRemoveButton().setDisable(true);
