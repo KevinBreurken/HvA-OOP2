@@ -108,9 +108,11 @@ public class CustomWindowHandle extends HBox {
             if (CustomWindowHandle.handleFileSaveClick()) {
                 MainApplication.getArtistDAO().save();
                 MainApplication.getAlbumDAO().save();
-                Platform.exit();
             }
+            MainApplication.getImageFileDAO().removeUnsavedImages();
+            Platform.exit();
         } else {
+            MainApplication.getImageFileDAO().removeUnsavedImages();
             Platform.exit();
         }
     }

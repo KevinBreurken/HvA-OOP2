@@ -124,7 +124,7 @@ public class ArtistController extends Controller {
         if (item == null) //called when selected item is removed.
             return;
         displayArtist(item);
-        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + item.getImageFileName());
+        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + item.getCurrentFileName());
         view.getAdjustableListView().getRemoveButton().setDisable(false);
     }
 
@@ -162,6 +162,7 @@ public class ArtistController extends Controller {
                 currentArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
                 currentArtist.setLabel(labelName);
                 if (selectedFile != null) {
+                    MainApplication.getImageFileDAO().checkForExistingUnsavedImages(currentArtist);
                     currentArtist.setUnsavedImageFileName(selectedFile.getName());
                 }
                 newArtist = currentArtist;
@@ -170,15 +171,17 @@ public class ArtistController extends Controller {
                 if (selectedFile != null) {
                     imagePath = selectedFile.getName();
                 }
-                newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected(), imagePath);
+                newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected(), null);
+                newArtist.setUnsavedImageFileName(imagePath);
                 messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list.", newArtist.getName()));
             }
 
             //Add/Image
             if (selectedFile != null) {
                 MainApplication.getImageFileDAO().saveArtistImage(selectedFile);
-                newArtist.setFileName(selectedFile.getName());
+                newArtist.setUnsavedImageFileName(selectedFile.getName());
             }
+            System.out.println(newArtist);
             applyFromEditView(newArtist);
         } else {
             messageBuilder.createAlert(Alert.AlertType.ERROR);
@@ -225,6 +228,7 @@ public class ArtistController extends Controller {
     private void handleListRemoveClick() {
         String popupText = String.format("Are you sure you want to remove %s?", currentArtist.getName());
         if (MessageBuilder.showConfirmationAlert(popupText)) {
+            MainApplication.getImageFileDAO().queRemoveAllImagesOfArtist(currentArtist);
             MainApplication.getArtistDAO().remove(currentArtist);
             currentArtist = null;
             view.getAdjustableListView().getRemoveButton().setDisable(true);

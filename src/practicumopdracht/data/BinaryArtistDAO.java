@@ -1,5 +1,6 @@
 package practicumopdracht.data;
 
+import practicumopdracht.MainApplication;
 import practicumopdracht.models.Artist;
 
 import java.io.*;
@@ -27,13 +28,13 @@ public class BinaryArtistDAO extends ArtistDAO {
         ) {
             dataOutputStream.writeInt(objects.size());
             for (Artist artist : objects) {
-                System.out.println("AS: " + artist.getCurrentFileName());
                 dataOutputStream.writeUTF(artist.getName());
                 dataOutputStream.writeUTF(artist.getLabel());
                 dataOutputStream.writeBoolean(artist.isFavorited());
-                dataOutputStream.writeUTF(artist.getCurrentFileName());
-
+                dataOutputStream.writeUTF(artist.getImageFileName());
+                artist.setUnsavedImageFileName(null);
             }
+            MainApplication.getImageFileDAO().removeQueuedImages();
         } catch (Exception e) {
             System.err.println(e);
         }

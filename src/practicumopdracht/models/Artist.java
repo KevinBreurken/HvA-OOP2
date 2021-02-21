@@ -26,7 +26,7 @@ public class Artist {
     }
 
     public String getUnsavedImageFileName() {
-        return imageFileName;
+        return unsavedImageFileName;
     }
 
     public void setUnsavedImageFileName(String unsavedImageFileName) {

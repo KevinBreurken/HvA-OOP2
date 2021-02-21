@@ -218,8 +218,8 @@ public class AlbumView extends View {
         headerPane.getChildren().add(leftRadioButtonGroup);
         leftRadioButtonGroup.setMaxWidth(90);
         ToggleGroup alphabetToggleGroup = new ToggleGroup();
-        VBox firstRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-name.png", alphabetToggleGroup);
-        VBox secondRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-name.png", alphabetToggleGroup);
+        VBox firstRadioElement = createRadioButtonElement("src/practicumopdracht/content/sorting/sort-descending-name.png", alphabetToggleGroup);
+        VBox secondRadioElement = createRadioButtonElement("src/practicumopdracht/content/sorting/sort-ascending-name.png", alphabetToggleGroup);
         leftRadioButtonGroup.getChildren().addAll(firstRadioElement, secondRadioElement);
         firstRadioElement.prefWidthProperty().bind(leftRadioButtonGroup.widthProperty().divide(groupSize));
         secondRadioElement.prefWidthProperty().bind(leftRadioButtonGroup.widthProperty().divide(groupSize));
@@ -233,8 +233,8 @@ public class AlbumView extends View {
         headerPane.getChildren().add(rightRadioButtonGroup);
         rightRadioButtonGroup.setMaxWidth(90);
         ToggleGroup salesToggleGroup = new ToggleGroup();
-        VBox thirdRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-descending-sales.png", salesToggleGroup);
-        VBox fourthRadioElement = createRadioButtonElement("src/practicumopdracht/content/sort-ascending-sales.png", salesToggleGroup);
+        VBox thirdRadioElement = createRadioButtonElement("src/practicumopdracht/content/sorting/sort-descending-sales.png", salesToggleGroup);
+        VBox fourthRadioElement = createRadioButtonElement("src/practicumopdracht/content/sorting/sort-ascending-sales.png", salesToggleGroup);
         rightRadioButtonGroup.getChildren().addAll(thirdRadioElement, fourthRadioElement);
         thirdRadioElement.prefWidthProperty().bind(rightRadioButtonGroup.widthProperty().divide(groupSize));
         fourthRadioElement.prefWidthProperty().bind(rightRadioButtonGroup.widthProperty().divide(groupSize));
