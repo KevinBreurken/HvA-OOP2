@@ -165,7 +165,6 @@ public class NewArtistView extends GeneralContentView {
         favImageView.setImage(state ? favImageOn : favImageOff);
     }
 
-
     @Override
     public Parent getRoot() {
         return super.getRoot();

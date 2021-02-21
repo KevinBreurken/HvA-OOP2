@@ -16,8 +16,8 @@ public abstract class GeneralContentView extends View {
     protected AdjustableListView adjustableListBox = new AdjustableListView("Add", "Remove");
     protected VBox contentViewBox = new VBox();
     protected VBox editViewBox = new VBox();
+    protected StackPane rootPane = new StackPane();
 
-    private StackPane rootPane = new StackPane();
     private StackPane artistDarkenOverlay = new StackPane();
 
     public GeneralContentView() {
@@ -43,13 +43,9 @@ public abstract class GeneralContentView extends View {
 
     public void setBackgroundImageByPath(String imagePath) {
         File tempFile = new File(imagePath);
-        boolean exists = tempFile.exists();
-        Image image;
-        if (exists) {
-            image = MainApplication.loadImage(imagePath);
-        } else {
-            image = MainApplication.loadImage("src/practicumopdracht/content/default_bg.png");
-        }
+        Image image = tempFile.exists() ? MainApplication.loadImage(imagePath) :
+                MainApplication.loadImage("src/practicumopdracht/content/default_bg.png");
+
         BackgroundImage bgImage = new BackgroundImage(
                 image,
                 BackgroundRepeat.NO_REPEAT,

@@ -13,6 +13,7 @@ import practicumopdracht.comparators.AlbumComparatorSales;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.AlbumView;
+import practicumopdracht.views.NewAlbumView;
 import practicumopdracht.views.View;
 
 import java.awt.*;
@@ -24,12 +25,13 @@ import java.util.Optional;
 
 public class AlbumController extends Controller {
 
-    private AlbumView view;
+    private NewAlbumView view;
     private Album currentAlbum;
     private boolean isNameSortingAscending;
     private boolean isNameSalesAscending;
+
     public AlbumController() {
-        view = new AlbumView();
+        view = new NewAlbumView();
 
         //HEADER - SAVE/LOAD
         view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
