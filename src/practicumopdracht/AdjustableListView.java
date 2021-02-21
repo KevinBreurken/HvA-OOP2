@@ -44,12 +44,16 @@ public class AdjustableListView extends VBox {
         return headerStackPane;
     }
 
-    public AdjustableListView(String listTitle, String addButtonText, String removeButtonText) {
+    public Label getTitleLabel() {
+        return titleLabel;
+    }
+
+    public AdjustableListView(String addButtonText, String removeButtonText) {
         setMinWidth(200);
         setAlignment(Pos.CENTER);
         headerStackPane = new StackPane();
         //Add title label.
-        titleLabel = new Label(listTitle);
+        titleLabel = new Label("");
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
         //Allows the window to be dragged by the label as well.
         titleLabel.setOnMousePressed(pressEvent -> {

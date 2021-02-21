@@ -56,7 +56,7 @@ public class AlbumView extends View {
     public AlbumView() {
         this.rootVerticalBox = new VBox();
         this.rootHorizontalBox = new HBox();
-        this.adjustableListBox = new AdjustableListView("Albums", "Add", "Remove");
+        this.adjustableListBox = new AdjustableListView( "Add", "Remove");
 
         initLayout();
     }
@@ -161,7 +161,6 @@ public class AlbumView extends View {
         return dateInputField;
     }
 
-    @Override
     protected void initLayout() {
         windowHandle = new CustomWindowHandle();
         initAlbumDisplay();

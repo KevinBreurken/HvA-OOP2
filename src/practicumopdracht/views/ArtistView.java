@@ -27,7 +27,6 @@ public class ArtistView extends View {
     private HBox rootHorizontalBox = new HBox();
     private ImageView favImageView;
     private Image favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");
-    ;
     private Image favImageOff;
     private Label contentTitle;
     private Label recordlabelTitle;
@@ -53,7 +52,7 @@ public class ArtistView extends View {
     private StackPane rootPane;
 
     public ArtistView() {
-        this.adjustableListBox = new AdjustableListView("Artist", "Add", "Remove");
+        this.adjustableListBox = new AdjustableListView( "Add", "Remove");
         initLayout();
     }
 
@@ -113,7 +112,6 @@ public class ArtistView extends View {
         favImageView.setImage(state ? favImageOn : favImageOff);
     }
 
-    @Override
     protected void initLayout() {
         initArtistDisplay();
 
@@ -162,8 +160,8 @@ public class ArtistView extends View {
         setBackgroundImageByPath("src/practicumopdracht/content/default_bg.png");
 
         artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-        rootHorizontalBox.getChildren().add(rootPane);
         rootPane.getChildren().add(artistDisplayContentPane);
+        rootHorizontalBox.getChildren().add(rootPane);
 
         sortImageView = new ImageView();
         sortButton = new Button("");
