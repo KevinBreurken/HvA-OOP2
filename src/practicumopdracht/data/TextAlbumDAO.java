@@ -29,8 +29,8 @@ public class TextAlbumDAO extends AlbumDAO {
                 Artist linkedArtist = MainApplication.getArtistDAO().getById(Integer.parseInt(split[5]));
                 addOrUpdate(new Album(LocalDate.parse(split[3]), split[0], Double.parseDouble(split[1]), Integer.parseInt(split[4]), split[2], linkedArtist));
             }
-        }  (Exception e) {
-            System.err.println(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return super.load();
     }
@@ -49,7 +49,7 @@ public class TextAlbumDAO extends AlbumDAO {
             }
             printWriter.close();
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return super.save();
     }
