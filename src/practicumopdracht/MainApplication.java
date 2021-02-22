@@ -94,8 +94,6 @@ public class MainApplication extends Application {
         artistDAO.load();
         albumDAO.load();
 
-
-
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle(title);
         stage.setWidth(WIDTH);

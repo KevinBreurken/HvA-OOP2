@@ -36,7 +36,7 @@ public class BinaryArtistDAO extends ArtistDAO {
             }
             MainApplication.getImageFileDAO().removeQueuedImages();
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return super.save();
     }
@@ -59,11 +59,10 @@ public class BinaryArtistDAO extends ArtistDAO {
                 String imagePath = dataInputStream.readUTF();
 
                 Artist loadedArtist = new Artist(name,label,favorite,imagePath);
-                System.out.println(loadedArtist);
                 objects.add(loadedArtist);
             }
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
         return super.load();
     }
