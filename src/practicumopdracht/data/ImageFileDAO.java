@@ -28,7 +28,7 @@ public class ImageFileDAO {
             Files.createDirectories(path);
 
         } catch (IOException e) {
-            System.err.println("Failed to create directory!" + e.getMessage());
+            e.printStackTrace();
         }
         filesToRemoveOnSave = new ArrayList<>();
     }

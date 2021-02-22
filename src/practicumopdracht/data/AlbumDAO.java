@@ -3,12 +3,23 @@ package practicumopdracht.data;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AlbumDAO implements DAO {
     protected List<Album> objects;
     private int addOrUpdateCallSinceLoad;
+
+    public void checkIfFileExists(String fileName){
+        File file = new File(fileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public boolean isEdited() {

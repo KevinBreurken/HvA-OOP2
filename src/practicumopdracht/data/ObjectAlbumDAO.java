@@ -12,12 +12,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
 
     public ObjectAlbumDAO(){
         objects = new ArrayList<>();
-        File file = new File(FILENAME);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        checkIfFileExists(FILENAME);
     }
 
     @Override

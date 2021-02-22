@@ -2,11 +2,22 @@ package practicumopdracht.data;
 
 import practicumopdracht.models.Artist;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public abstract class ArtistDAO implements DAO {
     protected List<Artist> objects;
     private int addOrUpdateCallSinceLoad;
+
+    public void checkIfFileExists(String fileName){
+        File file = new File(fileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public boolean isEdited() {

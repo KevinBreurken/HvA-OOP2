@@ -21,6 +21,7 @@ public class TextAlbumDAO extends AlbumDAO {
 
     @Override
     public boolean load() {
+        checkIfFileExists(FILENAME);
         try (Scanner scanner = new Scanner(new File(FILENAME))) {
 
             while (scanner.hasNextLine()) {
@@ -40,12 +41,12 @@ public class TextAlbumDAO extends AlbumDAO {
         try {
             PrintWriter printWriter = new PrintWriter(FILENAME);
             for (Album album : objects) {
-                printWriter.print(album.getName() + ",_,");
-                printWriter.print(album.getSales() + ",_,");
-                printWriter.print(album.getWikiLink() + ",_,");
-                printWriter.print(album.getReleaseDate() + ",_,");
-                printWriter.print(album.getRating() + ",_,");
-                printWriter.println(MainApplication.getArtistDAO().getIDFor(album.getArtist()) + ",_,");
+                printWriter.print(album.getName() + SPLIT_SEQUENCE);
+                printWriter.print(album.getSales() + SPLIT_SEQUENCE);
+                printWriter.print(album.getWikiLink() + SPLIT_SEQUENCE);
+                printWriter.print(album.getReleaseDate() + SPLIT_SEQUENCE);
+                printWriter.print(album.getRating() + SPLIT_SEQUENCE);
+                printWriter.println(MainApplication.getArtistDAO().getIDFor(album.getArtist()) + SPLIT_SEQUENCE);
             }
             printWriter.close();
         } catch (Exception e) {

@@ -9,4 +9,5 @@ public interface DAO<T> {
     boolean save();
     boolean load();
     boolean isEdited();
+    void checkIfFileExists(String fileName);
 }
