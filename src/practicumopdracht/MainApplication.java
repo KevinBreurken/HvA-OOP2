@@ -88,8 +88,8 @@ public class MainApplication extends Application {
             return;
         }
         MainApplication.stage = stage;
-        artistDAO = new TextArtistDAO();
-        albumDAO = new TextAlbumDAO();
+        artistDAO = new BinaryArtistDAO();
+        albumDAO = new ObjectAlbumDAO();
         imageFileDAO = new ImageFileDAO();
         artistDAO.load();
         albumDAO.load();

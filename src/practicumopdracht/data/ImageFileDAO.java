@@ -59,7 +59,7 @@ public class ImageFileDAO {
             Path originalPath = Paths.get(file.getAbsolutePath());
             Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            System.err.println("Failed to save Image!" + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -67,7 +67,7 @@ public class ImageFileDAO {
         try {
             Files.delete(Paths.get(directoryPath + artistPrefix + "/" + filename));
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 

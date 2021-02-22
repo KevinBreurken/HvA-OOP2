@@ -316,6 +316,7 @@ public class AlbumView extends GeneralContentView {
         ratingIncreaseButton = (Button) rootSelector.getChildren().get(2);
 
         changeImageButton.setMaxWidth(300);
+        changeImageButton.setDisable(true);
         groupBox.getChildren().add(changeImageButton);
 
         //Buttons
