@@ -17,6 +17,7 @@ public abstract class ArtistDAO implements DAO {
         try {
             return objects.get(id);
         } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
             return null;
         }
     }

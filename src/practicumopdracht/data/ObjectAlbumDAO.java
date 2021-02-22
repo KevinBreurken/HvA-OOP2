@@ -32,7 +32,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
                 objectOutputStream.writeObject(album);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return super.save();
     }
@@ -54,7 +54,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
                 objects.add(album);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return super.load();
     }
