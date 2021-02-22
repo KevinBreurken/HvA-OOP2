@@ -30,7 +30,7 @@ public class TextAlbumDAO extends AlbumDAO {
                 addOrUpdate(new Album(LocalDate.parse(split[3]), split[0], Double.parseDouble(split[1]), Integer.parseInt(split[4]), split[2], linkedArtist));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
         }
         return super.load();
     }
@@ -49,7 +49,7 @@ public class TextAlbumDAO extends AlbumDAO {
             }
             printWriter.close();
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
         }
         return super.save();
     }

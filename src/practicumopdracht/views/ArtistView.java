@@ -1,5 +1,6 @@
 package practicumopdracht.views;
 
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -9,55 +10,52 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import practicumopdracht.AdjustableListView;
-import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
-import java.io.File;
+public class ArtistView extends GeneralContentView {
 
-public class ArtistView extends View {
-
-    private CustomWindowHandle windowHandle;
-    //Artist Content
-    private VBox artistContentBox;
-    private StackPane artistDisplayContentPane;
-    private HBox rootHorizontalBox = new HBox();
+    //Sorting
+    private Button sortButton = new Button("");
+    private ImageView sortImageView = new ImageView();
+    private Image sortDescendingImage = MainApplication.loadImage("src/practicumopdracht/content/sorting/sort-descending.png");
+    private Image sortAscendingImage = MainApplication.loadImage("src/practicumopdracht/content/sorting/sort-ascending.png");
+    //Content
     private ImageView favImageView;
     private Image favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");
-    private Image favImageOff;
-    private Label contentTitle;
-    private Label recordlabelTitle;
-    //Artist Edit
-    private VBox artistEditBox;
+    private Image favImageOff = MainApplication.loadImage("src/practicumopdracht/content/fav-off-32.png");
+    private Label contentTitle = new Label("Artist Name");
+    private Label recordlabelTitle = new Label("Label Name");
+    private Button viewAlbumsButton = new Button("View Albums");
+    private Button editArtistButton = new Button("Edit Artist");
+    //Edit
     private Button artistEditApplyButton;
     private Button artistEditCancelButton;
-    private Button changeImageButton;
-
-    //Artist Edit - Input
+    private Button changeImageButton = new Button("Change Album Image");
+    //Edit - Input
     private CheckBox favoriteCheckBox;
     private TextField artistNameTextField;
     private TextField labelNameTextField;
-    //Artist List
-    private AdjustableListView adjustableListBox;
-    private Button viewAlbumsButton;
-    private Button editArtistButton;
-    private Image sortDescendingImage = MainApplication.loadImage("src/practicumopdracht/content/sorting/sort-descending.png");
-    private Image sortAscendingImage = MainApplication.loadImage("src/practicumopdracht/content/sorting/sort-ascending.png");
-    private Button sortButton;
-    private ImageView sortImageView;
-    private VBox rootVerticalBox = new VBox();
-    private StackPane rootPane;
 
     public ArtistView() {
-        this.adjustableListBox = new AdjustableListView( "Add", "Remove");
-        initLayout();
-    }
+        this.adjustableListBox.getTitleLabel().setText("Artist");
 
-    public CustomWindowHandle getWindowHandle() {
-        return windowHandle;
+        sortButton.setGraphic(sortImageView);
+        sortButton.setStyle("-fx-background-color: transparent;");
+        sortButton.setMinSize(30, 30);
+        StackPane.setAlignment(sortButton, Pos.CENTER_RIGHT);
+        adjustableListBox.getHeaderStackPane().getChildren().add(sortButton);
+        setSortingButtonGraphic(false);
+
+        initContentView();
+        initEditView();
+
+        setState(ViewState.EMPTY);
     }
 
     public Button getArtistEditApplyButton() {
@@ -84,10 +82,6 @@ public class ArtistView extends View {
         return sortButton;
     }
 
-    public AdjustableListView getAdjustableListView() {
-        return adjustableListBox;
-    }
-
     public CheckBox getFavoriteCheckBox() {
         return favoriteCheckBox;
     }
@@ -108,73 +102,71 @@ public class ArtistView extends View {
         return recordlabelTitle;
     }
 
-    public void setFavoriteDisplayState(boolean state) {
-        favImageView.setImage(state ? favImageOn : favImageOff);
+    private void initContentView() {
+        contentViewBox.setAlignment(Pos.CENTER);
+
+        //Favorite icon
+        favImageView = new ImageView();
+        favImageView.setSmooth(true);
+        setFavoriteDisplayState(true);
+
+        //Artist title
+        contentTitle.setWrapText(true);
+        contentTitle.setTextAlignment(TextAlignment.CENTER);
+        contentTitle.setAlignment(Pos.CENTER);
+        contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
+                "-fx-font-size: 30; -fx-font-family: Broadway");
+
+        //Label name
+        recordlabelTitle.setWrapText(true);
+        recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
+        recordlabelTitle.setAlignment(Pos.CENTER);
+        recordlabelTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
+                "-fx-font-size: 20; -fx-font-family: Broadway");
+
+        //Button group
+        VBox buttonHBox = new VBox();
+        buttonHBox.setSpacing(10);
+        buttonHBox.setPadding(new Insets(20, 0, 0, 0));
+        buttonHBox.setAlignment(Pos.CENTER);
+        buttonHBox.getChildren().addAll(viewAlbumsButton, editArtistButton);
+        buttonHBox.setMinWidth(200);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+
+        gridPane.add(favImageView,0,0);
+        GridPane.setHalignment(favImageView, HPos.CENTER);
+        gridPane.add(contentTitle,0,1);
+        GridPane.setHalignment(contentTitle, HPos.CENTER);
+        gridPane.add(recordlabelTitle,0,2);
+        GridPane.setHalignment(recordlabelTitle, HPos.CENTER);
+        gridPane.add(buttonHBox,0,3);
+        GridPane.setHalignment(buttonHBox, HPos.CENTER);
+
+        contentViewBox.getChildren().add(gridPane);
     }
 
-    protected void initLayout() {
-        initArtistDisplay();
+    private void initEditView() {
+        editViewBox.setAlignment(Pos.CENTER);
+        //Name
+        VBox artistNameHBox = UIComponents.createTextfieldGroup("Artist name:", "Type artist name here...");
+        artistNameTextField = (TextField) artistNameHBox.getChildren().get(1);
+        //Label
+        VBox labelNameHBox = UIComponents.createTextfieldGroup("Label name:", "Type label name here...");
+        labelNameTextField = (TextField) labelNameHBox.getChildren().get(1);
+        //Favorite
+        HBox favoriteHBox = UIComponents.createFavoriteGroup("Favorite:");
+        favoriteCheckBox = (CheckBox) favoriteHBox.getChildren().get(1);
+        //Change image button
+        changeImageButton.setMaxWidth(150);
+        VBox.setMargin(changeImageButton, new Insets(10, 0, 0, 0));
 
-        VBox.setVgrow(rootVerticalBox, Priority.ALWAYS);
-        windowHandle = new CustomWindowHandle();
-        rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
-        rootVerticalBox.getChildren().add(windowHandle);
-        rootVerticalBox.getChildren().add(rootHorizontalBox);
-        Pane bottomEdge = new Pane();
-        bottomEdge.setMinHeight(10);
-        rootVerticalBox.getChildren().add(bottomEdge);
-        rootHorizontalBox.getChildren().add(adjustableListBox);
-        rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
-
-    }
-
-    public void setBackgroundImageByPath(String imagePath) {
-        File tempFile = new File(imagePath);
-        boolean exists = tempFile.exists();
-        Image image;
-        if(exists){
-            image = MainApplication.loadImage(imagePath);
-        }else {
-            image = MainApplication.loadImage("src/practicumopdracht/content/default_bg.png");
-        }
-        BackgroundImage bgImage = new BackgroundImage(
-                image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(-1, -1, false, false, false, true)
-        );
-
-        rootPane.setBackground(new Background(bgImage));
-    }
-
-    private void initArtistDisplay() {
-
-        rootPane = new StackPane();
-        rootPane.setMinWidth(200);
-        artistDisplayContentPane = new StackPane();
-
-        HBox.setHgrow(rootPane, Priority.ALWAYS);
-        VBox.setVgrow(rootPane, Priority.ALWAYS);
-
-        setBackgroundImageByPath("src/practicumopdracht/content/default_bg.png");
-
-        artistDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-        rootPane.getChildren().add(artistDisplayContentPane);
-        rootHorizontalBox.getChildren().add(rootPane);
-
-        sortImageView = new ImageView();
-        sortButton = new Button("");
-        sortButton.setGraphic(sortImageView);
-        sortButton.setStyle("-fx-background-color: transparent;");
-        sortButton.setMinSize(30, 30);
-        StackPane.setAlignment(sortButton, Pos.CENTER_RIGHT);
-        adjustableListBox.getHeaderStackPane().getChildren().add(sortButton);
-
-        initArtistEditView();
-        initArtistContentView();
-
-        setState(ViewState.EMPTY);
+        //Buttons
+        HBox editButtonHBox = UIComponents.createEditButtonGroup();
+        artistEditApplyButton = (Button) editButtonHBox.getChildren().get(0);
+        artistEditCancelButton = (Button) editButtonHBox.getChildren().get(1);
+        editViewBox.getChildren().addAll(artistNameHBox, labelNameHBox, favoriteHBox, changeImageButton, editButtonHBox);
     }
 
     public void setSortingButtonGraphic(boolean ascending) {
@@ -182,78 +174,13 @@ public class ArtistView extends View {
         sortImageView.setImage(imageToSetTo);
     }
 
-    private void initArtistContentView() {
-        artistContentBox = new VBox();
-        artistDisplayContentPane.getChildren().add(artistContentBox);
-        artistContentBox.setAlignment(Pos.CENTER);
-
-        favImageOn = MainApplication.loadImage("src/practicumopdracht/content/fav-on-32.png");
-        favImageOff = MainApplication.loadImage("src/practicumopdracht/content/fav-off-32.png");
-        favImageView = new ImageView();
-        favImageView.setSmooth(true);
-        artistContentBox.getChildren().add(favImageView);
-
-        //Add / Remove Button
-        contentTitle = new Label("Arctic Monkeys");
-        contentTitle.setWrapText(true);
-        contentTitle.setTextAlignment(TextAlignment.CENTER);
-        contentTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
-                "-fx-font-size: 30; -fx-font-family: Broadway");
-        artistContentBox.getChildren().add(contentTitle);
-        recordlabelTitle = new Label("Domino Records");
-        recordlabelTitle.setWrapText(true);
-        recordlabelTitle.setTextAlignment(TextAlignment.CENTER);
-        recordlabelTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
-                "-fx-font-size: 20; -fx-font-family: Broadway");
-        artistContentBox.getChildren().add(recordlabelTitle);
-
-        VBox buttonHBox = new VBox();
-        buttonHBox.setSpacing(10);
-        buttonHBox.setPadding(new Insets(20, 0, 0, 0));
-        buttonHBox.setAlignment(Pos.CENTER);
-        viewAlbumsButton = new Button("View Albums");
-        buttonHBox.getChildren().add(viewAlbumsButton);
-        editArtistButton = new Button("Edit Artist");
-        buttonHBox.getChildren().add(editArtistButton);
-        artistContentBox.getChildren().add(buttonHBox);
-        buttonHBox.setMinWidth(200);
-
-        artistContentBox.setVisible(false);
-    }
-
-    private void initArtistEditView() {
-        artistEditBox = new VBox();
-        artistDisplayContentPane.getChildren().add(artistEditBox);
-        artistEditBox.setAlignment(Pos.CENTER);
-        VBox artistNameHBox = UIComponents.createTextfieldGroup("Artist name:", "Type artist name here...");
-        artistNameTextField = (TextField) artistNameHBox.getChildren().get(1);
-        artistEditBox.getChildren().add(artistNameHBox);
-        VBox labelNameHBox = UIComponents.createTextfieldGroup("Label name:", "Type label name here...");
-        labelNameTextField = (TextField) labelNameHBox.getChildren().get(1);
-        artistEditBox.getChildren().add(labelNameHBox);
-        HBox favoriteHBox = UIComponents.createFavoriteGroup("Favorite:");
-        favoriteCheckBox = (CheckBox) favoriteHBox.getChildren().get(1);
-        artistEditBox.getChildren().add(favoriteHBox);
-        changeImageButton = new Button("Change Album Image");
-        changeImageButton.setMaxWidth(150);
-        VBox.setMargin(changeImageButton, new Insets(10, 0, 0, 0));
-        artistEditBox.getChildren().add(changeImageButton);
-        //Buttons
-        HBox editButtonHBox = UIComponents.createEditButtonGroup();
-        artistEditApplyButton = (Button) editButtonHBox.getChildren().get(0);
-        artistEditCancelButton = (Button) editButtonHBox.getChildren().get(1);
-        artistEditBox.getChildren().add(editButtonHBox);
-        artistEditBox.setVisible(false);
+    public void setFavoriteDisplayState(boolean state) {
+        favImageView.setImage(state ? favImageOn : favImageOff);
     }
 
     @Override
     public Parent getRoot() {
-        return rootVerticalBox;
+        return super.getRoot();
     }
 
-    @Override
-    public void setState(ViewState state) {
-        artistContentBox.setVisible(state != ViewState.EMPTY && state == ViewState.VIEW);
-        artistEditBox.setVisible(state != ViewState.EMPTY && state == ViewState.EDIT);
-    }
 }

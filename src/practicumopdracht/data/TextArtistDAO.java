@@ -24,7 +24,7 @@ public class TextArtistDAO extends ArtistDAO {
                 addOrUpdate(new Artist(split[0],split[1],Boolean.parseBoolean(split[2]),split[3]));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
             return false;
         }
         return super.load();
@@ -41,7 +41,7 @@ public class TextArtistDAO extends ArtistDAO {
             }
             printWriter.close();
         } catch (Exception e) {
-            System.out.println(e);
+            System.err.println(e);
         }
         return super.save();
     }

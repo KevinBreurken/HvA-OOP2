@@ -13,7 +13,7 @@ import practicumopdracht.MainApplication;
 import practicumopdracht.MessageBuilder;
 import practicumopdracht.comparators.ArtistComparatorAZ;
 import practicumopdracht.models.Artist;
-import practicumopdracht.views.NewArtistView;
+import practicumopdracht.views.ArtistView;
 import practicumopdracht.views.View;
 
 import java.io.File;
@@ -25,13 +25,13 @@ public class ArtistController extends Controller {
      * Reference to the artist that is selected on the Artist View, is used in other controllers as well.
      */
     private static Artist currentArtist;
-    private NewArtistView view;
+    private ArtistView view;
     private boolean isListAscending = false;
     private String imagePath;
     private File selectedFile;
 
     public ArtistController() {
-        view = new NewArtistView();
+        view = new ArtistView();
 
         AdjustableListView adjustableListView = view.getAdjustableListView();
         //HEADER - SAVE/LOAD

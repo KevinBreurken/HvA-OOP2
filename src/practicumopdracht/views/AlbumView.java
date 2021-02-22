@@ -6,35 +6,38 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import practicumopdracht.AdjustableListView;
-import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
 
-public class AlbumView extends View {
+public class AlbumView extends GeneralContentView {
 
-    private CustomWindowHandle windowHandle;
-    private StackPane rootPane;
-    private HBox rootHorizontalBox;
-    private VBox rootVerticalBox;
-    //Album Content
-    private StackPane albumDisplayContentPane;
-    private VBox albumVBox;
-    private Button backToArtistButton;
-    private Button editAlbumButton;
-    private Button wikiButton;
-    private VBox contentVBox;
-    private Label albumTitleLabel;
-    private Label dateLabel;
-    private Label salesLabel;
-    private Label ratingLabel;
-    //Album Edit
+    private ComboBox artistComboBox = new ComboBox();
+
+    //Sorting
+    private RadioButton alphabetDescendingRadioButton;
+    private RadioButton alphabetAscendingRadioButton;
+    private RadioButton salesDescendingRadioButton;
+    private RadioButton salesAscendingRadioButton;
+
+    //Content
+    private Label albumTitleLabel = new Label("Album Title");
+    private Label dateLabel = new Label("00 / 00 / 0000");
+    private Label salesLabel = new Label("Sales: 000000");
+    private Label ratingLabel = new Label("Rating: (0/0)");
+    private Button wikiButton = new Button("See Wiki");
+    private Button editAlbumButton = new Button("Edit");
+    private Button backToArtistButton = new Button("");
+
+    //Edit
     private GridPane gridPane;
     private Button albumEditApplyButton;
     private Button albumEditCancelButton;
-    private Button changeImageButton;
+    private Button changeImageButton = new Button("Change Album Image");
     private Button ratingDecreaseButton;
     private Button ratingIncreaseButton;
     //Album Edit Input
@@ -44,21 +47,18 @@ public class AlbumView extends View {
     private DatePicker dateInputField;
     private ComboBox editArtistComboBox;
     private TextField ratingTextField;
-    //Album List
-    private AdjustableListView adjustableListBox;
-    private ComboBox artistComboBox;
-    //Sorting
-    private RadioButton alphabetDescendingRadioButton;
-    private RadioButton alphabetAscendingRadioButton;
-    private RadioButton salesDescendingRadioButton;
-    private RadioButton salesAscendingRadioButton;
 
     public AlbumView() {
-        this.rootVerticalBox = new VBox();
-        this.rootHorizontalBox = new HBox();
-        this.adjustableListBox = new AdjustableListView( "Add", "Remove");
+        this.adjustableListBox.getTitleLabel().setText("Album");
 
-        initLayout();
+        artistComboBox.setMaxWidth(100);
+        adjustableListBox.setMaxWidth(250);
+        adjustableListBox.addToTop(artistComboBox);
+
+        initContentView();
+        initEditView();
+        initSortingRadioButtons();
+        setState(ViewState.EDIT);
     }
 
     public RadioButton getAlphabetDescendingRadioButton() {
@@ -75,10 +75,6 @@ public class AlbumView extends View {
 
     public RadioButton getSalesAscendingRadioButton() {
         return salesAscendingRadioButton;
-    }
-
-    public CustomWindowHandle getWindowHandle() {
-        return windowHandle;
     }
 
     public ComboBox getEditArtistComboBox() {
@@ -133,10 +129,6 @@ public class AlbumView extends View {
         return wikiButton;
     }
 
-    public AdjustableListView getAdjustableListView() {
-        return adjustableListBox;
-    }
-
     public Button getBackToArtistButton() {
         return backToArtistButton;
     }
@@ -159,52 +151,6 @@ public class AlbumView extends View {
 
     public DatePicker getDateInputField() {
         return dateInputField;
-    }
-
-    protected void initLayout() {
-        windowHandle = new CustomWindowHandle();
-        initAlbumDisplay();
-        rootHorizontalBox.prefHeightProperty().bind(MainApplication.getStage().heightProperty());
-        rootVerticalBox.getChildren().add(windowHandle);
-        rootVerticalBox.getChildren().add(rootHorizontalBox);
-        Pane bottomEdge = new Pane();
-        bottomEdge.setMinHeight(10);
-        rootVerticalBox.getChildren().add(bottomEdge);
-        rootHorizontalBox.getChildren().add(adjustableListBox);
-        rootHorizontalBox.setAlignment(Pos.TOP_RIGHT);
-
-    }
-
-    private void initAlbumDisplay() {
-        rootPane = new StackPane();
-        albumDisplayContentPane = new StackPane();
-
-        HBox.setHgrow(rootPane, Priority.ALWAYS);
-        VBox.setVgrow(rootPane, Priority.ALWAYS);
-
-        BackgroundImage bgImage = new BackgroundImage(
-                MainApplication.loadImage("src/practicumopdracht/content/arcticmonkeys.jfif"
-                        , 24, 24, true, true),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(-1, -1, false, false, false, true)
-        );
-
-        rootPane.setBackground(new Background(bgImage));
-        albumDisplayContentPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
-        rootHorizontalBox.getChildren().add(rootPane);
-        rootPane.getChildren().add(albumDisplayContentPane);
-
-        artistComboBox = new ComboBox();
-        artistComboBox.setMaxWidth(100);
-        adjustableListBox.setMaxWidth(250);
-        adjustableListBox.addToTop(artistComboBox);
-
-        initAlbumEditView();
-        initAlbumContentView();
-        initSortingRadioButtons();
-        setState(ViewState.EMPTY);
     }
 
     private void initSortingRadioButtons() {
@@ -240,7 +186,6 @@ public class AlbumView extends View {
         salesDescendingRadioButton = (RadioButton) thirdRadioElement.getChildren().get(1);
         salesDescendingRadioButton.setSelected(true);
         salesAscendingRadioButton = (RadioButton) fourthRadioElement.getChildren().get(1);
-
     }
 
     private VBox createRadioButtonElement(String imagePath, ToggleGroup group) {
@@ -256,10 +201,83 @@ public class AlbumView extends View {
         return vBoxElement;
     }
 
-    private void initAlbumEditView() {
+    private void initContentView() {
+        contentViewBox.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/default_album.png",
+                300, 300, true, true));
+        imageView.setPreserveRatio(true);
+
+        StackPane pane = new StackPane();
+        pane.getChildren().add(imageView);
+        StackPane.setAlignment(imageView, Pos.CENTER);
+        contentViewBox.getChildren().add(pane);
+
+        VBox contentVBox = new VBox();
+        contentVBox.setAlignment(Pos.BOTTOM_CENTER);
+        contentVBox.setSpacing(15);
+        contentVBox.setPadding(new Insets(0, 0, 10, 0));
+        pane.getChildren().add(contentVBox);
+
+        //Album title label
+        albumTitleLabel.setEffect(UIComponents.createDropShadowEffect());
+        albumTitleLabel.setWrapText(true);
+        albumTitleLabel.setMaxWidth(300);
+        albumTitleLabel.setAlignment(Pos.CENTER);
+        albumTitleLabel.setTextAlignment(TextAlignment.CENTER);
+        albumTitleLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
+                "-fx-font-size: 20; -fx-font-family: Broadway");
+
+        //Date label
+        dateLabel = new Label("12 / 6 / 2018");
+        dateLabel.setEffect(UIComponents.createDropShadowEffect());
+        dateLabel.setWrapText(true);
+        dateLabel.setTextAlignment(TextAlignment.CENTER);
+        dateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
+                "-fx-font-size: 20; -fx-font-family: Broadway;");
+
+        //Sales label
+        salesLabel = new Label("Sales: 257382");
+        salesLabel.setEffect(UIComponents.createDropShadowEffect());
+        salesLabel.setWrapText(true);
+        salesLabel.setTextAlignment(TextAlignment.CENTER);
+        salesLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
+                "-fx-font-size: 20; -fx-font-family: Broadway");
+
+        //Rating label
+        ratingLabel = new Label("Rating: (4/5)");
+        ratingLabel.setEffect(UIComponents.createDropShadowEffect());
+        ratingLabel.setWrapText(true);
+        ratingLabel.setTextAlignment(TextAlignment.CENTER);
+        ratingLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
+                "-fx-font-size: 20; -fx-font-family: Broadway");
+
+        //Buttons
+        HBox buttonHBox = new HBox();
+        buttonHBox.setSpacing(10);
+        buttonHBox.setPadding(new Insets(0, 0, 10, 0));
+        buttonHBox.setAlignment(Pos.CENTER);
+        buttonHBox.getChildren().add(wikiButton);
+        buttonHBox.getChildren().add(editAlbumButton);
+        editAlbumButton.setMinWidth(50);
+        wikiButton.setMinWidth(50);
+
+        //Back to artist button
+        backToArtistButton = new Button("");
+        backToArtistButton.setMinSize(50, 50);
+        backToArtistButton.setStyle("-fx-background-color: transparent;");
+        backToArtistButton.setPadding(new Insets(0, 0, 0, 10));
+        backToArtistButton.setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/navigation/back.png")));
+        rootPane.setAlignment(Pos.TOP_LEFT);
+        rootPane.getChildren().add(backToArtistButton);
+
+        contentVBox.getChildren().addAll(albumTitleLabel, dateLabel, salesLabel, ratingLabel, buttonHBox);
+    }
+
+    private void initEditView() {
         gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        albumDisplayContentPane.getChildren().add(gridPane);
+        editViewBox.getChildren().add(gridPane);
 
         StackPane pane = new StackPane();
         pane.setMinSize(100, 100);
@@ -295,10 +313,8 @@ public class AlbumView extends View {
         HBox rootSelector = (HBox) intSelector.getChildren().get(1);
         ratingDecreaseButton = (Button) rootSelector.getChildren().get(0);
         ratingTextField = (TextField) rootSelector.getChildren().get(1);
-        System.out.println(ratingTextField.getText());
         ratingIncreaseButton = (Button) rootSelector.getChildren().get(2);
 
-        changeImageButton = new Button("Change Album Image");
         changeImageButton.setMaxWidth(300);
         groupBox.getChildren().add(changeImageButton);
 
@@ -307,94 +323,10 @@ public class AlbumView extends View {
         albumEditApplyButton = (Button) editButtonHBox.getChildren().get(0);
         albumEditCancelButton = (Button) editButtonHBox.getChildren().get(1);
         groupBox.getChildren().add(editButtonHBox);
-        gridPane.setVisible(false);
-    }
-
-    private void initAlbumContentView() {
-        albumVBox = new VBox();
-        albumVBox.setAlignment(Pos.CENTER);
-        albumDisplayContentPane.getChildren().add(albumVBox);
-        ImageView imageView = new ImageView(MainApplication.loadImage("src/practicumopdracht/content/default_album.png", 300, 300, true, true));
-        imageView.setPreserveRatio(true);
-
-        StackPane pane = new StackPane();
-        pane.getChildren().add(imageView);
-        StackPane.setAlignment(imageView, Pos.CENTER);
-
-        albumVBox.getChildren().add(pane);
-        contentVBox = new VBox();
-        contentVBox.setSpacing(15);
-        contentVBox.setPadding(new Insets(0, 0, 10, 0));
-        albumTitleLabel = new Label("Tranquility Base Hotel & Casino");
-        albumTitleLabel.setEffect(UIComponents.createDropShadowEffect());
-        albumTitleLabel.setWrapText(true);
-        albumTitleLabel.setMaxWidth(300);
-        albumTitleLabel.setAlignment(Pos.CENTER);
-        albumTitleLabel.setTextAlignment(TextAlignment.CENTER);
-        albumTitleLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
-                "-fx-font-size: 20; -fx-font-family: Broadway");
-        contentVBox.getChildren().add(albumTitleLabel);
-
-        dateLabel = new Label("12 / 6 / 2018");
-        dateLabel.setEffect(UIComponents.createDropShadowEffect());
-        dateLabel.setWrapText(true);
-        dateLabel.setTextAlignment(TextAlignment.CENTER);
-        dateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
-                "-fx-font-size: 20; -fx-font-family: Broadway;");
-        contentVBox.getChildren().add(dateLabel);
-
-        salesLabel = new Label("Sales: 257382");
-        salesLabel.setEffect(UIComponents.createDropShadowEffect());
-        salesLabel.setWrapText(true);
-        salesLabel.setTextAlignment(TextAlignment.CENTER);
-        salesLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
-                "-fx-font-size: 20; -fx-font-family: Broadway");
-        contentVBox.getChildren().add(salesLabel);
-
-        ratingLabel = new Label("Rating: (4/5)");
-        ratingLabel.setEffect(UIComponents.createDropShadowEffect());
-        ratingLabel.setWrapText(true);
-        ratingLabel.setTextAlignment(TextAlignment.CENTER);
-        ratingLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: rgba(255,255,255,1); " +
-                "-fx-font-size: 20; -fx-font-family: Broadway");
-        contentVBox.getChildren().add(ratingLabel);
-
-        //Buttons
-        HBox buttonHBox = new HBox();
-        buttonHBox.setSpacing(10);
-        buttonHBox.setPadding(new Insets(0, 0, 10, 0));
-        buttonHBox.setAlignment(Pos.CENTER);
-        wikiButton = new Button("See Wiki");
-        buttonHBox.getChildren().add(wikiButton);
-        editAlbumButton = new Button("Edit");
-        buttonHBox.getChildren().add(editAlbumButton);
-        contentVBox.getChildren().add(buttonHBox);
-        editAlbumButton.setMinWidth(50);
-        wikiButton.setMinWidth(50);
-
-        backToArtistButton = new Button("");
-        backToArtistButton.setMinSize(50, 50);
-        rootPane.setAlignment(Pos.TOP_LEFT);
-        rootPane.getChildren().add(backToArtistButton);
-        backToArtistButton.setStyle("-fx-background-color: transparent;");
-        backToArtistButton.setPadding(new Insets(0, 0, 0, 10));
-        backToArtistButton.setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/navigation/back.png")));
-
-        contentVBox.setAlignment(Pos.BOTTOM_CENTER);
-        albumVBox.setVisible(false);
-        albumDisplayContentPane.getChildren().add(contentVBox);
-
     }
 
     @Override
     public Parent getRoot() {
-        return rootVerticalBox;
-    }
-
-    @Override
-    public void setState(ViewState state) {
-        albumVBox.setVisible(state != ViewState.EMPTY && state == ViewState.VIEW);
-        contentVBox.setVisible(state != ViewState.EMPTY && state == ViewState.VIEW);
-        gridPane.setVisible(state != ViewState.EMPTY && state == ViewState.EDIT);
+        return super.getRoot();
     }
 }
