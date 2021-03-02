@@ -24,11 +24,13 @@ public class ArtistController extends Controller {
     /**
      * Reference to the artist that is selected on the Artist View, is used in other controllers as well.
      */
-    private static Artist currentArtist;
+    private Artist currentArtist;
+
     private ArtistView view;
     private boolean isListAscending = false;
     private String imagePath;
     private File selectedFile;
+
 
     public ArtistController() {
         view = new ArtistView();
@@ -63,14 +65,20 @@ public class ArtistController extends Controller {
             view.getAdjustableListView().getListView().getSelectionModel().select(currentArtist);
             onArtistListItemSelected(currentArtist);
         }
-    }
 
-    public static Artist getCurrentArtist() {
-        return currentArtist;
-    }
+        //Source: https://stackoverflow.com/a/36657553
+        view.getAdjustableListView().getListView().setCellFactory(param -> new ListCell<Artist>() {
+            @Override
+            protected void updateItem(Artist item, boolean empty) {
+                super.updateItem(item, empty);
 
-    public static void setCurrentArtist(Artist artist) {
-        currentArtist = artist;
+                if (empty || item == null || item.getListString() == null) {
+                    setText(null);
+                } else {
+                    setText(item.getListString());
+                }
+            }
+        });
     }
 
     private void handleFileSaveClick() {
@@ -106,19 +114,6 @@ public class ArtistController extends Controller {
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(artists));
         FXCollections.sort(listView.getItems(), new ArtistComparatorAZ(isListAscending));
-        //Source: https://stackoverflow.com/a/36657553
-        listView.setCellFactory(param -> new ListCell<Artist>() {
-            @Override
-            protected void updateItem(Artist item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null || item.getListString() == null) {
-                    setText(null);
-                } else {
-                    setText(item.getListString());
-                }
-            }
-        });
     }
 
     private void onArtistListItemSelected(Artist item) {
@@ -209,7 +204,7 @@ public class ArtistController extends Controller {
     }
 
     private void handleAlbumsClick() {
-        MainApplication.switchController(new AlbumController());
+        MainApplication.switchController(new AlbumController(currentArtist));
     }
 
     private void handleEditClick() {

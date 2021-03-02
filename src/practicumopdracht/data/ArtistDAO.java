@@ -4,6 +4,7 @@ import practicumopdracht.models.Artist;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ArtistDAO implements DAO {
@@ -42,18 +43,19 @@ public abstract class ArtistDAO implements DAO {
     }
 
     @Override
-    public List getAll() {
+    public List<Artist> getAll() {
         return objects;
     }
 
     @Override
     public void addOrUpdate(Object T) {
+        Artist artistObject = (Artist) T;
         addOrUpdateCallSinceLoad++;
-        System.out.println(objects.size());
-        if (objects.contains(T)) {
+
+        if (objects.contains(artistObject)) {
             return;
         }
-        objects.add((Artist) T);
+        objects.add(artistObject);
     }
 
     @Override

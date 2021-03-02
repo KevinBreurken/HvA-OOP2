@@ -26,12 +26,13 @@ public class AlbumController extends Controller {
 
     private AlbumView view;
     private Album currentAlbum;
+    private Artist currentArtist;
     private boolean isNameSortingAscending;
     private boolean isNameSalesAscending;
 
-    public AlbumController() {
+    public AlbumController(Artist artist) {
         view = new AlbumView();
-
+        currentArtist = artist;
         //HEADER - SAVE/LOAD
         view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
         view.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
@@ -70,6 +71,20 @@ public class AlbumController extends Controller {
 
         setArtistComboBox();
         updateAlbumList();
+
+        //Source: https://stackoverflow.com/a/36657553
+        view.getAdjustableListView().getListView().setCellFactory(param -> new ListCell<Album>() {
+            @Override
+            protected void updateItem(Album item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null || item.getListString() == null) {
+                    setText(null);
+                } else {
+                    setText(item.getListString());
+                }
+            }
+        });
     }
 
     private void handleFileSaveClick() {
@@ -95,7 +110,7 @@ public class AlbumController extends Controller {
     private void onComboArtistSelected(Artist item) {
         if (item == null) //caused when selected item is removed.
             return;
-        ArtistController.setCurrentArtist(item);
+        currentArtist = item;
         updateAlbumList();
     }
 
@@ -108,7 +123,7 @@ public class AlbumController extends Controller {
 
     private void displayAlbum(Album album) {
         currentAlbum = album;
-        view.getEditArtistComboBox().setValue(ArtistController.getCurrentArtist());
+        view.getEditArtistComboBox().setValue(currentArtist);
         view.getAlbumTitleLabel().setText(album.getName());
         view.getSalesLabel().setText(String.format("Sales: %.0f", album.getSales()));
         view.getRatingLabel().setText(String.format("Rating: (%d/%d)", album.getRating(), Album.MAX_RATING));
@@ -117,26 +132,13 @@ public class AlbumController extends Controller {
     }
 
     private void updateAlbumList() {
-        ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(ArtistController.getCurrentArtist());
+        ArrayList<Album> albums = (ArrayList<Album>) MainApplication.getAlbumDAO().getAllFor(currentArtist);
         if (albums == null)
             return;
 
         ListView listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));
         FXCollections.sort(listView.getItems(), new AlbumComparatorAZ(isNameSortingAscending).thenComparing(new AlbumComparatorSales(isNameSalesAscending)));
-        //Source: https://stackoverflow.com/a/36657553
-        listView.setCellFactory(param -> new ListCell<Album>() {
-            @Override
-            protected void updateItem(Album item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null || item.getListString() == null) {
-                    setText(null);
-                } else {
-                    setText(item.getListString());
-                }
-            }
-        });
         if (albums.size() > 0)
             view.getAdjustableListView().getListView().getSelectionModel().select(0);
         else {
@@ -171,14 +173,14 @@ public class AlbumController extends Controller {
         ComboBox artistComboBox = view.getArtistComboBox();
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
         artistComboBox.setItems(FXCollections.observableList(artists));
-        artistComboBox.getSelectionModel().select(ArtistController.getCurrentArtist());
+        artistComboBox.getSelectionModel().select(currentArtist);
         artistComboBox.setMaxWidth(999);
         artistComboBox.setButtonCell(cellFactory.call(null));
         artistComboBox.setCellFactory(cellFactory);
 
         ComboBox artistEditComboBox = view.getEditArtistComboBox();
         artistEditComboBox.setItems(FXCollections.observableList(artists));
-        artistEditComboBox.getSelectionModel().select(ArtistController.getCurrentArtist());
+        artistEditComboBox.getSelectionModel().select(currentArtist);
         artistEditComboBox.setButtonCell(cellFactory.call(null));
         artistEditComboBox.setCellFactory(cellFactory);
     }
@@ -216,7 +218,6 @@ public class AlbumController extends Controller {
             textArea.getStyleClass().add("error");
             messageBuilder.append("Wiki: Incorrect wiki link.");
         }
-        ;
 
         //Release date:
         DatePicker datePicker = view.getDateInputField();
@@ -260,7 +261,7 @@ public class AlbumController extends Controller {
             }
             messageBuilder.createAlert(Alert.AlertType.INFORMATION);
             view.getArtistComboBox().setValue(artistCurrentlySelected);
-            ArtistController.setCurrentArtist(artistCurrentlySelected);
+            currentArtist = artistCurrentlySelected;
             applyFromEditView(newAlbum);
         } else {
             messageBuilder.createAlert(Alert.AlertType.ERROR);

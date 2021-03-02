@@ -163,6 +163,7 @@ public class AlbumView extends GeneralContentView {
         headerPane.getChildren().add(leftRadioButtonGroup);
         leftRadioButtonGroup.setMaxWidth(90);
         ToggleGroup alphabetToggleGroup = new ToggleGroup();
+
         VBox firstRadioElement = createRadioButtonElement("src/practicumopdracht/content/sorting/sort-descending-name.png", alphabetToggleGroup);
         VBox secondRadioElement = createRadioButtonElement("src/practicumopdracht/content/sorting/sort-ascending-name.png", alphabetToggleGroup);
         leftRadioButtonGroup.getChildren().addAll(firstRadioElement, secondRadioElement);

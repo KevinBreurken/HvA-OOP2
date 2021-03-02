@@ -53,7 +53,6 @@ public class Album implements Serializable {
         this.name = name;
         this.sales = sales;
         this.rating = rating;
-        System.out.println("h: " + hoortBij);
         this.hoortBij = hoortBij;
         artistID = MainApplication.getArtistDAO().getIDFor(hoortBij);
     }
@@ -103,7 +102,6 @@ public class Album implements Serializable {
 
         if (hoortBij != null)
             sb.append(String.format("\tArtist: %s\n", hoortBij.getName()));
-
 
         return sb.toString();
     }

@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AlbumDAO implements DAO {
+public abstract class AlbumDAO implements DAO<Album> {
     protected List<Album> objects;
     private int addOrUpdateCallSinceLoad;
 
@@ -36,21 +36,22 @@ public abstract class AlbumDAO implements DAO {
     }
 
     @Override
-    public List getAll() {
+    public List<Album> getAll() {
         return objects;
     }
 
     @Override
-    public void addOrUpdate(Object T) {
+    public void addOrUpdate(Album album) {
         addOrUpdateCallSinceLoad++;
-        if(objects.contains(T))
-            return;
 
-        objects.add((Album) T);
+        if (objects.contains(album)) {
+            return;
+        }
+        objects.add(album);
     }
 
     @Override
-    public void remove(Object T) {
+    public void remove(Album T) {
         objects.remove(T);
     }
 
