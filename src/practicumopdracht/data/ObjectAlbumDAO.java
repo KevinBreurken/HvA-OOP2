@@ -3,6 +3,7 @@ package practicumopdracht.data;
 import practicumopdracht.MainApplication;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
+import practicumopdracht.views.View;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -31,7 +31,7 @@ public class BinaryArtistDAO extends ArtistDAO {
                 dataOutputStream.writeUTF(artist.getName());
                 dataOutputStream.writeUTF(artist.getLabel());
                 dataOutputStream.writeBoolean(artist.isFavorited());
-                dataOutputStream.writeUTF(artist.getImageFileName());
+                dataOutputStream.writeUTF(artist.getCurrentFileName());
                 artist.setUnsavedImageFileName(null);
             }
             MainApplication.getImageFileDAO().removeQueuedImages();
