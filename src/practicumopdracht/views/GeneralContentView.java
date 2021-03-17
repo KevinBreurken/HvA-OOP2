@@ -42,9 +42,19 @@ public abstract class GeneralContentView extends View {
     }
 
     public void setBackgroundImageByPath(String imagePath) {
+        setBackgroundImageByPath(imagePath, -1);
+    }
+
+    public void setBackgroundImageByPath(String imagePath, int size) {
         File tempFile = new File(imagePath);
-        Image image = tempFile.exists() ? MainApplication.loadImage(imagePath) :
-                MainApplication.loadImage("src/practicumopdracht/content/default_bg.png");
+
+        Image image;
+
+        if (!tempFile.exists())
+            image = MainApplication.loadImage("src/practicumopdracht/content/default_bg.png");
+        else
+            image = size != -1 ? MainApplication.loadImage(imagePath, size, size, false, true) :
+                    MainApplication.loadImage(imagePath);
 
         BackgroundImage bgImage = new BackgroundImage(
                 image,

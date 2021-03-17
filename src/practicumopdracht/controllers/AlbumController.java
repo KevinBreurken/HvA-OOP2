@@ -111,6 +111,8 @@ public class AlbumController extends Controller {
         if (item == null) //caused when selected item is removed.
             return;
         currentArtist = item;
+        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + currentArtist.getCurrentFileName(),50);
+        System.out.println("asd");
         updateAlbumList();
     }
 
@@ -149,6 +151,7 @@ public class AlbumController extends Controller {
     }
 
     private void setArtistComboBox() {
+
         //Source:https://stackoverflow.com/a/40325634
         //required for setting the combobox button and content to the item.getListString();
         Callback<ListView<Artist>, ListCell<Artist>> cellFactory = new Callback<ListView<Artist>, ListCell<Artist>>() {
