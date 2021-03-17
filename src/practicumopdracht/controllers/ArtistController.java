@@ -177,7 +177,6 @@ public class ArtistController extends Controller {
                 MainApplication.getImageFileDAO().saveArtistImage(selectedFile);
                 newArtist.setUnsavedImageFileName(selectedFile.getName());
             }
-            System.out.println(newArtist);
             applyFromEditView(newArtist);
         } else {
             messageBuilder.createAlert(Alert.AlertType.ERROR);

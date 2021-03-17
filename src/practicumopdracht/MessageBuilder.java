@@ -1,12 +1,12 @@
 package practicumopdracht;
 
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.util.Optional;
 
 public class MessageBuilder {
@@ -44,7 +44,9 @@ public class MessageBuilder {
             });
         });
         alert.initStyle(StageStyle.UNDECORATED);
-        dialogPane.getStylesheets().add("practicumopdracht/default.css");
+        //Source: Stylesheet from https://github.com/joffrey-bion/javafx-themes
+        File f = new File("src/practicumopdracht/content/css/default.css");
+        dialogPane.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
         return alert;
     }
 

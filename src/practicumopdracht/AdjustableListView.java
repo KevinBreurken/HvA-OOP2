@@ -2,16 +2,13 @@ package practicumopdracht;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.util.Callback;
-import practicumopdracht.models.Artist;
 
 /**
  * Reusable listview used in both Artist and Album view.
@@ -27,26 +24,6 @@ public class AdjustableListView extends VBox {
     private HBox buttonHBox;
     private Button addButton;
     private Button removeButton;
-
-    public Button getAddButton() {
-        return addButton;
-    }
-
-    public Button getRemoveButton() {
-        return removeButton;
-    }
-
-    public ListView getListView() {
-        return listView;
-    }
-
-    public StackPane getHeaderStackPane() {
-        return headerStackPane;
-    }
-
-    public Label getTitleLabel() {
-        return titleLabel;
-    }
 
     public AdjustableListView(String addButtonText, String removeButtonText) {
         setMinWidth(200);
@@ -85,8 +62,28 @@ public class AdjustableListView extends VBox {
 
     }
 
-    public void addToTop(Node node){
-        this.getChildren().add(0,node);
+    public Button getAddButton() {
+        return addButton;
+    }
+
+    public Button getRemoveButton() {
+        return removeButton;
+    }
+
+    public ListView getListView() {
+        return listView;
+    }
+
+    public StackPane getHeaderStackPane() {
+        return headerStackPane;
+    }
+
+    public Label getTitleLabel() {
+        return titleLabel;
+    }
+
+    public void addToTop(Node node) {
+        this.getChildren().add(0, node);
     }
 
 }

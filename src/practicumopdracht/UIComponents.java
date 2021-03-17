@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 
 /**
- * Class containing functions to create custom UI Components.
+ * Class containing static functions to create custom UI Components.
  */
 public class UIComponents {
 

@@ -2,7 +2,6 @@ package practicumopdracht;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -11,6 +10,7 @@ import practicumopdracht.controllers.Controller;
 import practicumopdracht.data.*;
 import practicumopdracht.vendors.ResizeHelper;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,8 +45,10 @@ public class MainApplication extends Application {
      */
     public static void switchController(Controller controller) {
         Scene scene = new Scene(controller.getView().getRoot());
+
         //Source: Stylesheet from https://github.com/joffrey-bion/javafx-themes
-        scene.getStylesheets().add("practicumopdracht/default.css");
+        File f = new File("src/practicumopdracht/content/css/default.css");
+        scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
         stage.setScene(scene);
         ResizeHelper.addResizeListener(stage);
     }

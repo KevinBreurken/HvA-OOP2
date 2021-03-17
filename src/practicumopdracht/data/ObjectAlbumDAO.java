@@ -25,6 +25,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
             objectOutputStream.writeInt(objects.size());
             for (Album album : objects) {
                 objectOutputStream.writeObject(album);
+                objectOutputStream.writeInt(MainApplication.getArtistDAO().getIDFor(album.getArtist()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +46,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
 
             for (int i = 0; i < objectAmount; i++) {
                 Album album = (Album) objectInputStream.readObject();
-                album.setHoortBij(MainApplication.getArtistDAO().getById(album.getArtistID()));
+                album.setHoortBij(MainApplication.getArtistDAO().getById(objectInputStream.readInt()));
                 objects.add(album);
             }
         } catch (Exception e) {

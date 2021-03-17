@@ -4,14 +4,13 @@ import practicumopdracht.models.Artist;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ArtistDAO implements DAO {
     protected List<Artist> objects;
     private int addOrUpdateCallSinceLoad;
 
-    public void checkIfFileExists(String fileName){
+    public void checkIfFileExists(String fileName) {
         File file = new File(fileName);
         try {
             file.createNewFile();
@@ -55,6 +54,7 @@ public abstract class ArtistDAO implements DAO {
         if (objects.contains(artistObject)) {
             return;
         }
+
         objects.add(artistObject);
     }
 

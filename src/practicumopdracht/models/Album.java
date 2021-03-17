@@ -21,8 +21,6 @@ public class Album implements Serializable {
 
     private transient Artist hoortBij;
 
-    private int artistID;
-
     public void setHoortBij(Artist hoortBij) {
         this.hoortBij = hoortBij;
     }
@@ -54,7 +52,6 @@ public class Album implements Serializable {
         this.sales = sales;
         this.rating = rating;
         this.hoortBij = hoortBij;
-        artistID = MainApplication.getArtistDAO().getIDFor(hoortBij);
     }
 
     public String getName() {
@@ -85,10 +82,6 @@ public class Album implements Serializable {
         return name;
     }
 
-    public int getArtistID() {
-        return artistID;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -97,8 +90,7 @@ public class Album implements Serializable {
                 .append(String.format("\tSales: %f\n", sales))
                 .append(String.format("\tWiki: %s\n", wikiLink))
                 .append(String.format("\tRelease date: %s\n", releaseDate.toString()))
-                .append(String.format("\tRating: (%d/%d)\n", rating, MAX_RATING))
-                .append(String.format("\tArtist-ID: %s\n", artistID));
+                .append(String.format("\tRating: (%d/%d)\n", rating, MAX_RATING));
 
         if (hoortBij != null)
             sb.append(String.format("\tArtist: %s\n", hoortBij.getName()));
