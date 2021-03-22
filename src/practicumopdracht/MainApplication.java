@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 /**
  * Starts the JavaFX application and handles general application operations.
  */
@@ -59,9 +58,7 @@ public class MainApplication extends Application {
             Image image = new Image(input);
             input.close();
             return image;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -73,9 +70,7 @@ public class MainApplication extends Application {
             Image image = new Image(input, requestedWidth, requestedHeight, preserveRatio, smooth);
             input.close();
             return image;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -106,5 +101,6 @@ public class MainApplication extends Application {
         ArtistController artistController = new ArtistController();
         MainApplication.switchController(artistController);
         stage.show();
+
     }
 }

@@ -33,6 +33,9 @@ public abstract class View {
         return windowHandle;
     }
 
+    /**
+     * Different states an View can be in.
+     */
     public enum ViewState {
         EMPTY,
         VIEW,

@@ -12,7 +12,7 @@ public abstract class AlbumDAO implements DAO<Album> {
     protected List<Album> objects;
     private int addOrUpdateCallSinceLoad;
 
-    public void checkIfFileExists(String fileName){
+    public void checkIfFileExists(String fileName) {
         File file = new File(fileName);
         try {
             file.createNewFile();
@@ -26,10 +26,10 @@ public abstract class AlbumDAO implements DAO<Album> {
         return (addOrUpdateCallSinceLoad != 0);
     }
 
-    public List<Album> getAllFor(Artist object){
+    public List<Album> getAllFor(Artist object) {
         ArrayList<Album> newListOfType = new ArrayList<>();
         for (int i = 0; i < objects.size(); i++) {
-            if(objects.get(i).getArtist() == object)
+            if (objects.get(i).getArtist() == object)
                 newListOfType.add(objects.get(i));
         }
         return newListOfType;

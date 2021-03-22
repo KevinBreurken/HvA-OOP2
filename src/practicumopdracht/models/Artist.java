@@ -45,10 +45,6 @@ public class Artist {
         this.name = name;
     }
 
-    public void setFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
-    }
-
     public String getLabel() {
         return label;
     }

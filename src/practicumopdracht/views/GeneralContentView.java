@@ -47,7 +47,6 @@ public abstract class GeneralContentView extends View {
 
     public void setBackgroundImageByPath(String imagePath, int size) {
         File tempFile = new File(imagePath);
-
         Image image;
 
         if (!tempFile.exists())

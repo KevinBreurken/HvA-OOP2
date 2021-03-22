@@ -2,8 +2,6 @@ package practicumopdracht.data;
 
 import practicumopdracht.MainApplication;
 import practicumopdracht.models.Album;
-import practicumopdracht.models.Artist;
-import practicumopdracht.views.View;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
             for (int i = 0; i < objectAmount; i++) {
                 Album album = (Album) objectInputStream.readObject();
                 album.setHoortBij(MainApplication.getArtistDAO().getById(objectInputStream.readInt()));
-                objects.add(album);
+                addOrUpdate(album);
             }
         } catch (Exception e) {
             e.printStackTrace();
