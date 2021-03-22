@@ -35,7 +35,7 @@ public class AlbumController extends Controller {
         currentArtist = artist;
         //HEADER - SAVE/LOAD
         view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
-        view.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
+        view.getWindowHandle().getFileSaveButton().setOnAction(event -> CustomWindowHandle.handleFileSaveClick());
 
         //ALBUM - GENERAL
         view.getBackToArtistButton().setOnAction(event -> handleBackToArtistClick());
@@ -65,9 +65,8 @@ public class AlbumController extends Controller {
         //ALBUM - EDIT CONTENT
         view.getRatingDecreaseButton().setOnAction(event -> handleChangeRatingClick(-1));
         view.getRatingIncreaseButton().setOnAction(event -> handleChangeRatingClick(1));
-        view.getAlbumEditApplyButton().setOnAction(event -> handleAlbumEditApplyClick());
+        view.getAlbumEditApplyButton().setOnAction(event -> validateEdit());
         view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
-        view.getChangeImageButton().setOnAction(event -> handleChangePictureClick());
 
         setArtistComboBox();
         updateAlbumList();
@@ -85,10 +84,6 @@ public class AlbumController extends Controller {
                 }
             }
         });
-    }
-
-    private void handleFileSaveClick() {
-        CustomWindowHandle.handleFileSaveClick();
     }
 
     private void handleFileLoadClick() {
@@ -112,7 +107,6 @@ public class AlbumController extends Controller {
             return;
         currentArtist = item;
         view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + currentArtist.getCurrentFileName(), 50);
-        System.out.println("asd");
         updateAlbumList();
     }
 
@@ -138,7 +132,7 @@ public class AlbumController extends Controller {
         if (albums == null)
             return;
 
-        ListView listView = view.getAdjustableListView().getListView();
+        ListView<Album> listView = view.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));
         FXCollections.sort(listView.getItems(), new AlbumComparatorAZ(isNameSortingAscending).thenComparing(new AlbumComparatorSales(isNameSalesAscending)));
         if (albums.size() > 0)
@@ -147,11 +141,9 @@ public class AlbumController extends Controller {
             view.setState(View.ViewState.EMPTY);
             view.getAdjustableListView().getRemoveButton().setDisable(true);
         }
-
     }
 
     private void setArtistComboBox() {
-
         //Source:https://stackoverflow.com/a/40325634
         //required for setting the combobox button and content to the item.getListString();
         Callback<ListView<Artist>, ListCell<Artist>> cellFactory = new Callback<ListView<Artist>, ListCell<Artist>>() {
@@ -331,22 +323,13 @@ public class AlbumController extends Controller {
         try {
             desktop.browse(URI.create(currentAlbum.getWikiLink()));
         } catch (IOException e) {
+            MessageBuilder.showPopupAlert("couldn't open browser.");
             e.printStackTrace();
         }
     }
 
-    private void handleAlbumEditApplyClick() {
-        validateEdit();
-    }
-
     private void handleAlbumEditCancelClick() {
         view.setState((MainApplication.getAlbumDAO().getAll().size() == 0) ? View.ViewState.EMPTY : View.ViewState.VIEW);
-    }
-
-    private void handleChangePictureClick() {
-        Alert a = new Alert(Alert.AlertType.ERROR);
-        a.setContentText("Change Picture.");
-        a.show();
     }
 
     private void handleChangeRatingClick(int increase) {
@@ -360,7 +343,7 @@ public class AlbumController extends Controller {
             ratingField.setText("0");
         }
     }
-    
+
     @Override
     public View getView() {
         return view;

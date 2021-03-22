@@ -37,7 +37,6 @@ public class AlbumView extends GeneralContentView {
     private GridPane gridPane;
     private Button albumEditApplyButton;
     private Button albumEditCancelButton;
-    private Button changeImageButton = new Button("Change Album Image");
     private Button ratingDecreaseButton;
     private Button ratingIncreaseButton;
     //Album Edit Input
@@ -115,10 +114,6 @@ public class AlbumView extends GeneralContentView {
 
     public Button getRatingIncreaseButton() {
         return ratingIncreaseButton;
-    }
-
-    public Button getChangeImageButton() {
-        return changeImageButton;
     }
 
     public Button getEditAlbumButton() {
@@ -315,10 +310,6 @@ public class AlbumView extends GeneralContentView {
         ratingDecreaseButton = (Button) rootSelector.getChildren().get(0);
         ratingTextField = (TextField) rootSelector.getChildren().get(1);
         ratingIncreaseButton = (Button) rootSelector.getChildren().get(2);
-
-        changeImageButton.setMaxWidth(300);
-        changeImageButton.setDisable(true);
-        groupBox.getChildren().add(changeImageButton);
 
         //Buttons
         HBox editButtonHBox = UIComponents.createEditButtonGroup();
