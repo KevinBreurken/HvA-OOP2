@@ -21,18 +21,18 @@ public class CustomWindowHandle extends HBox {
     MenuItem loadSaveButton;
 
     public CustomWindowHandle() {
-        setMinHeight(30);
-
         setOnMousePressed(pressEvent -> setOnMouseDragged(dragEvent -> {
             MainApplication.getStage().setX(dragEvent.getScreenX() - pressEvent.getSceneX());
             MainApplication.getStage().setY(dragEvent.getScreenY() - pressEvent.getSceneY());
         }));
+
+        setPadding(new Insets(0, 0, 10, 10));
+        setMinHeight(30);
+
         Label titleLabel = new Label(MainApplication.title);
         setAlignment(Pos.CENTER_LEFT);
         titleLabel.setPadding(new Insets(10, 10, 0, 0));
         titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15; ");
-
-        setPadding(new Insets(0, 0, 10, 10));
 
         final Button left = new Button(MainApplication.title);
         left.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);
@@ -46,7 +46,6 @@ public class CustomWindowHandle extends HBox {
         closeButton.setPadding(new Insets(8, 0, 0, 0));
         closeButton.setGraphic(new ImageView(MainApplication.loadImage("src/practicumopdracht/content/navigation/close.png")));
         closeButton.setOnAction(event -> handleCloseClick());
-
 
         final Button maximiseButton = new Button("");
         maximiseButton.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);

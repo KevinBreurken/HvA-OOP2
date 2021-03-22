@@ -63,8 +63,8 @@ public class AlbumController extends Controller {
         view.getEditAlbumButton().setOnAction(event -> handleEditAlbumClick());
 
         //ALBUM - EDIT CONTENT
-        view.getRatingDecreaseButton().setOnAction(event -> handleDecreaseRatingClick());
-        view.getRatingIncreaseButton().setOnAction(event -> handleIncreaseRatingClick());
+        view.getRatingDecreaseButton().setOnAction(event -> handleChangeRatingClick(-1));
+        view.getRatingIncreaseButton().setOnAction(event -> handleChangeRatingClick(1));
         view.getAlbumEditApplyButton().setOnAction(event -> handleAlbumEditApplyClick());
         view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
         view.getChangeImageButton().setOnAction(event -> handleChangePictureClick());
@@ -111,7 +111,7 @@ public class AlbumController extends Controller {
         if (item == null) //caused when selected item is removed.
             return;
         currentArtist = item;
-        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + currentArtist.getCurrentFileName(),50);
+        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + currentArtist.getCurrentFileName(), 50);
         System.out.println("asd");
         updateAlbumList();
     }
@@ -340,10 +340,7 @@ public class AlbumController extends Controller {
     }
 
     private void handleAlbumEditCancelClick() {
-        if (MainApplication.getAlbumDAO().getAll().size() == 0)
-            view.setState(View.ViewState.EMPTY);
-        else
-            view.setState(View.ViewState.VIEW);
+        view.setState((MainApplication.getAlbumDAO().getAll().size() == 0) ? View.ViewState.EMPTY : View.ViewState.VIEW);
     }
 
     private void handleChangePictureClick() {
@@ -352,32 +349,18 @@ public class AlbumController extends Controller {
         a.show();
     }
 
-    private void handleIncreaseRatingClick() {
+    private void handleChangeRatingClick(int increase) {
         TextField ratingField = view.getRatingTextField();
         try {
             int ratingCount = Integer.parseInt(ratingField.getText());
-            if (ratingCount < Album.MAX_RATING)
-                ratingCount++;
-
+            ratingCount += increase;
+            ratingCount = Math.max(Album.MIN_RATING, Math.min(Album.MAX_RATING, ratingCount));
             ratingField.setText("" + ratingCount);
         } catch (Exception e) {
             ratingField.setText("0");
         }
     }
-
-    private void handleDecreaseRatingClick() {
-        TextField ratingField = view.getRatingTextField();
-        try {
-            int ratingCount = Integer.parseInt(ratingField.getText());
-            if (ratingCount > Album.MIN_RATING)
-                ratingCount--;
-
-            ratingField.setText("" + ratingCount);
-        } catch (Exception e) {
-            ratingField.setText("0");
-        }
-    }
-
+    
     @Override
     public View getView() {
         return view;
