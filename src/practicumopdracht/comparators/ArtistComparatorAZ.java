@@ -1,16 +1,11 @@
 package practicumopdracht.comparators;
 
-import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 
-import java.util.Comparator;
+public class ArtistComparatorAZ extends DirectionalComparator<Artist> {
 
-public class ArtistComparatorAZ implements Comparator<Artist> {
-
-    private final boolean isAscending;
-
-    public ArtistComparatorAZ(boolean isAscending){
-        this.isAscending = isAscending;
+    public ArtistComparatorAZ(boolean isAscending) {
+        super(isAscending);
     }
 
     @Override

@@ -2,14 +2,10 @@ package practicumopdracht.comparators;
 
 import practicumopdracht.models.Album;
 
-import java.util.Comparator;
-
-public class AlbumComparatorSales implements Comparator<Album> {
-
-    private final boolean isAscending;
+public class AlbumComparatorSales extends DirectionalComparator<Album> {
 
     public AlbumComparatorSales(boolean isAscending) {
-        this.isAscending = isAscending;
+        super(isAscending);
     }
 
     @Override
