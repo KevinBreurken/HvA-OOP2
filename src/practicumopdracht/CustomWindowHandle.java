@@ -1,6 +1,5 @@
 package practicumopdracht;
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,6 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
+/**
+ * Custom handle for the JavaFX application. handles functionality for general window functions (minimise/close) and
+ * calling load/save DAO's.
+ */
 public class CustomWindowHandle extends HBox {
 
     MenuItem fileSaveButton;
@@ -19,12 +22,11 @@ public class CustomWindowHandle extends HBox {
 
     public CustomWindowHandle() {
         setMinHeight(30);
-        setOnMousePressed(pressEvent -> {
-            setOnMouseDragged(dragEvent -> {
-                MainApplication.getStage().setX(dragEvent.getScreenX() - pressEvent.getSceneX());
-                MainApplication.getStage().setY(dragEvent.getScreenY() - pressEvent.getSceneY());
-            });
-        });
+
+        setOnMousePressed(pressEvent -> setOnMouseDragged(dragEvent -> {
+            MainApplication.getStage().setX(dragEvent.getScreenX() - pressEvent.getSceneX());
+            MainApplication.getStage().setY(dragEvent.getScreenY() - pressEvent.getSceneY());
+        }));
         Label titleLabel = new Label(MainApplication.title);
         setAlignment(Pos.CENTER_LEFT);
         titleLabel.setPadding(new Insets(10, 10, 0, 0));
@@ -73,6 +75,14 @@ public class CustomWindowHandle extends HBox {
         getChildren().addAll(titleLabel, spacer, menuButton, minimiseButton, maximiseButton, closeButton);
     }
 
+    public MenuItem getFileSaveButton() {
+        return fileSaveButton;
+    }
+
+    public MenuItem getFileLoadButton() {
+        return loadSaveButton;
+    }
+
     public static boolean handleFileSaveClick() {
         if (MessageBuilder.showConfirmationAlert("Do you want to save the currently loaded Artist and Album data?")) {
             boolean succes = MainApplication.getArtistDAO().save();
@@ -88,6 +98,7 @@ public class CustomWindowHandle extends HBox {
         if (MessageBuilder.showConfirmationAlert("Do you want to load the currently stored Artist and Album data?")) {
             boolean succes = MainApplication.getArtistDAO().load();
             succes = MainApplication.getAlbumDAO().load() || succes;
+
             String displayString = succes ? "Data Loaded" : "Load Failed";
             MessageBuilder.showPopupAlert(displayString);
             return succes;
@@ -95,26 +106,8 @@ public class CustomWindowHandle extends HBox {
         return false;
     }
 
-    public MenuItem getFileSaveButton() {
-        return fileSaveButton;
-    }
-
-    public MenuItem getFileLoadButton() {
-        return loadSaveButton;
-    }
-
     private synchronized void handleCloseClick() {
-        if (MainApplication.getAlbumDAO().isEdited() || MainApplication.getArtistDAO().isEdited()) {
-            if (CustomWindowHandle.handleFileSaveClick()) {
-                MainApplication.getArtistDAO().save();
-                MainApplication.getAlbumDAO().save();
-            }
-            MainApplication.getImageFileDAO().removeUnsavedImages();
-            Platform.exit();
-        } else {
-            MainApplication.getImageFileDAO().removeUnsavedImages();
-            Platform.exit();
-        }
+        MainApplication.onApplicationClose();
     }
 
     private void handleMinimiseClick() {

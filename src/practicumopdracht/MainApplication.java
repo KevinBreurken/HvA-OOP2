@@ -1,6 +1,7 @@
 package practicumopdracht;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -12,14 +13,14 @@ import practicumopdracht.vendors.ResizeHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+
 /**
  * Starts the JavaFX application and handles general application operations.
  */
 public class MainApplication extends Application {
 
-    public static final String title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);;
+    public static final String title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);
+    ;
 
     private static Stage stage;
     private static ArtistDAO artistDAO;
@@ -34,12 +35,22 @@ public class MainApplication extends Application {
     public static Stage getStage() {
         return stage;
     }
-    public static ArtistDAO getArtistDAO() { return artistDAO;}
-    public static AlbumDAO getAlbumDAO() { return albumDAO;}
-    public static ImageFileDAO getImageFileDAO() { return imageFileDAO;}
+
+    public static ArtistDAO getArtistDAO() {
+        return artistDAO;
+    }
+
+    public static AlbumDAO getAlbumDAO() {
+        return albumDAO;
+    }
+
+    public static ImageFileDAO getImageFileDAO() {
+        return imageFileDAO;
+    }
 
     /**
      * Switches the controller to a new controller and scene.
+     *
      * @param controller the newly applied controller.
      */
     public static void switchController(Controller controller) {
@@ -74,6 +85,20 @@ public class MainApplication extends Application {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Function called when the application wants to close, handles closing sequence.
+     */
+    public static synchronized void onApplicationClose() {
+        if (getAlbumDAO().isEdited() || getArtistDAO().isEdited()) {
+            if (CustomWindowHandle.handleFileSaveClick()) {
+                getArtistDAO().save();
+                getAlbumDAO().save();
+            }
+        }
+        getImageFileDAO().removeUnsavedImages();
+        Platform.exit();
     }
 
     @Override

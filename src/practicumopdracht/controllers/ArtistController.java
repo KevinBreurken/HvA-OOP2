@@ -21,12 +21,9 @@ import java.util.ArrayList;
 
 public class ArtistController extends Controller {
 
-    /**
-     * Reference to the artist that is selected on the Artist View, is used in other controllers as well.
-     */
-    private Artist currentArtist;
-
+    private static Artist currentSelectedArtist;
     private ArtistView view;
+
     private boolean isListAscending = false;
     private String imagePath;
     private File selectedFile;
@@ -34,7 +31,6 @@ public class ArtistController extends Controller {
 
     public ArtistController() {
         view = new ArtistView();
-
         AdjustableListView adjustableListView = view.getAdjustableListView();
         //HEADER - SAVE/LOAD
         view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
@@ -47,9 +43,8 @@ public class ArtistController extends Controller {
         view.getSortButton().setOnAction(event -> handleSortClick());
         view.setSortingButtonGraphic(isListAscending);
         //Add listeners for when an item is selected in the item list.
-        adjustableListView.getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            onArtistListItemSelected((Artist) newValue);
-        });
+        adjustableListView.getListView().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onArtistListItemSelected((Artist) newValue));
 
         //ARTIST - CONTENT
         view.getEditArtistButton().setOnAction(event -> handleEditClick());
@@ -61,9 +56,9 @@ public class ArtistController extends Controller {
 
         updateArtistList();
         //Sets the selection back to currentArtist when the user returns from the Album View.
-        if (currentArtist != null) {
-            view.getAdjustableListView().getListView().getSelectionModel().select(currentArtist);
-            onArtistListItemSelected(currentArtist);
+        if (currentSelectedArtist != null) {
+            view.getAdjustableListView().getListView().getSelectionModel().select(currentSelectedArtist);
+            onArtistListItemSelected(currentSelectedArtist);
         }
 
         //Source: https://stackoverflow.com/a/36657553
@@ -125,7 +120,7 @@ public class ArtistController extends Controller {
     }
 
     private void displayArtist(Artist artist) {
-        currentArtist = artist;
+        currentSelectedArtist = artist;
         view.setFavoriteDisplayState(artist.isFavorited());
         view.getArtistDisplay().setText(artist.getName());
         view.getLabelDisplay().setText(artist.getLabel());
@@ -153,15 +148,15 @@ public class ArtistController extends Controller {
 
         if (messageBuilder.getTotalAppendCount() == 0) {
             Artist newArtist;
-            if (currentArtist != null) {
-                currentArtist.setName(artistName);
-                currentArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
-                currentArtist.setLabel(labelName);
+            if (currentSelectedArtist != null) {
+                currentSelectedArtist.setName(artistName);
+                currentSelectedArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
+                currentSelectedArtist.setLabel(labelName);
                 if (selectedFile != null) {
-                    MainApplication.getImageFileDAO().checkForExistingUnsavedImages(currentArtist);
-                    currentArtist.setUnsavedImageFileName(selectedFile.getName());
+                    MainApplication.getImageFileDAO().checkForExistingUnsavedImages(currentSelectedArtist);
+                    currentSelectedArtist.setUnsavedImageFileName(selectedFile.getName());
                 }
-                newArtist = currentArtist;
+                newArtist = currentSelectedArtist;
                 messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Edited '%s'", newArtist.getName()));
             } else {
                 if (selectedFile != null) {
@@ -203,11 +198,11 @@ public class ArtistController extends Controller {
     }
 
     private void handleAlbumsClick() {
-        MainApplication.switchController(new AlbumController(currentArtist));
+        MainApplication.switchController(new AlbumController(currentSelectedArtist));
     }
 
     private void handleEditClick() {
-        setEditFieldsByArtist(currentArtist);
+        setEditFieldsByArtist(currentSelectedArtist);
         imagePath = "";
         selectedFile = null;
         view.setState(View.ViewState.EDIT);
@@ -215,17 +210,17 @@ public class ArtistController extends Controller {
 
     private void handleListAddClick() {
         clearEditFields();
-        currentArtist = null;
+        currentSelectedArtist = null;
         view.setState(View.ViewState.EDIT);
 
     }
 
     private void handleListRemoveClick() {
-        String popupText = String.format("Are you sure you want to remove %s?", currentArtist.getName());
+        String popupText = String.format("Are you sure you want to remove %s?", currentSelectedArtist.getName());
         if (MessageBuilder.showConfirmationAlert(popupText)) {
-            MainApplication.getImageFileDAO().queueRemoveAllImagesOfArtist(currentArtist);
-            MainApplication.getArtistDAO().remove(currentArtist);
-            currentArtist = null;
+            MainApplication.getImageFileDAO().queueRemoveAllImagesOfArtist(currentSelectedArtist);
+            MainApplication.getArtistDAO().remove(currentSelectedArtist);
+            currentSelectedArtist = null;
             view.getAdjustableListView().getRemoveButton().setDisable(true);
             updateArtistList();
             view.setState(View.ViewState.EMPTY);
