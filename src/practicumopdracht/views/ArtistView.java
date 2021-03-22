@@ -17,8 +17,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
+import practicumopdracht.models.Artist;
 
-public class ArtistView extends GeneralContentView {
+public class ArtistView extends GeneralContentView<Artist> {
 
     //Sorting
     private Button sortButton = new Button("");

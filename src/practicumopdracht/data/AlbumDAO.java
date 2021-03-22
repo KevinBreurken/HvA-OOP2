@@ -1,5 +1,6 @@
 package practicumopdracht.data;
 
+import practicumopdracht.MessageBuilder;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 
@@ -17,6 +18,7 @@ public abstract class AlbumDAO implements DAO<Album> {
         try {
             file.createNewFile();
         } catch (IOException e) {
+            MessageBuilder.showPopupAlert(String.format("file could not be created at path: %s",fileName));
             e.printStackTrace();
         }
     }
@@ -28,9 +30,9 @@ public abstract class AlbumDAO implements DAO<Album> {
 
     public List<Album> getAllFor(Artist object) {
         ArrayList<Album> newListOfType = new ArrayList<>();
-        for (int i = 0; i < objects.size(); i++) {
-            if (objects.get(i).getArtist() == object)
-                newListOfType.add(objects.get(i));
+        for (Album album : objects) {
+            if (album.getArtist() == object)
+                newListOfType.add(album);
         }
         return newListOfType;
     }
@@ -51,8 +53,8 @@ public abstract class AlbumDAO implements DAO<Album> {
     }
 
     @Override
-    public void remove(Album T) {
-        objects.remove(T);
+    public void remove(Album album) {
+        objects.remove(album);
     }
 
     @Override

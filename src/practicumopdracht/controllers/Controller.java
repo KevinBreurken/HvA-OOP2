@@ -1,6 +1,5 @@
 package practicumopdracht.controllers;
 
-import javafx.scene.Parent;
 import practicumopdracht.views.View;
 
 /**

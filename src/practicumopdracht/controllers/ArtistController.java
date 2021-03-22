@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class ArtistController extends Controller {
 
     private static Artist currentSelectedArtist;
-    private ArtistView view;
+    private final ArtistView VIEW;
 
     private boolean isListAscending = false;
     private String imagePath;
@@ -30,39 +30,39 @@ public class ArtistController extends Controller {
 
 
     public ArtistController() {
-        view = new ArtistView();
-        AdjustableListView adjustableListView = view.getAdjustableListView();
+        VIEW = new ArtistView();
         //HEADER - SAVE/LOAD
-        view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
-        view.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
+        VIEW.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
+        VIEW.getWindowHandle().getFileSaveButton().setOnAction(event -> handleFileSaveClick());
         //ARTIST - GENERAL
+        AdjustableListView<Artist> adjustableListView = VIEW.getAdjustableListView();
         adjustableListView.getAddButton().setOnAction(event -> handleListAddClick());
         adjustableListView.getRemoveButton().setOnAction(event -> handleListRemoveClick());
         adjustableListView.getRemoveButton().setDisable(true);
         //Artist - Sort
-        view.getSortButton().setOnAction(event -> handleSortClick());
-        view.setSortingButtonGraphic(isListAscending);
+        VIEW.getSortButton().setOnAction(event -> handleSortClick());
+        VIEW.setSortingButtonGraphic(isListAscending);
         //Add listeners for when an item is selected in the item list.
         adjustableListView.getListView().getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> onArtistListItemSelected((Artist) newValue));
+                .addListener((observable, oldValue, newValue) -> onArtistListItemSelected(newValue));
 
         //ARTIST - CONTENT
-        view.getEditArtistButton().setOnAction(event -> handleEditClick());
-        view.getViewAlbumsButton().setOnAction(event -> handleAlbumsClick());
+        VIEW.getEditArtistButton().setOnAction(event -> handleEditClick());
+        VIEW.getViewAlbumsButton().setOnAction(event -> handleAlbumsClick());
         //ARTIST - EDIT CONTENT
-        view.getArtistEditApplyButton().setOnAction(event -> handleEditApplyClick());
-        view.getArtistEditCancelButton().setOnAction(event -> handleEditCancelClick());
-        view.getChangeImageButton().setOnAction(event -> handleChangeImageClick());
+        VIEW.getArtistEditApplyButton().setOnAction(event -> handleEditApplyClick());
+        VIEW.getArtistEditCancelButton().setOnAction(event -> handleEditCancelClick());
+        VIEW.getChangeImageButton().setOnAction(event -> handleChangeImageClick());
 
         updateArtistList();
         //Sets the selection back to currentArtist when the user returns from the Album View.
         if (currentSelectedArtist != null) {
-            view.getAdjustableListView().getListView().getSelectionModel().select(currentSelectedArtist);
+            VIEW.getAdjustableListView().getListView().getSelectionModel().select(currentSelectedArtist);
             onArtistListItemSelected(currentSelectedArtist);
         }
 
         //Source: https://stackoverflow.com/a/36657553
-        view.getAdjustableListView().getListView().setCellFactory(param -> new ListCell<Artist>() {
+        VIEW.getAdjustableListView().getListView().setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Artist item, boolean empty) {
                 super.updateItem(item, empty);
@@ -93,12 +93,12 @@ public class ArtistController extends Controller {
         selectedFile = file;
         System.out.println(file.getName());
         imagePath = file.getName();
-        view.setBackgroundImageByPath(file.getAbsolutePath());
+        VIEW.setBackgroundImageByPath(file.getAbsolutePath());
     }
 
     private void handleSortClick() {
         isListAscending = !isListAscending;
-        view.setSortingButtonGraphic(isListAscending);
+        VIEW.setSortingButtonGraphic(isListAscending);
         updateArtistList();
     }
 
@@ -106,7 +106,7 @@ public class ArtistController extends Controller {
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
         if (artists == null)
             return;
-        ListView listView = view.getAdjustableListView().getListView();
+        ListView<Artist> listView = VIEW.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(artists));
         FXCollections.sort(listView.getItems(), new ArtistComparatorAZ(isListAscending));
     }
@@ -115,22 +115,22 @@ public class ArtistController extends Controller {
         if (item == null) //called when selected item is removed.
             return;
         displayArtist(item);
-        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + item.getCurrentFileName());
-        view.getAdjustableListView().getRemoveButton().setDisable(false);
+        VIEW.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + item.getCurrentFileName());
+        VIEW.getAdjustableListView().getRemoveButton().setDisable(false);
     }
 
     private void displayArtist(Artist artist) {
         currentSelectedArtist = artist;
-        view.setFavoriteDisplayState(artist.isFavorited());
-        view.getArtistDisplay().setText(artist.getName());
-        view.getLabelDisplay().setText(artist.getLabel());
-        view.setState(View.ViewState.VIEW);
+        VIEW.setFavoriteDisplayState(artist.isFavorited());
+        VIEW.getArtistDisplay().setText(artist.getName());
+        VIEW.getLabelDisplay().setText(artist.getLabel());
+        VIEW.setState(View.ViewState.VIEW);
     }
 
     private void validateEdit() {
         MessageBuilder messageBuilder = new MessageBuilder();
         //Album Name
-        TextField nameField = view.getArtistNameTextField();
+        TextField nameField = VIEW.getArtistNameTextField();
         String artistName = nameField.getText();
         if (artistName.length() > 0) nameField.getStyleClass().removeAll("error");
         else {
@@ -138,7 +138,7 @@ public class ArtistController extends Controller {
             messageBuilder.append("Name: No name entered.");
         }
 
-        TextField labelField = view.getLabelNameTextField();
+        TextField labelField = VIEW.getLabelNameTextField();
         String labelName = labelField.getText();
         if (labelName.length() > 0) labelField.getStyleClass().removeAll("error");
         else {
@@ -150,7 +150,7 @@ public class ArtistController extends Controller {
             Artist newArtist;
             if (currentSelectedArtist != null) {
                 currentSelectedArtist.setName(artistName);
-                currentSelectedArtist.setFavorited(view.getFavoriteCheckBox().isSelected());
+                currentSelectedArtist.setFavorited(VIEW.getFavoriteCheckBox().isSelected());
                 currentSelectedArtist.setLabel(labelName);
                 if (selectedFile != null) {
                     MainApplication.getImageFileDAO().checkForExistingUnsavedImages(currentSelectedArtist);
@@ -162,7 +162,7 @@ public class ArtistController extends Controller {
                 if (selectedFile != null) {
                     imagePath = selectedFile.getName();
                 }
-                newArtist = new Artist(artistName, labelName, view.getFavoriteCheckBox().isSelected(), null);
+                newArtist = new Artist(artistName, labelName, VIEW.getFavoriteCheckBox().isSelected(), null);
                 newArtist.setUnsavedImageFileName(imagePath);
                 messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list.", newArtist.getName()));
             }
@@ -181,20 +181,20 @@ public class ArtistController extends Controller {
     private void applyFromEditView(Artist artist) {
         MainApplication.getArtistDAO().addOrUpdate(artist);
         updateArtistList();
-        view.getAdjustableListView().getListView().getSelectionModel().select(artist);
-        view.setState(View.ViewState.VIEW);
+        VIEW.getAdjustableListView().getListView().getSelectionModel().select(artist);
+        VIEW.setState(View.ViewState.VIEW);
     }
 
     private void clearEditFields() {
-        view.getArtistNameTextField().setText("");
-        view.getLabelNameTextField().setText("");
-        view.getFavoriteCheckBox().setSelected(false);
+        VIEW.getArtistNameTextField().setText("");
+        VIEW.getLabelNameTextField().setText("");
+        VIEW.getFavoriteCheckBox().setSelected(false);
     }
 
     private void setEditFieldsByArtist(Artist artist) {
-        view.getArtistNameTextField().setText(artist.getName());
-        view.getLabelNameTextField().setText(artist.getLabel());
-        view.getFavoriteCheckBox().setSelected(artist.isFavorited());
+        VIEW.getArtistNameTextField().setText(artist.getName());
+        VIEW.getLabelNameTextField().setText(artist.getLabel());
+        VIEW.getFavoriteCheckBox().setSelected(artist.isFavorited());
     }
 
     private void handleAlbumsClick() {
@@ -205,13 +205,13 @@ public class ArtistController extends Controller {
         setEditFieldsByArtist(currentSelectedArtist);
         imagePath = "";
         selectedFile = null;
-        view.setState(View.ViewState.EDIT);
+        VIEW.setState(View.ViewState.EDIT);
     }
 
     private void handleListAddClick() {
         clearEditFields();
         currentSelectedArtist = null;
-        view.setState(View.ViewState.EDIT);
+        VIEW.setState(View.ViewState.EDIT);
 
     }
 
@@ -221,17 +221,17 @@ public class ArtistController extends Controller {
             MainApplication.getImageFileDAO().queueRemoveAllImagesOfArtist(currentSelectedArtist);
             MainApplication.getArtistDAO().remove(currentSelectedArtist);
             currentSelectedArtist = null;
-            view.getAdjustableListView().getRemoveButton().setDisable(true);
+            VIEW.getAdjustableListView().getRemoveButton().setDisable(true);
             updateArtistList();
-            view.setState(View.ViewState.EMPTY);
+            VIEW.setState(View.ViewState.EMPTY);
         }
     }
 
     private void handleEditCancelClick() {
         if (MainApplication.getArtistDAO().getAll().size() == 0)
-            view.setState(View.ViewState.EMPTY);
+            VIEW.setState(View.ViewState.EMPTY);
         else
-            view.setState(View.ViewState.VIEW);
+            VIEW.setState(View.ViewState.VIEW);
     }
 
     private void handleEditApplyClick() {
@@ -240,6 +240,6 @@ public class ArtistController extends Controller {
 
     @Override
     public View getView() {
-        return view;
+        return VIEW;
     }
 }

@@ -34,7 +34,7 @@ public class ObjectAlbumDAO extends AlbumDAO {
 
     @Override
     public boolean load() {
-        objects = new ArrayList<Album>();
+        objects = new ArrayList<>();
 
         File file = new File(FILENAME);
         try (

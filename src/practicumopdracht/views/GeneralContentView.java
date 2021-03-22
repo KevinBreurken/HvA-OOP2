@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.MainApplication;
-import practicumopdracht.models.Album;
 
 import java.io.File;
 

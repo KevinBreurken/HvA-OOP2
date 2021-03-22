@@ -15,10 +15,7 @@ public class Artist {
         this.name = name;
         this.label = label;
         this.favorited = favorited;
-        if (imagePath != null)
-            this.imageFileName = imagePath;
-        else
-            this.imageFileName = "?";
+        this.imageFileName = (imagePath != null) ? imagePath : "?";
     }
 
     public String getImageFileName() {

@@ -15,7 +15,7 @@ public class TextArtistDAO extends ArtistDAO {
     @Override
     public boolean load() {
         checkIfFileExists(FILENAME);
-        objects = new ArrayList<Artist>();
+        objects = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(new File(FILENAME))) {
 

@@ -1,12 +1,13 @@
 package practicumopdracht.data;
 
+import practicumopdracht.MessageBuilder;
 import practicumopdracht.models.Artist;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public abstract class ArtistDAO implements DAO {
+public abstract class ArtistDAO implements DAO<Artist> {
     protected List<Artist> objects;
     private int addOrUpdateCallSinceLoad;
 
@@ -15,6 +16,7 @@ public abstract class ArtistDAO implements DAO {
         try {
             file.createNewFile();
         } catch (IOException e) {
+            MessageBuilder.showPopupAlert(String.format("file could not be created at path: %s",fileName));
             e.printStackTrace();
         }
     }
@@ -47,20 +49,18 @@ public abstract class ArtistDAO implements DAO {
     }
 
     @Override
-    public void addOrUpdate(Object T) {
-        Artist artistObject = (Artist) T;
+    public void addOrUpdate(Artist artist) {
         addOrUpdateCallSinceLoad++;
 
-        if (objects.contains(artistObject)) {
+        if (objects.contains(artist))
             return;
-        }
 
-        objects.add(artistObject);
+        objects.add(artist);
     }
 
     @Override
-    public void remove(Object T) {
-        objects.remove(T);
+    public void remove(Artist artist) {
+        objects.remove(artist);
     }
 
     @Override

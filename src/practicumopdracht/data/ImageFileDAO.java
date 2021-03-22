@@ -14,17 +14,13 @@ import java.util.ArrayList;
 public class ImageFileDAO {
 
     private static String directoryPath = new File("").getAbsolutePath() + "/images";
-    private static String albumPrefix = "/albums";
     private static String artistPrefix = "/artists";
 
     private ArrayList<String> filesToRemoveOnSave;
 
     public ImageFileDAO() {
         try {
-            Path path = Paths.get(directoryPath + albumPrefix);
-            Files.createDirectories(path);
-
-            path = Paths.get(directoryPath + artistPrefix);
+            Path path = Paths.get(directoryPath + artistPrefix);
             Files.createDirectories(path);
 
         } catch (IOException e) {
@@ -38,17 +34,17 @@ public class ImageFileDAO {
     }
 
     public void removeQueuedImages() {
-        for (int i = 0; i < filesToRemoveOnSave.size(); i++) {
-            removeArtistImage(filesToRemoveOnSave.get(i));
-        }
+        for (String s : filesToRemoveOnSave)
+            removeArtistImage(s);
+
         filesToRemoveOnSave.clear();
     }
 
     public void removeUnsavedImages() {
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
-        for (int i = 0; i < artists.size(); i++) {
-            if (artists.get(i).getUnsavedImageFileName() != null) {
-                removeArtistImage(artists.get(i).getUnsavedImageFileName());
+        for (Artist artist : artists) {
+            if (artist.getUnsavedImageFileName() != null) {
+                removeArtistImage(artist.getUnsavedImageFileName());
             }
         }
     }
