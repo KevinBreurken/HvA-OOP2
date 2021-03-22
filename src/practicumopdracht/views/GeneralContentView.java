@@ -5,15 +5,16 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.MainApplication;
+import practicumopdracht.models.Album;
 
 import java.io.File;
 
 /**
  * View containing elements used by both Artist and Album view.
  */
-public abstract class GeneralContentView extends View {
+public abstract class GeneralContentView<T> extends View {
 
-    protected AdjustableListView adjustableListBox = new AdjustableListView("Add", "Remove");
+    protected AdjustableListView<T> adjustableListBox = new AdjustableListView<T>("Add", "Remove");
     protected VBox contentViewBox = new VBox();
     protected VBox editViewBox = new VBox();
     protected StackPane rootPane = new StackPane();
@@ -37,7 +38,7 @@ public abstract class GeneralContentView extends View {
         artistDarkenOverlay.getChildren().add(editViewBox);
     }
 
-    public AdjustableListView getAdjustableListView() {
+    public AdjustableListView<T> getAdjustableListView() {
         return adjustableListBox;
     }
 

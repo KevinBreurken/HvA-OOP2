@@ -24,55 +24,53 @@ import java.util.Optional;
 
 public class AlbumController extends Controller {
 
-    private AlbumView view;
+    private final AlbumView VIEW;
     private Album currentAlbum;
     private Artist currentArtist;
     private boolean isNameSortingAscending;
     private boolean isNameSalesAscending;
 
     public AlbumController(Artist artist) {
-        view = new AlbumView();
+        VIEW = new AlbumView();
         currentArtist = artist;
         //HEADER - SAVE/LOAD
-        view.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
-        view.getWindowHandle().getFileSaveButton().setOnAction(event -> CustomWindowHandle.handleFileSaveClick());
+        VIEW.getWindowHandle().getFileLoadButton().setOnAction(event -> handleFileLoadClick());
+        VIEW.getWindowHandle().getFileSaveButton().setOnAction(event -> CustomWindowHandle.handleFileSaveClick());
 
         //ALBUM - GENERAL
-        view.getBackToArtistButton().setOnAction(event -> handleBackToArtistClick());
-        view.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
-        view.getAdjustableListView().getRemoveButton().setOnAction(event -> handleListRemoveClick());
-        view.getAdjustableListView().getRemoveButton().setDisable(true);
+        VIEW.getBackToArtistButton().setOnAction(event -> handleBackToArtistClick());
+        VIEW.getAdjustableListView().getAddButton().setOnAction(event -> handleListAddClick());
+        VIEW.getAdjustableListView().getRemoveButton().setOnAction(event -> handleListRemoveClick());
+        VIEW.getAdjustableListView().getRemoveButton().setDisable(true);
         //Add listeners for when an item is selected in the Artist ComboBox
-        view.getArtistComboBox().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            onComboArtistSelected((Artist) newValue);
-        });
+        VIEW.getArtistComboBox().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onComboArtistSelected(newValue));
         //Add listeners for when an item is selected in the Album ListView.
-        view.getAdjustableListView().getListView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            onAlbumListSelected((Album) newValue);
-        });
+        VIEW.getAdjustableListView().getListView().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> onAlbumListSelected(newValue));
 
         //ALBUM - SORTING
-        view.getAlphabetAscendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(true));
-        view.getAlphabetDescendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(false));
-        view.getSalesAscendingRadioButton().setOnAction(event -> onSalesSortingSelected(true));
-        view.getSalesDescendingRadioButton().setOnAction(event -> onSalesSortingSelected(false));
+        VIEW.getAlphabetAscendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(true));
+        VIEW.getAlphabetDescendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(false));
+        VIEW.getSalesAscendingRadioButton().setOnAction(event -> onSalesSortingSelected(true));
+        VIEW.getSalesDescendingRadioButton().setOnAction(event -> onSalesSortingSelected(false));
 
 
         //ALBUM - CONTENT
-        view.getWikiButton().setOnAction(event -> handleOpenWikiClick());
-        view.getEditAlbumButton().setOnAction(event -> handleEditAlbumClick());
+        VIEW.getWikiButton().setOnAction(event -> handleOpenWikiClick());
+        VIEW.getEditAlbumButton().setOnAction(event -> handleEditAlbumClick());
 
         //ALBUM - EDIT CONTENT
-        view.getRatingDecreaseButton().setOnAction(event -> handleChangeRatingClick(-1));
-        view.getRatingIncreaseButton().setOnAction(event -> handleChangeRatingClick(1));
-        view.getAlbumEditApplyButton().setOnAction(event -> validateEdit());
-        view.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
+        VIEW.getRatingDecreaseButton().setOnAction(event -> handleChangeRatingClick(-1));
+        VIEW.getRatingIncreaseButton().setOnAction(event -> handleChangeRatingClick(1));
+        VIEW.getAlbumEditApplyButton().setOnAction(event -> validateEdit());
+        VIEW.getAlbumEditCancelButton().setOnAction(event -> handleAlbumEditCancelClick());
 
         setArtistComboBox();
         updateAlbumList();
 
         //Source: https://stackoverflow.com/a/36657553
-        view.getAdjustableListView().getListView().setCellFactory(param -> new ListCell<Album>() {
+        VIEW.getAdjustableListView().getListView().setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Album item, boolean empty) {
                 super.updateItem(item, empty);
@@ -87,9 +85,8 @@ public class AlbumController extends Controller {
     }
 
     private void handleFileLoadClick() {
-        if (CustomWindowHandle.handleFileLoadClick()) {
+        if (CustomWindowHandle.handleFileLoadClick())
             updateAlbumList();
-        }
     }
 
     private void onAlphabetSortingSelected(boolean isAscending) {
@@ -106,7 +103,7 @@ public class AlbumController extends Controller {
         if (item == null) //caused when selected item is removed.
             return;
         currentArtist = item;
-        view.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + currentArtist.getCurrentFileName(), 50);
+        VIEW.setBackgroundImageByPath(MainApplication.getImageFileDAO().getArtistPath() + "/" + currentArtist.getCurrentFileName(), 50);
         updateAlbumList();
     }
 
@@ -114,17 +111,17 @@ public class AlbumController extends Controller {
         if (item == null) //caused when selected item is removed.
             return;
         displayAlbum(item);
-        view.getAdjustableListView().getRemoveButton().setDisable(false);
+        VIEW.getAdjustableListView().getRemoveButton().setDisable(false);
     }
 
     private void displayAlbum(Album album) {
         currentAlbum = album;
-        view.getEditArtistComboBox().setValue(currentArtist);
-        view.getAlbumTitleLabel().setText(album.getName());
-        view.getSalesLabel().setText(String.format("Sales: %.0f", album.getSales()));
-        view.getRatingLabel().setText(String.format("Rating: (%d/%d)", album.getRating(), Album.MAX_RATING));
-        view.getDateLabel().setText(String.format("Release date: \n%s", album.getReleaseDate().toString()));
-        view.setState(View.ViewState.VIEW);
+        VIEW.getEditArtistComboBox().setValue(currentArtist);
+        VIEW.getAlbumTitleLabel().setText(album.getName());
+        VIEW.getSalesLabel().setText(String.format("Sales: %.0f", album.getSales()));
+        VIEW.getRatingLabel().setText(String.format("Rating: (%d/%d)", album.getRating(), Album.MAX_RATING));
+        VIEW.getDateLabel().setText(String.format("Release date: \n%s", album.getReleaseDate().toString()));
+        VIEW.setState(View.ViewState.VIEW);
     }
 
     private void updateAlbumList() {
@@ -132,25 +129,25 @@ public class AlbumController extends Controller {
         if (albums == null)
             return;
 
-        ListView<Album> listView = view.getAdjustableListView().getListView();
+        ListView<Album> listView = VIEW.getAdjustableListView().getListView();
         listView.setItems(FXCollections.observableList(albums));
         FXCollections.sort(listView.getItems(), new AlbumComparatorAZ(isNameSortingAscending).thenComparing(new AlbumComparatorSales(isNameSalesAscending)));
         if (albums.size() > 0)
-            view.getAdjustableListView().getListView().getSelectionModel().select(0);
+            VIEW.getAdjustableListView().getListView().getSelectionModel().select(0);
         else {
-            view.setState(View.ViewState.EMPTY);
-            view.getAdjustableListView().getRemoveButton().setDisable(true);
+            VIEW.setState(View.ViewState.EMPTY);
+            VIEW.getAdjustableListView().getRemoveButton().setDisable(true);
         }
     }
 
     private void setArtistComboBox() {
         //Source:https://stackoverflow.com/a/40325634
         //required for setting the combobox button and content to the item.getListString();
-        Callback<ListView<Artist>, ListCell<Artist>> cellFactory = new Callback<ListView<Artist>, ListCell<Artist>>() {
+        Callback<ListView<Artist>, ListCell<Artist>> cellFactory = new Callback<>() {
 
             @Override
             public ListCell<Artist> call(ListView<Artist> l) {
-                return new ListCell<Artist>() {
+                return new ListCell<>() {
 
                     @Override
                     protected void updateItem(Artist item, boolean empty) {
@@ -165,7 +162,7 @@ public class AlbumController extends Controller {
             }
         };
 
-        ComboBox artistComboBox = view.getArtistComboBox();
+        ComboBox<Artist> artistComboBox = VIEW.getArtistComboBox();
         ArrayList<Artist> artists = (ArrayList<Artist>) MainApplication.getArtistDAO().getAll();
         artistComboBox.setItems(FXCollections.observableList(artists));
         artistComboBox.getSelectionModel().select(currentArtist);
@@ -173,7 +170,7 @@ public class AlbumController extends Controller {
         artistComboBox.setButtonCell(cellFactory.call(null));
         artistComboBox.setCellFactory(cellFactory);
 
-        ComboBox artistEditComboBox = view.getEditArtistComboBox();
+        ComboBox<Artist> artistEditComboBox = VIEW.getEditArtistComboBox();
         artistEditComboBox.setItems(FXCollections.observableList(artists));
         artistEditComboBox.getSelectionModel().select(currentArtist);
         artistEditComboBox.setButtonCell(cellFactory.call(null));
@@ -183,8 +180,8 @@ public class AlbumController extends Controller {
     private void validateEdit() {
         MessageBuilder messageBuilder = new MessageBuilder();
         //Album Name
-        TextField nameField = view.getNameInputField();
-        String albumName = nameField.getText().toString();
+        TextField nameField = VIEW.getNameInputField();
+        String albumName = nameField.getText();
         boolean albumNameValid = (albumName.length() > 0);
         if (albumNameValid) nameField.getStyleClass().removeAll("error");
         else {
@@ -193,7 +190,7 @@ public class AlbumController extends Controller {
         }
 
         //Sales amount
-        TextField salesField = view.getAlbumSalesTextField();
+        TextField salesField = VIEW.getAlbumSalesTextField();
         double salesCount;
         try {
             salesCount = Double.parseDouble(salesField.getText());
@@ -205,8 +202,8 @@ public class AlbumController extends Controller {
         }
 
         //Wiki link:
-        TextArea textArea = view.getWikiLinkInputField();
-        String wikiLink = textArea.getText().toString();
+        TextArea textArea = VIEW.getWikiLinkInputField();
+        String wikiLink = textArea.getText();
         boolean wikiLinkValid = (wikiLink.contains("wiki") && !wikiLink.contains(" "));
         if (wikiLinkValid) textArea.getStyleClass().removeAll("error");
         else {
@@ -215,7 +212,7 @@ public class AlbumController extends Controller {
         }
 
         //Release date:
-        DatePicker datePicker = view.getDateInputField();
+        DatePicker datePicker = VIEW.getDateInputField();
         LocalDate pickedDate = datePicker.getValue();
         boolean dateValid = (pickedDate != null) && pickedDate.isBefore(LocalDate.now());
         if (dateValid) datePicker.getStyleClass().removeAll("error");
@@ -225,7 +222,7 @@ public class AlbumController extends Controller {
         }
 
         //Rating value
-        TextField ratingField = view.getRatingTextField();
+        TextField ratingField = VIEW.getRatingTextField();
         int ratingCount;
         try {
             ratingCount = Integer.parseInt(ratingField.getText());
@@ -241,7 +238,7 @@ public class AlbumController extends Controller {
         }
 
         if (messageBuilder.getTotalAppendCount() == 0) {
-            Artist artistCurrentlySelected = (Artist) view.getEditArtistComboBox().getValue();
+            Artist artistCurrentlySelected = VIEW.getEditArtistComboBox().getValue();
             Album newAlbum;
             if (currentAlbum != null) {
                 currentAlbum.setName(albumName);
@@ -255,7 +252,7 @@ public class AlbumController extends Controller {
                 newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
             }
             messageBuilder.createAlert(Alert.AlertType.INFORMATION);
-            view.getArtistComboBox().setValue(artistCurrentlySelected);
+            VIEW.getArtistComboBox().setValue(artistCurrentlySelected);
             currentArtist = artistCurrentlySelected;
             applyFromEditView(newAlbum);
         } else {
@@ -270,39 +267,39 @@ public class AlbumController extends Controller {
         //Add the newly made Album.
         MainApplication.getAlbumDAO().addOrUpdate(album);
         updateAlbumList();
-        view.getAdjustableListView().getListView().getSelectionModel().select(album);
-        view.setState(View.ViewState.VIEW);
+        VIEW.getAdjustableListView().getListView().getSelectionModel().select(album);
+        VIEW.setState(View.ViewState.VIEW);
     }
 
     private void clearEditFields() {
-        view.getNameInputField().setText("");
-        view.getAlbumSalesTextField().setText("");
-        view.getWikiLinkInputField().setText("");
-        view.getDateInputField().setValue(null);
-        view.getRatingTextField().setText("0");
+        VIEW.getNameInputField().setText("");
+        VIEW.getAlbumSalesTextField().setText("");
+        VIEW.getWikiLinkInputField().setText("");
+        VIEW.getDateInputField().setValue(null);
+        VIEW.getRatingTextField().setText("0");
     }
 
     private void setEditFieldsByAlbum(Album album) {
-        view.getNameInputField().setText(album.getName());
-        view.getAlbumSalesTextField().setText("" + album.getSales());
-        view.getWikiLinkInputField().setText(album.getWikiLink());
-        view.getDateInputField().setValue(album.getReleaseDate());
-        view.getRatingTextField().setText("" + album.getRating());
+        VIEW.getNameInputField().setText(album.getName());
+        VIEW.getAlbumSalesTextField().setText("" + album.getSales());
+        VIEW.getWikiLinkInputField().setText(album.getWikiLink());
+        VIEW.getDateInputField().setValue(album.getReleaseDate());
+        VIEW.getRatingTextField().setText("" + album.getRating());
     }
 
 
     private void handleListAddClick() {
         clearEditFields();
         currentAlbum = null;
-        view.setState(View.ViewState.EDIT);
+        VIEW.setState(View.ViewState.EDIT);
     }
 
     private void handleListRemoveClick() {
         Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
-        alert.setContentText(String.format("Are you sure you want to remove %s?\n", currentAlbum.getName(), ""));
+        alert.setContentText(String.format("Are you sure you want to remove %s?\n", currentAlbum.getName()));
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
+        if (result.isPresent() && result.get() == ButtonType.OK) {
             MainApplication.getAlbumDAO().remove(currentAlbum);
             currentAlbum = null;
             updateAlbumList();
@@ -315,7 +312,7 @@ public class AlbumController extends Controller {
 
     private void handleEditAlbumClick() {
         setEditFieldsByAlbum(currentAlbum);
-        view.setState(View.ViewState.EDIT);
+        VIEW.setState(View.ViewState.EDIT);
     }
 
     private void handleOpenWikiClick() {
@@ -329,11 +326,11 @@ public class AlbumController extends Controller {
     }
 
     private void handleAlbumEditCancelClick() {
-        view.setState((MainApplication.getAlbumDAO().getAll().size() == 0) ? View.ViewState.EMPTY : View.ViewState.VIEW);
+        VIEW.setState((MainApplication.getAlbumDAO().getAll().size() == 0) ? View.ViewState.EMPTY : View.ViewState.VIEW);
     }
 
     private void handleChangeRatingClick(int increase) {
-        TextField ratingField = view.getRatingTextField();
+        TextField ratingField = VIEW.getRatingTextField();
         try {
             int ratingCount = Integer.parseInt(ratingField.getText());
             ratingCount += increase;
@@ -346,7 +343,7 @@ public class AlbumController extends Controller {
 
     @Override
     public View getView() {
-        return view;
+        return VIEW;
     }
 
 }

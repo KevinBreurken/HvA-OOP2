@@ -9,15 +9,16 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import practicumopdracht.models.Album;
 
 /**
  * Reusable listview used in both Artist and Album view.
  */
-public class AdjustableListView extends VBox {
+public class AdjustableListView<T> extends VBox {
 
     private Label titleLabel;
 
-    private ListView listView;
+    private ListView<T> listView;
     private StackPane headerStackPane;
 
     //Buttons
@@ -44,7 +45,7 @@ public class AdjustableListView extends VBox {
         getChildren().add(headerStackPane);
 
         //add the list view
-        listView = new ListView();
+        listView = new ListView<>();
         listView.setStyle("-fx-font-family: 'Arial Unicode MS'");
         VBox.setVgrow(listView, Priority.ALWAYS);
         getChildren().add(listView);
@@ -70,7 +71,7 @@ public class AdjustableListView extends VBox {
         return removeButton;
     }
 
-    public ListView getListView() {
+    public ListView<T> getListView() {
         return listView;
     }
 

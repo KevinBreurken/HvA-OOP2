@@ -13,10 +13,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import practicumopdracht.MainApplication;
 import practicumopdracht.UIComponents;
+import practicumopdracht.models.Album;
+import practicumopdracht.models.Artist;
 
-public class AlbumView extends GeneralContentView {
+public class AlbumView extends GeneralContentView<Album> {
 
-    private ComboBox artistComboBox = new ComboBox();
+    private ComboBox<Artist> artistComboBox = new ComboBox<>();
 
     //Sorting
     private RadioButton alphabetDescendingRadioButton;
@@ -44,7 +46,7 @@ public class AlbumView extends GeneralContentView {
     private TextField albumSalesTextField;
     private TextArea wikiLinkInputField;
     private DatePicker dateInputField;
-    private ComboBox editArtistComboBox;
+    private ComboBox<Artist> editArtistComboBox;
     private TextField ratingTextField;
 
     public AlbumView() {
@@ -76,11 +78,11 @@ public class AlbumView extends GeneralContentView {
         return salesAscendingRadioButton;
     }
 
-    public ComboBox getEditArtistComboBox() {
+    public ComboBox<Artist> getEditArtistComboBox() {
         return editArtistComboBox;
     }
 
-    public ComboBox getArtistComboBox() {
+    public ComboBox<Artist> getArtistComboBox() {
         return artistComboBox;
     }
 
