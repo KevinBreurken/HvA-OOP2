@@ -13,7 +13,7 @@ import java.io.File;
  */
 public abstract class GeneralContentView<T> extends View {
 
-    protected AdjustableListView<T> adjustableListBox = new AdjustableListView<T>("Add", "Remove");
+    protected AdjustableListView<T> adjustableListBox = new AdjustableListView<>("Add", "Remove");
     protected VBox contentViewBox = new VBox();
     protected VBox editViewBox = new VBox();
     protected StackPane rootPane = new StackPane();

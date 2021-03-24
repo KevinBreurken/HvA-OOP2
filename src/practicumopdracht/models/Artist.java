@@ -7,14 +7,14 @@ package practicumopdracht.models;
 public class Artist {
     private String name;
     private String label;
-    private boolean favorited;
+    private boolean favorite;
     private String imageFileName;
     private String unsavedImageFileName;
 
-    public Artist(String name, String label, boolean favorited, String imagePath) {
+    public Artist(String name, String label, boolean favorite, String imagePath) {
         this.name = name;
         this.label = label;
-        this.favorited = favorited;
+        this.favorite = favorite;
         this.imageFileName = (imagePath != null) ? imagePath : "?";
     }
 
@@ -50,12 +50,12 @@ public class Artist {
         this.label = label;
     }
 
-    public boolean isFavorited() {
-        return favorited;
+    public boolean isFavorite() {
+        return favorite;
     }
 
-    public void setFavorited(boolean favorited) {
-        this.favorited = favorited;
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Artist {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("\tName: %s\n", name))
                 .append(String.format("\tSales: %s\n", label))
-                .append(String.format("\tFavorite: %s\n", favorited))
+                .append(String.format("\tFavorite: %s\n", favorite))
                 .append(String.format("\tImage filename: %s\n", imageFileName));
 
         return sb.toString();
@@ -71,12 +71,10 @@ public class Artist {
 
     /**
      * Used for displaying an artist in the List View.
-     *
-     * @return
      */
     public String getListString() {
         StringBuilder sb = new StringBuilder();
-        String favUnicodeString = favorited ? "\u2605" : "\u2606";
+        String favUnicodeString = favorite ? "\u2605" : "\u2606";
         sb.append(String.format("%s - %s %s", name, label, favUnicodeString));
 
         return sb.toString();

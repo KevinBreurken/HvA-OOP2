@@ -10,6 +10,10 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * From: https://stackoverflow.com/a/24017605
+ * class that helps an undecorated window to be resizable.
+ */
 public class ResizeHelper {
     static boolean isScrollbar = false;
 

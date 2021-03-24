@@ -83,23 +83,23 @@ public class CustomWindowHandle extends HBox {
     }
 
     public static boolean handleFileSaveClick() {
-        if (MessageBuilder.showConfirmationAlert("Do you want to save the currently loaded Artist and Album data?")) {
+        if (MessageDialogBuilder.showConfirmationAlert("Do you want to save the currently loaded Artist and Album data?")) {
             boolean succes = MainApplication.getArtistDAO().save();
             succes = MainApplication.getAlbumDAO().save() || succes;
             String displayString = succes ? "Saved Data" : "Save Failed";
-            MessageBuilder.showPopupAlert(displayString);
+            MessageDialogBuilder.showPopupAlert(displayString);
             return succes;
         }
         return false;
     }
 
     public static boolean handleFileLoadClick() {
-        if (MessageBuilder.showConfirmationAlert("Do you want to load the currently stored Artist and Album data?")) {
+        if (MessageDialogBuilder.showConfirmationAlert("Do you want to load the currently stored Artist and Album data?")) {
             boolean succes = MainApplication.getArtistDAO().load();
             succes = MainApplication.getAlbumDAO().load() || succes;
 
             String displayString = succes ? "Data Loaded" : "Load Failed";
-            MessageBuilder.showPopupAlert(displayString);
+            MessageDialogBuilder.showPopupAlert(displayString);
             return succes;
         }
         return false;

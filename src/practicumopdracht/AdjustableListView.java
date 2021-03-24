@@ -9,7 +9,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import practicumopdracht.models.Album;
 
 /**
  * Reusable listview used in both Artist and Album view.

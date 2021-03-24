@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 public class MainApplication extends Application {
 
     public static final String title = String.format("Practicumopdracht OOP2 - %s", Main.studentNaam);
-    ;
 
     private static Stage stage;
     private static ArtistDAO artistDAO;
@@ -71,8 +70,8 @@ public class MainApplication extends Application {
             return image;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public static Image loadImage(String fileUrl, int requestedWidth, int requestedHeight, boolean preserveRatio, boolean smooth) {
@@ -83,8 +82,8 @@ public class MainApplication extends Application {
             return image;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**

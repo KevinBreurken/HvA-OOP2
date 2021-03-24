@@ -1,5 +1,6 @@
 package practicumopdracht.data;
 
+import practicumopdracht.MainApplication;
 import practicumopdracht.models.Artist;
 
 import java.io.File;
@@ -38,8 +39,11 @@ public class TextArtistDAO extends ArtistDAO {
             for (Artist artist : objects) {
                 printWriter.print(artist.getName() + SPLIT_SEQUENCE);
                 printWriter.print(artist.getLabel() + SPLIT_SEQUENCE);
-                printWriter.println(artist.isFavorited() + SPLIT_SEQUENCE);
+                printWriter.print(artist.isFavorite() + SPLIT_SEQUENCE);
+                printWriter.println(artist.getCurrentFileName());
+                artist.setUnsavedImageFileName(null);
             }
+            MainApplication.getImageFileDAO().removeQueuedImages();
             printWriter.close();
         } catch (Exception e) {
             e.printStackTrace();

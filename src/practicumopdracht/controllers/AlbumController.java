@@ -7,7 +7,7 @@ import javafx.scene.control.*;
 import javafx.util.Callback;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
-import practicumopdracht.MessageBuilder;
+import practicumopdracht.MessageDialogBuilder;
 import practicumopdracht.comparators.AlbumComparatorAZ;
 import practicumopdracht.comparators.AlbumComparatorSales;
 import practicumopdracht.models.Album;
@@ -54,7 +54,6 @@ public class AlbumController extends Controller {
         VIEW.getAlphabetDescendingRadioButton().setOnAction(event -> onAlphabetSortingSelected(false));
         VIEW.getSalesAscendingRadioButton().setOnAction(event -> onSalesSortingSelected(true));
         VIEW.getSalesDescendingRadioButton().setOnAction(event -> onSalesSortingSelected(false));
-
 
         //ALBUM - CONTENT
         VIEW.getWikiButton().setOnAction(event -> handleOpenWikiClick());
@@ -178,7 +177,7 @@ public class AlbumController extends Controller {
     }
 
     private void validateEdit() {
-        MessageBuilder messageBuilder = new MessageBuilder();
+        MessageDialogBuilder messageDialogBuilder = new MessageDialogBuilder();
         //Album Name
         TextField nameField = VIEW.getNameInputField();
         String albumName = nameField.getText();
@@ -186,7 +185,7 @@ public class AlbumController extends Controller {
         if (albumNameValid) nameField.getStyleClass().removeAll("error");
         else {
             nameField.getStyleClass().add("error");
-            messageBuilder.append("Name: No name entered.");
+            messageDialogBuilder.append("Name: No name entered.");
         }
 
         //Sales amount
@@ -198,7 +197,7 @@ public class AlbumController extends Controller {
         } catch (Exception e) {
             salesCount = -1;
             salesField.getStyleClass().add("error");
-            messageBuilder.append("Sales: Value is incorrect.");
+            messageDialogBuilder.append("Sales: Value is incorrect.");
         }
 
         //Wiki link:
@@ -208,7 +207,7 @@ public class AlbumController extends Controller {
         if (wikiLinkValid) textArea.getStyleClass().removeAll("error");
         else {
             textArea.getStyleClass().add("error");
-            messageBuilder.append("Wiki: Incorrect wiki link.");
+            messageDialogBuilder.append("Wiki: Incorrect wiki link.");
         }
 
         //Release date:
@@ -218,7 +217,7 @@ public class AlbumController extends Controller {
         if (dateValid) datePicker.getStyleClass().removeAll("error");
         else {
             datePicker.getStyleClass().add("error");
-            messageBuilder.append("Date: Incorrect date.");
+            messageDialogBuilder.append("Date: Incorrect date.");
         }
 
         //Rating value
@@ -234,10 +233,10 @@ public class AlbumController extends Controller {
         } catch (Exception e) {
             ratingCount = -1;
             ratingField.getStyleClass().add("error");
-            messageBuilder.append("Rating: Incorrect value. (0/5)");
+            messageDialogBuilder.append("Rating: Incorrect value. (0/5)");
         }
 
-        if (messageBuilder.getTotalAppendCount() == 0) {
+        if (messageDialogBuilder.getTotalAppendCount() == 0) {
             Artist artistCurrentlySelected = VIEW.getEditArtistComboBox().getValue();
             Album newAlbum;
             if (currentAlbum != null) {
@@ -248,15 +247,16 @@ public class AlbumController extends Controller {
                 currentAlbum.setWikiLink(wikiLink);
                 currentAlbum.setHoortBij(artistCurrentlySelected);
                 newAlbum = currentAlbum;
+                messageDialogBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Edited '%s'\n\n%s", newAlbum.getName(),newAlbum.toString()));
             } else {
                 newAlbum = new Album(pickedDate, albumName, salesCount, ratingCount, wikiLink, artistCurrentlySelected);
+                messageDialogBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list.\n\n%s", newAlbum.getName(),newAlbum.toString()));
             }
-            messageBuilder.createAlert(Alert.AlertType.INFORMATION);
             VIEW.getArtistComboBox().setValue(artistCurrentlySelected);
             currentArtist = artistCurrentlySelected;
             applyFromEditView(newAlbum);
         } else {
-            messageBuilder.createAlert(Alert.AlertType.ERROR);
+            messageDialogBuilder.createAlert(Alert.AlertType.ERROR);
         }
     }
 
@@ -295,7 +295,7 @@ public class AlbumController extends Controller {
     }
 
     private void handleListRemoveClick() {
-        Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
+        Alert alert = MessageDialogBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
         alert.setContentText(String.format("Are you sure you want to remove %s?\n", currentAlbum.getName()));
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -320,7 +320,7 @@ public class AlbumController extends Controller {
         try {
             desktop.browse(URI.create(currentAlbum.getWikiLink()));
         } catch (IOException e) {
-            MessageBuilder.showPopupAlert("couldn't open browser.");
+            MessageDialogBuilder.showPopupAlert("couldn't open browser.");
             e.printStackTrace();
         }
     }

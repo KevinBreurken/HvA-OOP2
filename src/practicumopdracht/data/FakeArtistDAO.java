@@ -8,9 +8,9 @@ public class FakeArtistDAO extends ArtistDAO {
     @Override
     public boolean load() {
         objects = new ArrayList<>();
-        addOrUpdate(new Artist("Arctic Monkeys","Domino Records",true,""));
-        addOrUpdate(new Artist("The Kooks","Winestone Labels",true,""));
-        addOrUpdate(new Artist("Infected Mushrooms","Mushside Records",false,""));
+        addOrUpdate(new Artist("Arctic Monkeys","Domino Records",true,null));
+        addOrUpdate(new Artist("The Kooks","Winestone Labels",true,null));
+        addOrUpdate(new Artist("Infected Mushrooms","Mushside Records",false,null));
         return super.load();
     }
 

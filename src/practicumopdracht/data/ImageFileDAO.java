@@ -60,6 +60,8 @@ public class ImageFileDAO {
     }
 
     public void removeArtistImage(String filename) {
+        if(filename.equals("?"))
+            return;
         try {
             Files.delete(Paths.get(directoryPath + artistPrefix + "/" + filename));
         } catch (IOException e) {

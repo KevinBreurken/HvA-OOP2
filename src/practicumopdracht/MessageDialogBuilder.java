@@ -9,12 +9,12 @@ import javafx.stage.StageStyle;
 import java.io.File;
 import java.util.Optional;
 
-public class MessageBuilder {
+public class MessageDialogBuilder {
 
     private StringBuilder sb;
     private int totalAppendCount = 0;
 
-    public MessageBuilder() {
+    public MessageDialogBuilder() {
         this.sb = new StringBuilder();
     }
 
@@ -51,7 +51,7 @@ public class MessageBuilder {
     }
 
     public static boolean showConfirmationAlert(String contentText) {
-        Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
+        Alert alert = MessageDialogBuilder.createAlertTemplate(Alert.AlertType.CONFIRMATION);
         alert.setContentText(contentText);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -60,7 +60,7 @@ public class MessageBuilder {
     }
 
     public static void showPopupAlert(String contentText) {
-        Alert alert = MessageBuilder.createAlertTemplate(Alert.AlertType.INFORMATION);
+        Alert alert = MessageDialogBuilder.createAlertTemplate(Alert.AlertType.INFORMATION);
         alert.setContentText(contentText);
         alert.show();
     }

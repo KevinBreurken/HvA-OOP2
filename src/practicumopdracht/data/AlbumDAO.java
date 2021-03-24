@@ -1,6 +1,6 @@
 package practicumopdracht.data;
 
-import practicumopdracht.MessageBuilder;
+import practicumopdracht.MessageDialogBuilder;
 import practicumopdracht.models.Album;
 import practicumopdracht.models.Artist;
 
@@ -18,7 +18,7 @@ public abstract class AlbumDAO implements DAO<Album> {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            MessageBuilder.showPopupAlert(String.format("file could not be created at path: %s",fileName));
+            MessageDialogBuilder.showPopupAlert(String.format("file could not be created at path: %s",fileName));
             e.printStackTrace();
         }
     }

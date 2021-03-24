@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import practicumopdracht.AdjustableListView;
 import practicumopdracht.CustomWindowHandle;
 import practicumopdracht.MainApplication;
-import practicumopdracht.MessageBuilder;
+import practicumopdracht.MessageDialogBuilder;
 import practicumopdracht.comparators.ArtistComparatorAZ;
 import practicumopdracht.models.Artist;
 import practicumopdracht.views.ArtistView;
@@ -121,21 +121,21 @@ public class ArtistController extends Controller {
 
     private void displayArtist(Artist artist) {
         currentSelectedArtist = artist;
-        VIEW.setFavoriteDisplayState(artist.isFavorited());
+        VIEW.setFavoriteDisplayState(artist.isFavorite());
         VIEW.getArtistDisplay().setText(artist.getName());
         VIEW.getLabelDisplay().setText(artist.getLabel());
         VIEW.setState(View.ViewState.VIEW);
     }
 
     private void validateEdit() {
-        MessageBuilder messageBuilder = new MessageBuilder();
+        MessageDialogBuilder messageDialogBuilder = new MessageDialogBuilder();
         //Album Name
         TextField nameField = VIEW.getArtistNameTextField();
         String artistName = nameField.getText();
         if (artistName.length() > 0) nameField.getStyleClass().removeAll("error");
         else {
             nameField.getStyleClass().add("error");
-            messageBuilder.append("Name: No name entered.");
+            messageDialogBuilder.append("Name: No name entered.");
         }
 
         TextField labelField = VIEW.getLabelNameTextField();
@@ -143,28 +143,28 @@ public class ArtistController extends Controller {
         if (labelName.length() > 0) labelField.getStyleClass().removeAll("error");
         else {
             labelField.getStyleClass().add("error");
-            messageBuilder.append("Label: No label entered.");
+            messageDialogBuilder.append("Label: No label entered.");
         }
 
-        if (messageBuilder.getTotalAppendCount() == 0) {
+        if (messageDialogBuilder.getTotalAppendCount() == 0) {
             Artist newArtist;
             if (currentSelectedArtist != null) {
                 currentSelectedArtist.setName(artistName);
-                currentSelectedArtist.setFavorited(VIEW.getFavoriteCheckBox().isSelected());
+                currentSelectedArtist.setFavorite(VIEW.getFavoriteCheckBox().isSelected());
                 currentSelectedArtist.setLabel(labelName);
                 if (selectedFile != null) {
                     MainApplication.getImageFileDAO().checkForExistingUnsavedImages(currentSelectedArtist);
                     currentSelectedArtist.setUnsavedImageFileName(selectedFile.getName());
                 }
                 newArtist = currentSelectedArtist;
-                messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Edited '%s'", newArtist.getName()));
+                messageDialogBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Edited '%s' \n\n%s", newArtist.getName(),newArtist.toString()));
             } else {
                 if (selectedFile != null) {
                     imagePath = selectedFile.getName();
                 }
                 newArtist = new Artist(artistName, labelName, VIEW.getFavoriteCheckBox().isSelected(), null);
                 newArtist.setUnsavedImageFileName(imagePath);
-                messageBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list.", newArtist.getName()));
+                messageDialogBuilder.createAlert(Alert.AlertType.INFORMATION, String.format("Added '%s' to the list. \n\n%s", newArtist.getName(),newArtist.toString()));
             }
 
             //Add/Image
@@ -174,7 +174,7 @@ public class ArtistController extends Controller {
             }
             applyFromEditView(newArtist);
         } else {
-            messageBuilder.createAlert(Alert.AlertType.ERROR);
+            messageDialogBuilder.createAlert(Alert.AlertType.ERROR);
         }
     }
 
@@ -194,7 +194,7 @@ public class ArtistController extends Controller {
     private void setEditFieldsByArtist(Artist artist) {
         VIEW.getArtistNameTextField().setText(artist.getName());
         VIEW.getLabelNameTextField().setText(artist.getLabel());
-        VIEW.getFavoriteCheckBox().setSelected(artist.isFavorited());
+        VIEW.getFavoriteCheckBox().setSelected(artist.isFavorite());
     }
 
     private void handleAlbumsClick() {
@@ -217,7 +217,7 @@ public class ArtistController extends Controller {
 
     private void handleListRemoveClick() {
         String popupText = String.format("Are you sure you want to remove %s?", currentSelectedArtist.getName());
-        if (MessageBuilder.showConfirmationAlert(popupText)) {
+        if (MessageDialogBuilder.showConfirmationAlert(popupText)) {
             MainApplication.getImageFileDAO().queueRemoveAllImagesOfArtist(currentSelectedArtist);
             MainApplication.getArtistDAO().remove(currentSelectedArtist);
             currentSelectedArtist = null;

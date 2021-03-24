@@ -23,12 +23,14 @@ public class TextAlbumDAO extends AlbumDAO {
     public boolean load() {
         checkIfFileExists(FILENAME);
         try (Scanner scanner = new Scanner(new File(FILENAME))) {
-
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
+                if(line.length() == 0)
+                    break;
                 String[] split = line.split(SPLIT_SEQUENCE);
                 Artist linkedArtist = MainApplication.getArtistDAO().getById(Integer.parseInt(split[5]));
-                addOrUpdate(new Album(LocalDate.parse(split[3]), split[0], Double.parseDouble(split[1]), Integer.parseInt(split[4]), split[2], linkedArtist));
+                addOrUpdate(new Album(LocalDate.parse(split[3]), split[0], Double.parseDouble(split[1]),
+                        Integer.parseInt(split[4]), split[2], linkedArtist));
             }
         } catch (Exception e) {
             e.printStackTrace();
